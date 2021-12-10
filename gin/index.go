@@ -25,6 +25,7 @@ func Party(group *gin.RouterGroup) {
 	public.Group(group)
 }
 
+var LoginUrl = "/api/v1/public/admin/login"
 var LogoutUrl = "/api/v1/public/logout"
 var LoginResponse = tests.Responses{
 	{Key: "status", Value: http.StatusOK},

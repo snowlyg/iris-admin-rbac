@@ -15,8 +15,6 @@ import (
 )
 
 var (
-	loginUrl = "/api/v1/public/admin/login"
-
 	url = "/api/v1/api"
 )
 
@@ -34,7 +32,7 @@ func TestList(t *testing.T) {
 		return
 	}
 
-	TestClient = TestServer.GetTestLogin(t, loginUrl, rbac.LoginResponse)
+	TestClient = TestServer.GetTestLogin(t, rbac.LoginUrl, rbac.LoginResponse)
 	if TestClient == nil {
 		return
 	}
@@ -53,12 +51,12 @@ func TestList(t *testing.T) {
 				{Key: "data", Value: tests.Responses{
 					{Key: "pageSize", Value: pageParam.PageSize},
 					{Key: "page", Value: pageParam.Page},
-					{Key: "items", Value: items},
+					{Key: "list", Value: items},
 					{Key: "total", Value: len(routes)},
 				}},
 			}
 			requestParams := map[string]interface{}{"page": pageParam.Page, "pageSize": pageParam.PageSize}
-			TestClient.GET(url, pageKeys, requestParams)
+			TestClient.GET(fmt.Sprintf("%s/getList", url), pageKeys, requestParams)
 		})
 	}
 
@@ -70,7 +68,7 @@ func TestCreate(t *testing.T) {
 		return
 	}
 
-	client := TestServer.GetTestLogin(t, loginUrl, rbac.LoginResponse)
+	client := TestServer.GetTestLogin(t, rbac.LoginUrl, rbac.LoginResponse)
 	if client == nil {
 		return
 	}
@@ -93,7 +91,7 @@ func TestUpdate(t *testing.T) {
 		return
 	}
 
-	client := TestServer.GetTestLogin(t, loginUrl, rbac.LoginResponse)
+	client := TestServer.GetTestLogin(t, rbac.LoginUrl, rbac.LoginResponse)
 	if client == nil {
 		return
 	}
@@ -129,7 +127,7 @@ func TestGetById(t *testing.T) {
 		return
 	}
 
-	client := TestServer.GetTestLogin(t, loginUrl, rbac.LoginResponse)
+	client := TestServer.GetTestLogin(t, rbac.LoginUrl, rbac.LoginResponse)
 	if client == nil {
 		return
 	}

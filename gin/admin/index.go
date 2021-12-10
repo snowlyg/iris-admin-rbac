@@ -8,7 +8,7 @@ import (
 func Group(group *gin.RouterGroup) {
 	adminRouter := group.Group("/admin", middleware.Auth(), middleware.CasbinHandler(), middleware.Cors())
 	{
-		adminRouter.GET("/", GetAll)
+		adminRouter.GET("/getAll", GetAll)
 		adminRouter.GET("/{id:uint}", GetAdmin)
 		adminRouter.POST("/create", CreateAdmin)
 		adminRouter.POST("/{id:uint}", UpdateAdmin)

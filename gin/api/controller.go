@@ -51,11 +51,11 @@ func GetApiList(ctx *gin.Context) {
 	items := &PageResponse{}
 	total, err := orm.Pagination(database.Instance(), items, pageInfo.PaginateScope())
 	if err != nil {
-		zap_server.ZAPLOG.Error("GetAPIInfoList()", zap.Any("err", err))
+		zap_server.ZAPLOG.Error("获取分页获取API列表失败", zap.Any("orm.Pagination", err))
 		response.FailWithMessage(err.Error(), ctx)
 	} else {
 		response.OkWithData(response.PageResult{
-			List:     items,
+			List:     items.Item,
 			Total:    total,
 			Page:     pageInfo.Page,
 			PageSize: pageInfo.PageSize,

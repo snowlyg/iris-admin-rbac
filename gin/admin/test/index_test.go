@@ -51,7 +51,7 @@ func TestList(t *testing.T) {
 			{Key: "total", Value: 0, Type: "ge"},
 		}},
 	}
-	TestClient.GET(url, pageKeys, tests.RequestParams)
+	TestClient.GET(fmt.Sprintf("%s/getAll", url), pageKeys, tests.RequestParams)
 }
 
 func TestCreate(t *testing.T) {
