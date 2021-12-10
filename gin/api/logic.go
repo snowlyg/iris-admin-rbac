@@ -1,6 +1,8 @@
 package api
 
 import (
+	"fmt"
+
 	"github.com/snowlyg/iris-admin/server/casbin"
 	"github.com/snowlyg/iris-admin/server/database"
 	"github.com/snowlyg/iris-admin/server/database/orm"
@@ -52,4 +54,19 @@ func BatcheDelete(ids []uint) error {
 		return err
 	}
 	return nil
+}
+
+// GetApisForRole
+func GetApisForRole() (map[int][][]string, error) {
+	apis := ApiCollection{}
+	err := database.Instance().Model(&Api{}).Find(&apis).Error
+	if err != nil {
+		return nil, fmt.Errorf("获取权限错误 %w", err)
+	}
+	apisForRoles := map[int][][]string{}
+	for _, api := range apis {
+		apisForRole := []string{api.Path, api.Method}
+		apisForRoles[api.AuthorityType] = append(apisForRoles[api.AuthorityType], apisForRole)
+	}
+	return apisForRoles, nil
 }

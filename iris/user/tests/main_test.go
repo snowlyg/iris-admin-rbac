@@ -1,4 +1,4 @@
-package test
+package tests
 
 import (
 	_ "embed"
@@ -6,7 +6,7 @@ import (
 	"testing"
 
 	"github.com/snowlyg/helper/tests"
-	v1 "github.com/snowlyg/iris-admin-rbac/iris"
+	rbac "github.com/snowlyg/iris-admin-rbac/iris"
 	"github.com/snowlyg/iris-admin/server/web/web_iris"
 )
 
@@ -21,9 +21,9 @@ var TestClient *tests.Client
 
 func TestMain(m *testing.M) {
 	var uuid string
-	uuid, TestServer = v1.BeforeTestMain(mysqlPwd, redisPwd, 2)
+	uuid, TestServer = web_iris.BeforeTestMain(mysqlPwd, redisPwd, 4, rbac.PartyFunc, rbac.SeedFunc)
 	code := m.Run()
-	v1.AfterTestMain(uuid, TestClient)
+	web_iris.AfterTestMain(uuid, rbac.LogoutUrl, TestClient)
 
 	os.Exit(code)
 }

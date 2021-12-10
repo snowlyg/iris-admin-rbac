@@ -1,10 +1,13 @@
 package authority
 
-import "github.com/gin-gonic/gin"
+import (
+	"github.com/gin-gonic/gin"
+	"github.com/snowlyg/iris-admin/server/web/web_gin/middleware"
+)
 
 func Group(group *gin.RouterGroup) {
 
-	authRouter := group.Group("/authority")
+	authRouter := group.Group("/authority", middleware.Auth(), middleware.CasbinHandler(), middleware.Cors())
 	{
 		authRouter.POST("/createAuthority", CreateAuthority)                 // 创建角色
 		authRouter.PUT("/updateAuthority", UpdateAuthority)                  // 更新角色

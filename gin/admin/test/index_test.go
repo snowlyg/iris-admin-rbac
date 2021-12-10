@@ -5,10 +5,9 @@ import (
 	"net/http"
 	"testing"
 
-	"github.com/snowlyg/helper/str"
 	"github.com/snowlyg/helper/tests"
 	v1 "github.com/snowlyg/iris-admin-rbac/gin"
-	"github.com/snowlyg/iris-admin/server/web/web_gin"
+	"github.com/snowlyg/iris-admin/g"
 	"github.com/snowlyg/iris-admin/server/web/web_gin/response"
 )
 
@@ -34,14 +33,17 @@ func TestList(t *testing.T) {
 		{Key: "data", Value: tests.Responses{
 			{Key: "pageSize", Value: 10},
 			{Key: "page", Value: 1},
-			{Key: "items", Value: []tests.Responses{
+			{Key: "list", Value: []tests.Responses{
 				{
 					{Key: "id", Value: 1, Type: "ge"},
-					{Key: "name", Value: "超级管理员"},
-					{Key: "username", Value: "admin"},
-					{Key: "intro", Value: "超级管理员"},
-					{Key: "avatar", Value: str.Join("http://", web_gin.CONFIG.System.Addr, web_gin.CONFIG.System.StaticPrefix, "/images/avatar.jpg")},
-					{Key: "roles", Value: []string{"超级管理员"}},
+					{Key: "nickName", Value: "超级管理员"},
+					{Key: "userName", Value: "admin"},
+					{Key: "headerImg", Value: "http://qmplusimg.henrongyi.top/head.png"},
+					{Key: "status", Value: g.StatusTrue},
+					{Key: "is_show", Value: g.StatusFalse},
+					{Key: "phone", Value: "13800138000"},
+					{Key: "email", Value: "admin@admin.com"},
+					{Key: "authorityIds", Value: []string{"1"}},
 					{Key: "updatedAt", Value: "", Type: "notempty"},
 					{Key: "createdAt", Value: "", Type: "notempty"},
 				},

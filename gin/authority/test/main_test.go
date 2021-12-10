@@ -6,7 +6,7 @@ import (
 	"testing"
 
 	"github.com/snowlyg/helper/tests"
-	v1 "github.com/snowlyg/iris-admin-rbac/gin"
+	rbac "github.com/snowlyg/iris-admin-rbac/gin"
 	"github.com/snowlyg/iris-admin/server/web/web_gin"
 )
 
@@ -21,9 +21,9 @@ var TestClient *tests.Client
 
 func TestMain(m *testing.M) {
 	var uuid string
-	uuid, TestServer = v1.BeforeTestMain(mysqlPwd, redisPwd, 3)
+	uuid, TestServer = web_gin.BeforeTestMain(mysqlPwd, redisPwd, 3, rbac.PartyFunc, rbac.SeedFunc)
 	code := m.Run()
-	v1.AfterTestMain(uuid,TestClient)
+	web_gin.AfterTestMain(uuid, TestClient)
 
 	os.Exit(code)
 }

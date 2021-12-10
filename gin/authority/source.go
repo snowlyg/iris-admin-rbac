@@ -2,6 +2,7 @@ package authority
 
 import (
 	"github.com/gookit/color"
+	"github.com/snowlyg/iris-admin-rbac/gin/api"
 	"github.com/snowlyg/iris-admin/g"
 	"github.com/snowlyg/iris-admin/server/database"
 	"github.com/snowlyg/multi"
@@ -13,10 +14,10 @@ var Source = new(source)
 type source struct{}
 
 func GetSources() ([]*Authority, error) {
-	// apis, err := api.GetPermsForRole()
-	// if err != nil {
-	// 	return nil, err
-	// }
+	apis, err := api.GetApisForRole()
+	if err != nil {
+		return nil, err
+	}
 	sources := []*Authority{
 		{
 			BaseAuthority: BaseAuthority{
@@ -26,7 +27,7 @@ func GetSources() ([]*Authority, error) {
 				DefaultRouter: "",
 			},
 			AuthorityId: g.AdminAuthorityId,
-			// Perms:       apis,
+			Perms:       apis[multi.AdminAuthority],
 		},
 		{
 			BaseAuthority: BaseAuthority{
@@ -36,7 +37,7 @@ func GetSources() ([]*Authority, error) {
 				DefaultRouter: "",
 			},
 			AuthorityId: g.TenancyAuthorityId,
-			// Perms: apis,
+			Perms:       apis[multi.TenancyAuthority],
 		},
 		{
 			BaseAuthority: BaseAuthority{
@@ -46,7 +47,7 @@ func GetSources() ([]*Authority, error) {
 				DefaultRouter: "",
 			},
 			AuthorityId: g.LiteAuthorityId,
-			// Perms: apis,
+			Perms:       apis[multi.GeneralAuthority],
 		},
 		{
 			BaseAuthority: BaseAuthority{
@@ -56,7 +57,7 @@ func GetSources() ([]*Authority, error) {
 				DefaultRouter: "",
 			},
 			AuthorityId: g.DeviceAuthorityId,
-			// Perms: apis,
+			Perms:       apis[multi.GeneralAuthority],
 		},
 	}
 	return sources, nil

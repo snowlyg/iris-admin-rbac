@@ -1,4 +1,4 @@
-package test
+package tests
 
 import (
 	"os"
@@ -9,8 +9,8 @@ import (
 )
 
 var (
-	loginUrl  = "/api/v1/auth/login"
-	url       = "/api/v1/file"
+	loginUrl = "/api/v1/auth/login"
+	url      = "/api/v1/file"
 )
 
 func TestUpload(t *testing.T) {
@@ -23,7 +23,12 @@ func TestUpload(t *testing.T) {
 	}
 
 	name := "mysqlPwd.txt"
-	fh, err := os.Open("D:/admin/go/src/github.com/snowlyg/iris-admin/web/web_iris/modules/rabc/file/tests/" + name)
+	md5Name, err := file.GetFileName(name)
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	fh, err := os.Open("D:/admin/go/src/github.com/snowlyg/iris-admin-rbac/iris/file/tests/" + name)
 	if err != nil {
 		t.Error(err)
 		return
@@ -40,7 +45,7 @@ func TestUpload(t *testing.T) {
 		{Key: "code", Value: 2000},
 		{Key: "message", Value: "请求成功"},
 		{Key: "data", Value: tests.Responses{
-			{Key: "local", Value: file.GetPath(name)},
+			{Key: "local", Value: file.GetPath(md5Name)},
 			{Key: "qiniu", Value: ""},
 		}},
 	}

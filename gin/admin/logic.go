@@ -63,8 +63,8 @@ func FindByUserName(scopes ...func(db *gorm.DB) *gorm.DB) (*Response, error) {
 	return admin, nil
 }
 
-func FindPasswordByUserName(db *gorm.DB, username string, ids ...uint) (LoginResponse, error) {
-	admin := LoginResponse{}
+func FindPasswordByUserName(db *gorm.DB, username string, ids ...uint) (*LoginResponse, error) {
+	admin := &LoginResponse{}
 	db = db.Model(&Admin{}).Select("id,password").
 		Where("username = ?", username)
 	if len(ids) == 1 {
@@ -75,7 +75,22 @@ func FindPasswordByUserName(db *gorm.DB, username string, ids ...uint) (LoginRes
 		zap_server.ZAPLOG.Error("根据用户名查询用户错误", zap.String("用户名:", username), zap.Uints("ids:", ids), zap.String("错误:", err.Error()))
 		return admin, err
 	}
+	userId := strconv.FormatUint(uint64(admin.Id), 10)
+	admin.AuthorityIds, err = getUserRoleIds(userId)
+	if err != nil {
+		return nil, err
+	}
 	return admin, nil
+}
+
+// getUserRoleIds
+func getUserRoleIds(userId string) ([]string, error) {
+	roleIds, err := casbin.Instance().GetRolesForUser(userId)
+	if err != nil {
+		zap_server.ZAPLOG.Error("获取用户角色错误", zap.String("casbin.Instance().GetRolesForUser", err.Error()))
+		return nil, err
+	}
+	return roleIds, nil
 }
 
 func Create(req *Request) (uint, error) {
@@ -133,7 +148,7 @@ func FindById(db *gorm.DB, id uint) (Response, error) {
 // AddRoleForUser add roles for user
 func AddRoleForUser(admin *Admin) error {
 	userId := strconv.FormatUint(uint64(admin.ID), 10)
-	oldRoleIds, err := casbin.Instance().GetRolesForUser(userId)
+	oldRoleIds, err := getUserRoleIds(userId)
 	if err != nil {
 		zap_server.ZAPLOG.Error("获取用户角色错误", zap.String("错误:", err.Error()))
 		return err

@@ -7,12 +7,14 @@ import (
 )
 
 type source struct {
-	routes []map[string]string
+	routes         []map[string]string
+	AuthorityTypes map[string]int
 }
 
-func New(routes []map[string]string) *source {
+func New(routes []map[string]string, authorityTypes map[string]int) *source {
 	return &source{
-		routes: routes,
+		routes:         routes,
+		AuthorityTypes: authorityTypes,
 	}
 }
 
@@ -21,10 +23,10 @@ func (s *source) GetSources() ApiCollection {
 	for _, permRoute := range s.routes {
 		api := Api{BaseApi: BaseApi{
 			Path:          permRoute["path"],
-			Description:   permRoute["name"],
-			ApiGroup:      permRoute["name"],
-			AuthorityType: 0,
-			Method:        permRoute["act"],
+			Description:   permRoute["desc"],
+			ApiGroup:      permRoute["desc"],
+			AuthorityType: s.AuthorityTypes[permRoute["path"]],
+			Method:        permRoute["method"],
 		}}
 		apis = append(apis, api)
 	}

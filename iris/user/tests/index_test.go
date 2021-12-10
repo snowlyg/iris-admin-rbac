@@ -1,15 +1,17 @@
-package test
+package tests
 
 import (
 	"fmt"
 	"testing"
 
+	"github.com/snowlyg/helper/str"
 	"github.com/snowlyg/helper/tests"
+	"github.com/snowlyg/iris-admin/server/web/web_iris"
 )
 
 var (
-	loginUrl = "/api/v1/auth/login" // 登录URL
-	url      = "/api/v1/roles"      // url
+	loginUrl = "/api/v1/auth/login"
+	url      = "/api/v1/users"
 )
 
 func TestList(t *testing.T) {
@@ -30,9 +32,11 @@ func TestList(t *testing.T) {
 			{Key: "items", Value: []tests.Responses{
 				{
 					{Key: "id", Value: 1, Type: "ge"},
-					{Key: "name", Value: "SuperAdmin"},
-					{Key: "displayName", Value: "超级管理员"},
-					{Key: "description", Value: "超级管理员"},
+					{Key: "name", Value: "超级管理员"},
+					{Key: "username", Value: "admin"},
+					{Key: "intro", Value: "超级管理员"},
+					{Key: "avatar", Value: str.Join("http://", web_iris.CONFIG.System.Addr, web_iris.CONFIG.System.StaticPrefix, "/images/avatar.jpg")},
+					{Key: "roles", Value: []string{"超级管理员"}},
 					{Key: "updatedAt", Value: "", Type: "notempty"},
 					{Key: "createdAt", Value: "", Type: "notempty"},
 				},
@@ -50,9 +54,11 @@ func TestCreate(t *testing.T) {
 	}
 
 	data := map[string]interface{}{
-		"name":        "test_display_name",
-		"displayName": "测试名称",
-		"description": "测试描述信息",
+		"name":     "测试名称",
+		"username": "create_test_username",
+		"intro":    "测试描述信息",
+		"avatar":   "",
+		"password": "123456",
 	}
 	id := Create(TestClient, data)
 	if id == 0 {
@@ -68,9 +74,11 @@ func TestUpdate(t *testing.T) {
 	}
 
 	data := map[string]interface{}{
-		"name":        "update_test_display_name",
-		"displayName": "测试名称",
-		"description": "测试描述信息",
+		"name":     "测试名称",
+		"username": "update_test_username",
+		"intro":    "测试描述信息",
+		"avatar":   "",
+		"password": "123456",
 	}
 	id := Create(TestClient, data)
 	if id == 0 {
@@ -79,9 +87,11 @@ func TestUpdate(t *testing.T) {
 	defer Delete(TestClient, id)
 
 	update := map[string]interface{}{
-		"name":        "update_test_udisplay_name",
-		"displayName": "更新测试名称",
-		"description": "更新测试描述信息",
+		"name":     "更新测试名称",
+		"username": "update_test_username",
+		"intro":    "更新测试描述信息",
+		"avatar":   "",
+		"password": "123456",
 	}
 
 	pageKeys := tests.Responses{
@@ -98,13 +108,15 @@ func TestGetById(t *testing.T) {
 	}
 
 	data := map[string]interface{}{
-		"name":        "getbyid_test_display_name",
-		"displayName": "更新测试名称",
-		"description": "测试描述信息",
+		"name":     "测试名称",
+		"username": "getbyid_test_username",
+		"intro":    "测试描述信息",
+		"avatar":   "",
+		"password": "123456",
 	}
 	id := Create(TestClient, data)
 	if id == 0 {
-		t.Fatalf("测试添加失败 id=%d", id)
+		t.Fatalf("测试添加用户失败 id=%d", id)
 	}
 	defer Delete(TestClient, id)
 
@@ -114,11 +126,13 @@ func TestGetById(t *testing.T) {
 		{Key: "data", Value: tests.Responses{
 			{Key: "id", Value: 1, Type: "ge"},
 			{Key: "name", Value: data["name"].(string)},
-			{Key: "displayName", Value: data["displayName"].(string)},
-			{Key: "description", Value: data["description"].(string)},
+			{Key: "username", Value: data["username"].(string)},
+			{Key: "intro", Value: data["intro"].(string)},
+			{Key: "avatar", Value: data["avatar"].(string)},
 			{Key: "updatedAt", Value: "", Type: "notempty"},
 			{Key: "createdAt", Value: "", Type: "notempty"},
 			{Key: "createdAt", Value: "", Type: "notempty"},
+			{Key: "roles", Value: []string{}, Type: "null"},
 		},
 		},
 	}

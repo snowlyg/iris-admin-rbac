@@ -3,8 +3,6 @@ package public
 import (
 	"errors"
 	"fmt"
-	"strconv"
-	"time"
 
 	"github.com/snowlyg/iris-admin-rbac/gin/admin"
 	"github.com/snowlyg/iris-admin/server/database"
@@ -34,16 +32,25 @@ func GetAccessToken(req *LoginRequest) (*LoginResponse, error) {
 		return nil, ErrUserNameOrPassword
 	}
 
-	claims := &multi.CustomClaims{
-		ID:            strconv.FormatUint(uint64(admin.Id), 10),
+	// claims := &multi.CustomClaims{
+	// 	ID:            strconv.FormatUint(uint64(admin.Id), 10),
+	// 	Username:      req.Username,
+	// 	AuthorityId:   "",
+	// 	AuthorityType: req.AuthorityType,
+	// 	LoginType:     multi.LoginTypeWeb,
+	// 	AuthType:      multi.AuthPwd,
+	// 	CreationDate:  time.Now().Local().Unix(),
+	// 	ExpiresIn:     multi.RedisSessionTimeoutWeb.Milliseconds(),
+	// }
+	claims := multi.New(&multi.Multi{
+		Id:            admin.Id,
 		Username:      req.Username,
-		AuthorityId:   "",
-		AuthorityType: req.AuthorityType,
+		AuthorityIds:  admin.AuthorityIds,
+		AuthorityType: multi.AdminAuthority,
 		LoginType:     multi.LoginTypeWeb,
 		AuthType:      multi.AuthPwd,
-		CreationDate:  time.Now().Local().Unix(),
 		ExpiresIn:     multi.RedisSessionTimeoutWeb.Milliseconds(),
-	}
+	})
 	token, _, err := multi.AuthDriver.GenerateToken(claims)
 	if err != nil {
 		return nil, err
