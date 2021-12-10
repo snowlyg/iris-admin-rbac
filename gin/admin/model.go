@@ -14,7 +14,7 @@ type Admin struct {
 }
 
 type BaseAdmin struct {
-	Username string `json:"userName" gorm:"not null;type:varchar(32);comment:用户登录名"`
+	Username string `json:"username" gorm:"not null;type:varchar(32);comment:用户登录名"`
 	Status   int    `gorm:"column:status;type:tinyint(1);not null;default:1" json:"status"`   // 账号冻结 1为正常，2为禁止
 	IsShow   int    `gorm:"column:is_show;type:tinyint(1);not null;default:1" json:"is_show"` // 是否显示 1为正常，2为禁止
 	Email    string `json:"email" gorm:"default:'';comment:员工邮箱"`

@@ -19,7 +19,7 @@ func CreateApi(ctx *gin.Context) {
 		return
 	}
 	if id, err := orm.Create(database.Instance(), api); err != nil {
-		zap_server.ZAPLOG.Error("Create()", zap.Any("err", err))
+		zap_server.ZAPLOG.Error("添加角色数据失败", zap.Any("Create", err))
 		response.FailWithMessage(err.Error(), ctx)
 	} else {
 		response.OkWithData(gin.H{"id": id, "path": api.Path, "method": api.Method}, ctx)

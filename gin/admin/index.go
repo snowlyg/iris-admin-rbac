@@ -10,7 +10,7 @@ func Group(group *gin.RouterGroup) {
 	{
 		adminRouter.GET("/", GetAll)
 		adminRouter.GET("/{id:uint}", GetAdmin)
-		adminRouter.POST("/", CreateAdmin)
+		adminRouter.POST("/create", CreateAdmin)
 		adminRouter.POST("/{id:uint}", UpdateAdmin)
 		adminRouter.DELETE("/{id:uint}", DeleteAdmin)
 		adminRouter.GET("/profile", Profile)

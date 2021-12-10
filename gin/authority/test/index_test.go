@@ -6,8 +6,9 @@ import (
 	"testing"
 
 	"github.com/snowlyg/helper/tests"
-	v1 "github.com/snowlyg/iris-admin-rbac/gin"
+	rabc "github.com/snowlyg/iris-admin-rbac/gin"
 	"github.com/snowlyg/iris-admin/server/web/web_gin/response"
+	"github.com/snowlyg/multi"
 )
 
 var (
@@ -21,7 +22,7 @@ func TestList(t *testing.T) {
 		return
 	}
 
-	TestClient = TestServer.GetTestLogin(t, loginUrl, v1.LoginResponse)
+	TestClient = TestServer.GetTestLogin(t, loginUrl, rabc.LoginResponse)
 	if TestClient == nil {
 		return
 	}
@@ -53,14 +54,15 @@ func TestCreate(t *testing.T) {
 		return
 	}
 
-	client := TestServer.GetTestLogin(t, loginUrl, v1.LoginResponse)
+	client := TestServer.GetTestLogin(t, loginUrl, rabc.LoginResponse)
 	if client == nil {
 		return
 	}
 	data := map[string]interface{}{
-		"name":        "test_display_name",
-		"displayName": "测试名称",
-		"description": "测试描述信息",
+		"authorityId":   "999",
+		"authorityName": "测试角色",
+		"parentId":      "0",
+		"authorityType": multi.AdminAuthority,
 	}
 	id := Create(client, data)
 	if id == 0 {
@@ -75,14 +77,15 @@ func TestUpdate(t *testing.T) {
 		return
 	}
 
-	client := TestServer.GetTestLogin(t, loginUrl, v1.LoginResponse)
+	client := TestServer.GetTestLogin(t, loginUrl, rabc.LoginResponse)
 	if client == nil {
 		return
 	}
 	data := map[string]interface{}{
-		"name":        "update_test_display_name",
-		"displayName": "测试名称",
-		"description": "测试描述信息",
+		"authorityId":   "999",
+		"authorityName": "测试角色",
+		"parentId":      "0",
+		"authorityType": multi.AdminAuthority,
 	}
 	id := Create(client, data)
 	if id == 0 {
@@ -91,9 +94,10 @@ func TestUpdate(t *testing.T) {
 	defer Delete(client, id)
 
 	update := map[string]interface{}{
-		"name":        "update_test_udisplay_name",
-		"displayName": "更新测试名称",
-		"description": "更新测试描述信息",
+		"authorityId":   "999",
+		"authorityName": "测试角色",
+		"parentId":      "0",
+		"authorityType": multi.AdminAuthority,
 	}
 
 	pageKeys := tests.Responses{
@@ -109,14 +113,15 @@ func TestGetById(t *testing.T) {
 		return
 	}
 
-	client := TestServer.GetTestLogin(t, loginUrl, v1.LoginResponse)
+	client := TestServer.GetTestLogin(t, loginUrl, rabc.LoginResponse)
 	if client == nil {
 		return
 	}
 	data := map[string]interface{}{
-		"name":        "getbyid_test_display_name",
-		"displayName": "更新测试名称",
-		"description": "测试描述信息",
+		"authorityId":   "999",
+		"authorityName": "测试角色",
+		"parentId":      "0",
+		"authorityType": multi.AdminAuthority,
 	}
 	id := Create(client, data)
 	if id == 0 {

@@ -13,7 +13,7 @@ import (
 type Response struct {
 	orm.Model
 	BaseAdmin
-	AuthorityIds []string `gorm:"-" json:"authorityIds"`
+	Authorities []string `gorm:"-" json:"authorities"`
 }
 
 func (res *Response) ToString() {

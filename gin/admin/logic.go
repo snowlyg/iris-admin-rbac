@@ -5,7 +5,7 @@ import (
 	"strconv"
 
 	"github.com/snowlyg/helper/arr"
-	"github.com/snowlyg/iris-admin-rbac/iris/role"
+	"github.com/snowlyg/iris-admin-rbac/gin/authority"
 	"github.com/snowlyg/iris-admin/server/casbin"
 	"github.com/snowlyg/iris-admin/server/database"
 	"github.com/snowlyg/iris-admin/server/database/orm"
@@ -18,10 +18,10 @@ import (
 
 var ErrUserNameInvalide = errors.New("用户名名称已经被使用")
 
-// getRoles
-func getRoles(db *gorm.DB, admins ...*Response) {
+// transform
+func transform(admins ...*Response) {
 	var roleIds []uint
-	userRoleIds := make(map[uint][]string, 10)
+	userRoleIds := map[uint][]string{}
 	if len(admins) == 0 {
 		return
 	}
@@ -38,16 +38,19 @@ func getRoles(db *gorm.DB, admins ...*Response) {
 		}
 	}
 
-	roles, err := role.FindInId(db, roleIds)
+	roles, err := authority.FindInId(database.Instance(), roleIds)
 	if err != nil {
-		zap_server.ZAPLOG.Error("get role get err ", zap.String("错误:", err.Error()))
+		zap_server.ZAPLOG.Error("获取权限数据错误 ", zap.String("authority.FindInId", err.Error()))
+		return
 	}
-
+	if len(roles) == 0 {
+		return
+	}
 	for _, admin := range admins {
 		for _, role := range roles {
-			sRoleId := strconv.FormatInt(int64(role.Id), 10)
+			sRoleId := strconv.FormatInt(int64(role.AuthorityId), 10)
 			if arr.InArrayS(userRoleIds[admin.Id], sRoleId) {
-				admin.AuthorityIds = append(admin.AuthorityIds, role.DisplayName)
+				admin.Authorities = append(admin.Authorities, role.AuthorityName)
 			}
 		}
 	}
@@ -126,7 +129,7 @@ func IsAdminUser(id uint) error {
 	if err != nil {
 		return err
 	}
-	if arr.InArrayS(admin.AuthorityIds, role.GetAdminRoleName()) {
+	if arr.InArrayS(admin.Authorities, authority.GetAdminRoleName()) {
 		return errors.New("不能操作超级管理员")
 	}
 	return nil
@@ -140,7 +143,7 @@ func FindById(db *gorm.DB, id uint) (Response, error) {
 		return admin, err
 	}
 
-	getRoles(db, &admin)
+	transform(&admin)
 
 	return admin, nil
 }

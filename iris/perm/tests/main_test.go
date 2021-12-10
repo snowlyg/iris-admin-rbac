@@ -8,6 +8,7 @@ import (
 	"github.com/snowlyg/helper/tests"
 	rbac "github.com/snowlyg/iris-admin-rbac/iris"
 	"github.com/snowlyg/iris-admin/server/web/web_iris"
+	web_tests "github.com/snowlyg/iris-admin/server/web/tests"
 )
 
 //go:embed mysqlPwd.txt
@@ -21,9 +22,9 @@ var TestClient *tests.Client
 
 func TestMain(m *testing.M) {
 	var uuid string
-	uuid, TestServer = web_iris.BeforeTestMain(mysqlPwd, redisPwd, 2, rbac.PartyFunc, rbac.SeedFunc)
+	uuid, TestServer = web_tests.BeforeTestMainIris(mysqlPwd, redisPwd, 2, rbac.PartyFunc, rbac.SeedFunc)
 	code := m.Run()
-	web_iris.AfterTestMain(uuid, rbac.LogoutUrl, TestClient)
+	web_tests.AfterTestMain(uuid, rbac.LogoutUrl, TestClient)
 
 	os.Exit(code)
 }

@@ -120,7 +120,7 @@ func GetAll(ctx *gin.Context) {
 		return
 	}
 	// 查询用户角色
-	getRoles(database.Instance(), items.Item...)
+	transform(items.Item...)
 	response.OkWithData(response.PageResult{
 		List:     items.Item,
 		Total:    total,

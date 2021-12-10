@@ -6,11 +6,12 @@ import (
 	"testing"
 
 	"github.com/snowlyg/helper/tests"
-	v1 "github.com/snowlyg/iris-admin-rbac/gin"
+	rbac "github.com/snowlyg/iris-admin-rbac/gin"
 	"github.com/snowlyg/iris-admin-rbac/gin/api"
 	"github.com/snowlyg/iris-admin/server/database"
 	"github.com/snowlyg/iris-admin/server/database/orm"
 	"github.com/snowlyg/iris-admin/server/web/web_gin/response"
+	"github.com/snowlyg/multi"
 )
 
 var (
@@ -33,7 +34,7 @@ func TestList(t *testing.T) {
 		return
 	}
 
-	TestClient = TestServer.GetTestLogin(t, loginUrl, v1.LoginResponse)
+	TestClient = TestServer.GetTestLogin(t, loginUrl, rbac.LoginResponse)
 	if TestClient == nil {
 		return
 	}
@@ -69,15 +70,15 @@ func TestCreate(t *testing.T) {
 		return
 	}
 
-	client := TestServer.GetTestLogin(t, loginUrl, v1.LoginResponse)
+	client := TestServer.GetTestLogin(t, loginUrl, rbac.LoginResponse)
 	if client == nil {
 		return
 	}
 	data := map[string]interface{}{
-		"name":        "test_route_name",
-		"displayName": "测试描述信息",
-		"description": "测试描述信息",
-		"act":         "GET",
+		"authorityId":   "999",
+		"authorityName": "测试角色",
+		"parentId":      "0",
+		"authorityType": multi.AdminAuthority,
 	}
 	id := Create(client, data)
 	if id == 0 {
@@ -92,7 +93,7 @@ func TestUpdate(t *testing.T) {
 		return
 	}
 
-	client := TestServer.GetTestLogin(t, loginUrl, v1.LoginResponse)
+	client := TestServer.GetTestLogin(t, loginUrl, rbac.LoginResponse)
 	if client == nil {
 		return
 	}
@@ -128,7 +129,7 @@ func TestGetById(t *testing.T) {
 		return
 	}
 
-	client := TestServer.GetTestLogin(t, loginUrl, v1.LoginResponse)
+	client := TestServer.GetTestLogin(t, loginUrl, rbac.LoginResponse)
 	if client == nil {
 		return
 	}

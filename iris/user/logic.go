@@ -23,7 +23,7 @@ var ErrUserNameInvalide = errors.New("用户名名称已经被使用")
 // getRoles
 func getRoles(db *gorm.DB, users ...*Response) {
 	var roleIds []uint
-	userRoleIds := make(map[uint][]string, 10)
+	userRoleIds := map[uint][]string{}
 	if len(users) == 0 {
 		return
 	}

@@ -37,13 +37,13 @@ func TestList(t *testing.T) {
 				{
 					{Key: "id", Value: 1, Type: "ge"},
 					{Key: "nickName", Value: "超级管理员"},
-					{Key: "userName", Value: "admin"},
+					{Key: "username", Value: "admin"},
 					{Key: "headerImg", Value: "http://qmplusimg.henrongyi.top/head.png"},
 					{Key: "status", Value: g.StatusTrue},
 					{Key: "is_show", Value: g.StatusFalse},
 					{Key: "phone", Value: "13800138000"},
 					{Key: "email", Value: "admin@admin.com"},
-					{Key: "authorityIds", Value: []string{"1"}},
+					{Key: "authorities", Value: []string{"超级管理员"}},
 					{Key: "updatedAt", Value: "", Type: "notempty"},
 					{Key: "createdAt", Value: "", Type: "notempty"},
 				},
@@ -64,12 +64,13 @@ func TestCreate(t *testing.T) {
 	if client == nil {
 		return
 	}
+
 	data := map[string]interface{}{
-		"name":     "测试名称",
-		"username": "create_test_username",
-		"intro":    "测试描述信息",
-		"avatar":   "",
-		"password": "123456",
+		"nickName":     "测试名称",
+		"username":     "create_test_username",
+		"intro":        "测试描述信息",
+		"authorityIds": []uint{1},
+		"password":     "123456",
 	}
 	id := Create(client, data)
 	if id == 0 {
@@ -167,7 +168,7 @@ func Create(client *tests.Client, data map[string]interface{}) uint {
 		},
 		},
 	}
-	return client.POST(url, pageKeys, data).GetId()
+	return client.POST(fmt.Sprintf("%s/%s", url, "create"), pageKeys, data).GetId()
 }
 
 func Delete(client *tests.Client, id uint) {
