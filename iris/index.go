@@ -13,6 +13,7 @@ import (
 	"github.com/snowlyg/iris-admin/server/web/web_iris"
 )
 
+var LoginUrl = "/api/v1/auth/login"
 var LogoutUrl = "/api/v1/users/logout"
 
 // Party v1 模块

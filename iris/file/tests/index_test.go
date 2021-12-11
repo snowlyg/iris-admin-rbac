@@ -5,24 +5,24 @@ import (
 	"testing"
 
 	"github.com/snowlyg/helper/tests"
+	rbac "github.com/snowlyg/iris-admin-rbac/iris"
 	"github.com/snowlyg/iris-admin-rbac/iris/file"
 )
 
 var (
-	loginUrl = "/api/v1/auth/login"
-	url      = "/api/v1/file"
+	url = "/api/v1/file"
 )
 
 func TestUpload(t *testing.T) {
 	if TestServer == nil {
-		t.Errorf("TestServer is nil")
+		t.Errorf("测试服务初始化失败")
 	}
-	TestClient = TestServer.GetTestLogin(t, loginUrl, nil)
+	TestClient = TestServer.GetTestLogin(t, rbac.LoginUrl, nil)
 	if TestClient == nil {
 		return
 	}
 
-	name := "mysqlPwd.txt"
+	name := "index_test.go"
 	md5Name, err := file.GetFileName(name)
 	if err != nil {
 		t.Error(err)

@@ -11,20 +11,16 @@ import (
 	"github.com/snowlyg/iris-admin/server/web/web_gin"
 )
 
-//go:embed mysqlPwd.txt
-var mysqlPwd string
-
-//go:embed redisPwd.txt
-var redisPwd string
-
 var TestServer *web_gin.WebServer
 var TestClient *tests.Client
 
 func TestMain(m *testing.M) {
+	mysqlPwd := os.Getenv("mysqlPwd")
+	redisPwd := os.Getenv("redisPwd")
 	var uuid string
 	uuid, TestServer = web_tests.BeforeTestMainGin(mysqlPwd, redisPwd, 3, rbac.PartyFunc, rbac.SeedFunc)
 	code := m.Run()
-	web_tests.AfterTestMain(uuid, rbac.LogoutUrl, TestClient)
+	web_tests.AfterTestMain(uuid)
 
 	os.Exit(code)
 }

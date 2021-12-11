@@ -5,14 +5,14 @@ import (
 	"testing"
 
 	"github.com/snowlyg/helper/tests"
+	rbac "github.com/snowlyg/iris-admin-rbac/iris"
 	"github.com/snowlyg/iris-admin-rbac/iris/perm"
 	"github.com/snowlyg/iris-admin/server/database"
 	"github.com/snowlyg/iris-admin/server/database/orm"
 )
 
 var (
-	loginUrl = "/api/v1/auth/login"
-	url      = "/api/v1/perms"
+	url = "/api/v1/perms"
 )
 
 type PageParam struct {
@@ -25,9 +25,9 @@ type PageParam struct {
 
 func TestList(t *testing.T) {
 	if TestServer == nil {
-		t.Errorf("TestServer is nil")
+		t.Errorf("测试服务初始化失败")
 	}
-	TestClient = TestServer.GetTestLogin(t, loginUrl, nil)
+	TestClient = TestServer.GetTestLogin(t, rbac.LoginUrl, nil)
 	if TestClient == nil {
 		return
 	}
@@ -58,7 +58,7 @@ func TestList(t *testing.T) {
 }
 
 func TestCreate(t *testing.T) {
-	TestClient = TestServer.GetTestLogin(t, loginUrl, nil)
+	TestClient = TestServer.GetTestLogin(t, rbac.LoginUrl, nil)
 	if TestClient == nil {
 		return
 	}
@@ -77,7 +77,7 @@ func TestCreate(t *testing.T) {
 }
 
 func TestUpdate(t *testing.T) {
-	TestClient = TestServer.GetTestLogin(t, loginUrl, nil)
+	TestClient = TestServer.GetTestLogin(t, rbac.LoginUrl, nil)
 	if TestClient == nil {
 		return
 	}
@@ -109,7 +109,7 @@ func TestUpdate(t *testing.T) {
 }
 
 func TestGetById(t *testing.T) {
-	TestClient = TestServer.GetTestLogin(t, loginUrl, nil)
+	TestClient = TestServer.GetTestLogin(t, rbac.LoginUrl, nil)
 	if TestClient == nil {
 		return
 	}

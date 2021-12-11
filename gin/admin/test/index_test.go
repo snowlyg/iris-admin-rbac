@@ -6,14 +6,12 @@ import (
 	"testing"
 
 	"github.com/snowlyg/helper/tests"
-	v1 "github.com/snowlyg/iris-admin-rbac/gin"
+	rbac "github.com/snowlyg/iris-admin-rbac/gin"
 	"github.com/snowlyg/iris-admin/g"
 	"github.com/snowlyg/iris-admin/server/web/web_gin/response"
 )
 
 var (
-	loginUrl = "/api/v1/public/admin/login"
-
 	url = "/api/v1/admin"
 )
 
@@ -23,7 +21,7 @@ func TestList(t *testing.T) {
 		return
 	}
 
-	TestClient = TestServer.GetTestLogin(t, loginUrl, v1.LoginResponse)
+	TestClient = TestServer.GetTestLogin(t, rbac.LoginUrl, rbac.LoginResponse)
 	if TestClient == nil {
 		return
 	}
@@ -60,7 +58,7 @@ func TestCreate(t *testing.T) {
 		return
 	}
 
-	client := TestServer.GetTestLogin(t, loginUrl, v1.LoginResponse)
+	client := TestServer.GetTestLogin(t, rbac.LoginUrl, rbac.LoginResponse)
 	if client == nil {
 		return
 	}
@@ -85,7 +83,7 @@ func TestUpdate(t *testing.T) {
 		return
 	}
 
-	client := TestServer.GetTestLogin(t, loginUrl, v1.LoginResponse)
+	client := TestServer.GetTestLogin(t, rbac.LoginUrl, rbac.LoginResponse)
 	if client == nil {
 		return
 	}
@@ -123,7 +121,7 @@ func TestGetById(t *testing.T) {
 		return
 	}
 
-	client := TestServer.GetTestLogin(t, loginUrl, v1.LoginResponse)
+	client := TestServer.GetTestLogin(t, rbac.LoginUrl, rbac.LoginResponse)
 	if client == nil {
 		return
 	}
