@@ -1,6 +1,7 @@
 package tests
 
 import (
+	"fmt"
 	"os"
 	"testing"
 
@@ -16,6 +17,7 @@ var TestClient *tests.Client
 func TestMain(m *testing.M) {
 	mysqlPwd := os.Getenv("mysqlPwd")
 	redisPwd := os.Getenv("redisPwd")
+	fmt.Println(mysqlPwd, redisPwd)
 	var uuid string
 	uuid, TestServer = web_tests.BeforeTestMainIris(mysqlPwd, redisPwd, 4, rbac.PartyFunc, rbac.SeedFunc)
 	code := m.Run()

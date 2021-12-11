@@ -14,6 +14,7 @@ var (
 )
 
 func TestUpload(t *testing.T) {
+
 	if TestServer == nil {
 		t.Errorf("测试服务初始化失败")
 	}
@@ -28,7 +29,12 @@ func TestUpload(t *testing.T) {
 		t.Error(err)
 		return
 	}
-	fh, err := os.Open("D:/admin/go/src/github.com/snowlyg/iris-admin-rbac/iris/file/tests/" + name)
+	pwd, err := os.Getwd()
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	fh, err := os.Open(pwd + "\\" + name)
 	if err != nil {
 		t.Error(err)
 		return
