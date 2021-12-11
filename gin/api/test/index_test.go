@@ -41,7 +41,7 @@ func TestList(t *testing.T) {
 	routes, _ := TestServer.GetSources()
 	for _, pageParam := range pageParams {
 		t.Run(fmt.Sprintf("路由权限测试，第%d页", pageParam.Page), func(t *testing.T) {
-			items, err := getApis(pageParam)
+			items, err := getPageApis(pageParam)
 			if err != nil {
 				t.Fatalf("获取路由权限错误")
 			}
@@ -59,7 +59,36 @@ func TestList(t *testing.T) {
 			TestClient.GET(fmt.Sprintf("%s/getList", url), pageKeys, requestParams)
 		})
 	}
+}
 
+func TestGetAll(t *testing.T) {
+	if TestServer == nil {
+		t.Error("测试服务初始化失败")
+		return
+	}
+
+	TestClient = TestServer.GetTestLogin(t, rbac.LoginUrl, rbac.LoginResponse)
+	if TestClient == nil {
+		return
+	}
+
+	routes, _ := TestServer.GetSources()
+	t.Run("路由权限测试", func(t *testing.T) {
+		items, err := getAllApis(multi.AdminAuthority)
+		if err != nil {
+			t.Fatalf("获取路由权限错误")
+		}
+		if len(routes) != len(items) {
+			t.Errorf("接口需要返回 %d 个路由，实际返回了 %d 个数据", len(routes), len(items))
+		}
+		pageKeys := tests.Responses{
+			{Key: "status", Value: http.StatusOK},
+			{Key: "message", Value: response.ResponseOkMessage},
+			{Key: "data", Value: items},
+		}
+		requestParams := map[string]interface{}{"authorityType": multi.AdminAuthority}
+		TestClient.GET(fmt.Sprintf("%s/getAll", url), pageKeys, requestParams)
+	})
 }
 
 func TestCreate(t *testing.T) {
@@ -118,7 +147,7 @@ func TestUpdate(t *testing.T) {
 		{Key: "status", Value: http.StatusOK},
 		{Key: "message", Value: response.ResponseOkMessage},
 	}
-	client.POST(fmt.Sprintf("%s/%d", url, id), pageKeys, update)
+	client.PUT(fmt.Sprintf("%s//%d", url, id), pageKeys, update)
 }
 
 func TestGetById(t *testing.T) {
@@ -169,7 +198,7 @@ func Create(client *tests.Client, data map[string]interface{}) uint {
 		},
 		},
 	}
-	return client.POST(url, pageKeys, data).GetId()
+	return client.POST(fmt.Sprintf("%s/createApi", url), pageKeys, data).GetId()
 }
 
 func Delete(client *tests.Client, id uint) {
@@ -177,10 +206,35 @@ func Delete(client *tests.Client, id uint) {
 		{Key: "status", Value: http.StatusOK},
 		{Key: "message", Value: response.ResponseOkMessage},
 	}
-	client.DELETE(fmt.Sprintf("%s/%d", url, id), pageKeys)
+	client.DELETE(fmt.Sprintf("%s/deleteApi/%d", url, id), pageKeys)
 }
 
-func getApis(pageParam PageParam) ([]tests.Responses, error) {
+func getAllApis(authorityType int) ([]tests.Responses, error) {
+	routes := []tests.Responses{}
+	apis := api.PageResponse{}
+	err := apis.Find(database.Instance(), api.AuthorityTypeScope(authorityType))
+	if err != nil {
+		return routes, err
+	}
+
+	for _, route := range apis.Item {
+		api := tests.Responses{
+			{Key: "id", Value: route.Id},
+			{Key: "path", Value: route.Path},
+			{Key: "description", Value: route.Description},
+			{Key: "apiGroup", Value: route.ApiGroup},
+			{Key: "method", Value: route.Method},
+			{Key: "authorityType", Value: route.AuthorityType},
+			{Key: "updatedAt", Value: route.UpdatedAt},
+			{Key: "createdAt", Value: route.CreatedAt},
+		}
+		routes = append(routes, api)
+	}
+
+	return routes, err
+}
+
+func getPageApis(pageParam PageParam) ([]tests.Responses, error) {
 	l := pageParam.PageLen
 	routes := make([]tests.Responses, 0, l)
 	req := &orm.Paginate{

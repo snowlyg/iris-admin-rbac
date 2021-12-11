@@ -24,7 +24,7 @@ func (s *source) GetSources() ApiCollection {
 		api := Api{BaseApi: BaseApi{
 			Path:          permRoute["path"],
 			Description:   permRoute["desc"],
-			ApiGroup:      permRoute["desc"],
+			ApiGroup:      permRoute["group"],
 			AuthorityType: s.AuthorityTypes[permRoute["path"]],
 			Method:        permRoute["method"],
 		}}

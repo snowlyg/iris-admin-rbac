@@ -12,7 +12,7 @@ func Group(group *gin.RouterGroup) {
 		apiRouter.GET("/getAll", GetAllApis)                  // 获取所有api
 		apiRouter.GET("/getApiById/:id", GetApiById)          // 获取单条Api消息
 		apiRouter.POST("/createApi", CreateApi)               // 创建Api
-		apiRouter.DELETE("/deleteApi", DeleteApi)             // 删除Api
+		apiRouter.DELETE("/deleteApi/:id", DeleteApi)         // 删除Api
 		apiRouter.PUT("/updateApi/:id", UpdateApi)            // 更新api
 		apiRouter.DELETE("/deleteApisByIds", DeleteApisByIds) // 删除选中api
 	}

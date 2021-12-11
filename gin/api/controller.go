@@ -109,12 +109,12 @@ func GetAllApis(ctx *gin.Context) {
 		return
 	}
 	apis := &PageResponse{}
-	err := orm.Find(database.Instance(), apis, AuthorityTypeScope(req.AuthorityType))
+	err := apis.Find(database.Instance(), AuthorityTypeScope(req.AuthorityType))
 	if err != nil {
-		zap_server.ZAPLOG.Error("GetAllApis()", zap.Any("err", err))
+		zap_server.ZAPLOG.Error("获取所有的Api不分页", zap.Any("orm.Find", err))
 		response.FailWithMessage(err.Error(), ctx)
 	} else {
-		response.OkWithData(apis, ctx)
+		response.OkWithData(apis.Item, ctx)
 	}
 }
 
