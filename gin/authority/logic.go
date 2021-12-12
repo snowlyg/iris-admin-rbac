@@ -20,8 +20,16 @@ func GetAdminRoleName() string {
 	return "admin"
 }
 
-func Copy(req *AuthorityCopyResponse) (uint, error) {
+func Copy(req *AuthorityCopyRequest) (uint, error) {
 	return 0, nil
+}
+
+func Update(id uint, req *Authority) error {
+	err := database.Instance().Model(&Authority{}).Scopes(AuthorityIdScope(id)).Updates(req).Error
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 // Create 添加

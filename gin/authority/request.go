@@ -7,30 +7,20 @@ import (
 	"go.uber.org/zap"
 )
 
-// type Request struct {
-// 	BaseAuthority
-// 	Perms [][]string `json:"perms"`
-// }
-
-// func (req *Request) Request(ctx *gin.Context) error {
-// 	if err := ctx.ShouldBindJSON(req); err != nil {
-// 		zap_server.ZAPLOG.Error("参数验证失败", zap.String("ReadParams()", err.Error()))
-// 		return orm.ErrParamValidate
-// 	}
-// 	return nil
-// }
-
 type ReqPaginate struct {
 	orm.Paginate
 	Name string `json:"name"`
 }
 
-type AuthorityCopyResponse struct {
-	Authority      Authority `json:"authority"`
-	OldAuthorityId uint      `json:"oldAuthorityId" binding:"required"`
+type AuthorityUpdateRequest struct {
+	BaseAuthority
 }
 
-func (req *AuthorityCopyResponse) Request(ctx *gin.Context) error {
+type AuthorityCopyRequest struct {
+	BaseAuthority
+}
+
+func (req *AuthorityCopyRequest) Request(ctx *gin.Context) error {
 	if err := ctx.ShouldBindJSON(req); err != nil {
 		zap_server.ZAPLOG.Error("参数验证失败", zap.String("ReadParams()", err.Error()))
 		return orm.ErrParamValidate

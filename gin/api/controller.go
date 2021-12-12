@@ -28,13 +28,18 @@ func CreateApi(ctx *gin.Context) {
 
 // DeleteApi 删除api
 func DeleteApi(ctx *gin.Context) {
-	var req DeleteApiReq
-	if errs := ctx.ShouldBindJSON(&req); errs != nil {
+	var reqId request.GetById
+	if errs := ctx.ShouldBindUri(&reqId); errs != nil {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
-	if err := Delete(req); err != nil {
-		zap_server.ZAPLOG.Error("DeleteApi()", zap.Any("err", err))
+	var req DeleteApiReq
+	if errs := ctx.ShouldBind(&req); errs != nil {
+		response.FailWithMessage(errs.Error(), ctx)
+		return
+	}
+	if err := Delete(reqId.Id, req); err != nil {
+		zap_server.ZAPLOG.Error("删除失败", zap.Any("Delete", err))
 		response.FailWithMessage(err.Error(), ctx)
 	} else {
 		response.Ok(ctx)
@@ -71,9 +76,9 @@ func GetApiById(ctx *gin.Context) {
 		return
 	}
 	api := &Response{}
-	err := orm.First(database.Instance(), api, scope.IdScope(req.Id))
+	err := api.First(database.Instance(), scope.IdScope(req.Id))
 	if err != nil {
-		zap_server.ZAPLOG.Error("GetApiById()", zap.Any("err", err))
+		zap_server.ZAPLOG.Error("查询权限失败", zap.Any("api.First", err))
 		response.FailWithMessage(err.Error(), ctx)
 	} else {
 		response.OkWithData(api, ctx)
@@ -92,10 +97,10 @@ func UpdateApi(ctx *gin.Context) {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
-	err := orm.Update(database.Instance(), req.Id, api)
+	err := api.Update(database.Instance(), scope.IdScope(req.Id))
 	if err != nil {
-		zap_server.ZAPLOG.Error("UpdateApi()", zap.Any("err", err))
-		response.FailWithMessage("修改失败", ctx)
+		zap_server.ZAPLOG.Error("修改失败", zap.Any("api.Update", err))
+		response.FailWithMessage(err.Error(), ctx)
 	} else {
 		response.Ok(ctx)
 	}
@@ -126,7 +131,7 @@ func DeleteApisByIds(ctx *gin.Context) {
 		return
 	}
 	if err := BatcheDelete(reqIds.Ids); err != nil {
-		zap_server.ZAPLOG.Error("BatcheDelete()", zap.Any("err", err))
+		zap_server.ZAPLOG.Error("批量删除", zap.Any("BatcheDelete", err))
 		response.FailWithMessage(err.Error(), ctx)
 	} else {
 		response.Ok(ctx)

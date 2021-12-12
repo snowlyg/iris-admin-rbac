@@ -2,6 +2,7 @@ package tests
 
 import (
 	"os"
+	"path/filepath"
 	"testing"
 
 	"github.com/snowlyg/helper/tests"
@@ -34,7 +35,8 @@ func TestUpload(t *testing.T) {
 		t.Error(err)
 		return
 	}
-	fh, err := os.Open(pwd + "\\" + name)
+	fullpath := filepath.Join(pwd, name)
+	fh, err := os.Open(fullpath)
 	if err != nil {
 		t.Error(err)
 		return

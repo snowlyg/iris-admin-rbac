@@ -22,8 +22,8 @@ func CreatenInBatches(db *gorm.DB, apis ApiCollection) error {
 	return nil
 }
 
-func Delete(req DeleteApiReq) error {
-	if err := orm.Delete(database.Instance(), &Api{}, scope.IdScope(req.Id)); err != nil {
+func Delete(id uint, req DeleteApiReq) error {
+	if err := orm.Delete(database.Instance(), &Api{}, scope.IdScope(id)); err != nil {
 		return err
 	}
 	if err := casbin.ClearCasbin(1, req.Path, req.Method); err != nil {

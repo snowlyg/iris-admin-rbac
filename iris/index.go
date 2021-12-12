@@ -1,4 +1,4 @@
-package v1
+package iris
 
 import (
 	"github.com/kataras/iris/v12"
@@ -17,14 +17,14 @@ var LoginUrl = "/api/v1/auth/login"
 var LogoutUrl = "/api/v1/users/logout"
 
 // Party v1 模块
-func Party() func(v1 iris.Party) {
-	return func(v1 iris.Party) {
-		v1.PartyFunc("/users", user.Party())
-		v1.PartyFunc("/roles", role.Party())
-		v1.PartyFunc("/perms", perm.Party())
-		v1.PartyFunc("/file", file.Party())
-		v1.PartyFunc("/auth", auth.Party())
-		v1.PartyFunc("/oplog", oplog.Party())
+func Party() func(rbac iris.Party) {
+	return func(rbac iris.Party) {
+		rbac.PartyFunc("/users", user.Party())
+		rbac.PartyFunc("/roles", role.Party())
+		rbac.PartyFunc("/perms", perm.Party())
+		rbac.PartyFunc("/file", file.Party())
+		rbac.PartyFunc("/auth", auth.Party())
+		rbac.PartyFunc("/oplog", oplog.Party())
 	}
 }
 

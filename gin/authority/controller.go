@@ -4,7 +4,6 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/snowlyg/iris-admin/server/database"
 	"github.com/snowlyg/iris-admin/server/database/orm"
-	"github.com/snowlyg/iris-admin/server/database/scope"
 	"github.com/snowlyg/iris-admin/server/web/web_gin/response"
 	"github.com/snowlyg/iris-admin/server/zap_server"
 	"github.com/snowlyg/multi"
@@ -29,7 +28,12 @@ func CreateAuthority(ctx *gin.Context) {
 
 // CopyAuthority 拷贝角色
 func CopyAuthority(ctx *gin.Context) {
-	copyInfo := &AuthorityCopyResponse{}
+	reqId := &orm.ReqId{}
+	if errs := ctx.ShouldBindUri(&reqId); errs != nil {
+		response.FailWithMessage(errs.Error(), ctx)
+		return
+	}
+	copyInfo := &AuthorityCopyRequest{}
 	if errs := copyInfo.Request(ctx); errs != nil {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
@@ -46,11 +50,11 @@ func CopyAuthority(ctx *gin.Context) {
 // DeleteAuthority 删除角色
 func DeleteAuthority(ctx *gin.Context) {
 	reqId := &orm.ReqId{}
-	if errs := ctx.ShouldBindJSON(&reqId); errs != nil {
+	if errs := ctx.ShouldBindUri(&reqId); errs != nil {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
-	err := orm.Delete(database.Instance(), &Authority{}, scope.IdScope(reqId.Id))
+	err := orm.Delete(database.Instance(), &Authority{}, AuthorityIdScope(reqId.Id))
 	if err != nil {
 		response.FailWithMessage(err.Error(), ctx)
 		return
@@ -61,19 +65,19 @@ func DeleteAuthority(ctx *gin.Context) {
 // UpdateAuthority 更新角色信息
 func UpdateAuthority(ctx *gin.Context) {
 	reqId := &orm.ReqId{}
-	if errs := reqId.Request(ctx); errs != nil {
+	if errs := ctx.ShouldBindUri(&reqId); errs != nil {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
 
-	req := &Authority{}
+	req := &AuthorityUpdateRequest{}
 	if errs := ctx.ShouldBindJSON(&req); errs != nil {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
 
 	admin := &Authority{BaseAuthority: req.BaseAuthority}
-	err := orm.Update(database.Instance(), reqId.Id, admin)
+	err := Update( reqId.Id, admin)
 	if err != nil {
 		response.FailWithMessage(err.Error(), ctx)
 		return
@@ -84,7 +88,7 @@ func UpdateAuthority(ctx *gin.Context) {
 // GetAdminAuthorityList 分页获取管理角色列表
 func GetAdminAuthorityList(ctx *gin.Context) {
 	req := &orm.Paginate{}
-	if errs := ctx.ShouldBindJSON(&req); errs != nil {
+	if errs := ctx.ShouldBind(&req); errs != nil {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
@@ -96,7 +100,7 @@ func GetAdminAuthorityList(ctx *gin.Context) {
 		return
 	}
 	response.OkWithData(response.PageResult{
-		List:     items,
+		List:     items.Item,
 		Total:    total,
 		Page:     req.Page,
 		PageSize: req.PageSize,
@@ -106,7 +110,7 @@ func GetAdminAuthorityList(ctx *gin.Context) {
 // GetTenancyAuthorityList 分页获取商户角色列表
 func GetTenancyAuthorityList(ctx *gin.Context) {
 	req := &orm.Paginate{}
-	if errs := ctx.ShouldBindJSON(&req); errs != nil {
+	if errs := ctx.ShouldBind(&req); errs != nil {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
@@ -118,7 +122,7 @@ func GetTenancyAuthorityList(ctx *gin.Context) {
 		return
 	}
 	response.OkWithData(response.PageResult{
-		List:     items,
+		List:     items.Item,
 		Total:    total,
 		Page:     req.Page,
 		PageSize: req.PageSize,
@@ -128,7 +132,7 @@ func GetTenancyAuthorityList(ctx *gin.Context) {
 // GetGeneralAuthorityList 分页获取用户角色列表
 func GetGeneralAuthorityList(ctx *gin.Context) {
 	req := &orm.Paginate{}
-	if errs := ctx.ShouldBindJSON(&req); errs != nil {
+	if errs := ctx.ShouldBind(&req); errs != nil {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
@@ -140,7 +144,7 @@ func GetGeneralAuthorityList(ctx *gin.Context) {
 		return
 	}
 	response.OkWithData(response.PageResult{
-		List:     items,
+		List:     items.Item,
 		Total:    total,
 		Page:     req.Page,
 		PageSize: req.PageSize,
@@ -150,7 +154,7 @@ func GetGeneralAuthorityList(ctx *gin.Context) {
 // GetAuthorityList 分页获取所有角色列表
 func GetAuthorityList(ctx *gin.Context) {
 	req := &orm.Paginate{}
-	if errs := ctx.ShouldBindJSON(&req); errs != nil {
+	if errs := ctx.ShouldBind(&req); errs != nil {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
@@ -162,7 +166,7 @@ func GetAuthorityList(ctx *gin.Context) {
 		return
 	}
 	response.OkWithData(response.PageResult{
-		List:     items,
+		List:     items.Item,
 		Total:    total,
 		Page:     req.Page,
 		PageSize: req.PageSize,

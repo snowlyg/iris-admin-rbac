@@ -31,12 +31,40 @@ func TestList(t *testing.T) {
 		{Key: "data", Value: tests.Responses{
 			{Key: "pageSize", Value: 10},
 			{Key: "page", Value: 1},
-			{Key: "items", Value: []tests.Responses{
+			{Key: "list", Value: []tests.Responses{
 				{
-					{Key: "id", Value: 1, Type: "ge"},
-					{Key: "name", Value: "SuperAdmin"},
-					{Key: "displayName", Value: "超级管理员"},
-					{Key: "description", Value: "超级管理员"},
+					{Key: "authorityId", Value: 996, Type: "ge"},
+					{Key: "authorityName", Value: "设备用户"},
+					{Key: "authorityType", Value: multi.GeneralAuthority},
+					{Key: "parentId", Value: 0},
+					{Key: "defaultRouter", Value: "dashboard"},
+					{Key: "updatedAt", Value: "", Type: "notempty"},
+					{Key: "createdAt", Value: "", Type: "notempty"},
+				},
+				{
+					{Key: "authorityId", Value: 997, Type: "ge"},
+					{Key: "authorityName", Value: "小程序用户"},
+					{Key: "authorityType", Value: multi.GeneralAuthority},
+					{Key: "parentId", Value: 0},
+					{Key: "defaultRouter", Value: "dashboard"},
+					{Key: "updatedAt", Value: "", Type: "notempty"},
+					{Key: "createdAt", Value: "", Type: "notempty"},
+				},
+				{
+					{Key: "authorityId", Value: 998, Type: "ge"},
+					{Key: "authorityName", Value: "商户管理员"},
+					{Key: "authorityType", Value: multi.TenancyAuthority},
+					{Key: "parentId", Value: 0},
+					{Key: "defaultRouter", Value: "dashboard"},
+					{Key: "updatedAt", Value: "", Type: "notempty"},
+					{Key: "createdAt", Value: "", Type: "notempty"},
+				},
+				{
+					{Key: "authorityId", Value: 999, Type: "ge"},
+					{Key: "authorityName", Value: "超级管理员"},
+					{Key: "authorityType", Value: multi.AdminAuthority},
+					{Key: "parentId", Value: 0},
+					{Key: "defaultRouter", Value: "dashboard"},
 					{Key: "updatedAt", Value: "", Type: "notempty"},
 					{Key: "createdAt", Value: "", Type: "notempty"},
 				},
@@ -44,7 +72,115 @@ func TestList(t *testing.T) {
 			{Key: "total", Value: 0, Type: "ge"},
 		}},
 	}
-	TestClient.GET(url, pageKeys, tests.RequestParams)
+	TestClient.GET(fmt.Sprintf("%s/getAuthorityList", url), pageKeys, tests.RequestParams)
+}
+
+func TestGetAdminAuthorityList(t *testing.T) {
+	if TestServer == nil {
+		t.Error("测试服务初始化失败")
+		return
+	}
+
+	TestClient = TestServer.GetTestLogin(t, rbac.LoginUrl, rbac.LoginResponse)
+	if TestClient == nil {
+		return
+	}
+	pageKeys := tests.Responses{
+		{Key: "status", Value: http.StatusOK},
+		{Key: "message", Value: response.ResponseOkMessage},
+		{Key: "data", Value: tests.Responses{
+			{Key: "pageSize", Value: 10},
+			{Key: "page", Value: 1},
+			{Key: "list", Value: []tests.Responses{
+				{
+					{Key: "authorityId", Value: 999, Type: "ge"},
+					{Key: "authorityName", Value: "超级管理员"},
+					{Key: "authorityType", Value: multi.AdminAuthority},
+					{Key: "parentId", Value: 0},
+					{Key: "defaultRouter", Value: "dashboard"},
+					{Key: "updatedAt", Value: "", Type: "notempty"},
+					{Key: "createdAt", Value: "", Type: "notempty"},
+				},
+			}},
+			{Key: "total", Value: 0, Type: "ge"},
+		}},
+	}
+	TestClient.GET(fmt.Sprintf("%s/getAdminAuthorityList", url), pageKeys, tests.RequestParams)
+}
+
+func TestGetTenancyAuthorityList(t *testing.T) {
+	if TestServer == nil {
+		t.Error("测试服务初始化失败")
+		return
+	}
+
+	TestClient = TestServer.GetTestLogin(t, rbac.LoginUrl, rbac.LoginResponse)
+	if TestClient == nil {
+		return
+	}
+	pageKeys := tests.Responses{
+		{Key: "status", Value: http.StatusOK},
+		{Key: "message", Value: response.ResponseOkMessage},
+		{Key: "data", Value: tests.Responses{
+			{Key: "pageSize", Value: 10},
+			{Key: "page", Value: 1},
+			{Key: "list", Value: []tests.Responses{
+				{
+					{Key: "authorityId", Value: 998, Type: "ge"},
+					{Key: "authorityName", Value: "商户管理员"},
+					{Key: "authorityType", Value: multi.TenancyAuthority},
+					{Key: "parentId", Value: 0},
+					{Key: "defaultRouter", Value: "dashboard"},
+					{Key: "updatedAt", Value: "", Type: "notempty"},
+					{Key: "createdAt", Value: "", Type: "notempty"},
+				},
+			}},
+			{Key: "total", Value: 0, Type: "ge"},
+		}},
+	}
+	TestClient.GET(fmt.Sprintf("%s/getTenancyAuthorityList", url), pageKeys, tests.RequestParams)
+}
+
+func TestGetGeneralAuthorityList(t *testing.T) {
+	if TestServer == nil {
+		t.Error("测试服务初始化失败")
+		return
+	}
+
+	TestClient = TestServer.GetTestLogin(t, rbac.LoginUrl, rbac.LoginResponse)
+	if TestClient == nil {
+		return
+	}
+	pageKeys := tests.Responses{
+		{Key: "status", Value: http.StatusOK},
+		{Key: "message", Value: response.ResponseOkMessage},
+		{Key: "data", Value: tests.Responses{
+			{Key: "pageSize", Value: 10},
+			{Key: "page", Value: 1},
+			{Key: "list", Value: []tests.Responses{
+				{
+					{Key: "authorityId", Value: 996, Type: "ge"},
+					{Key: "authorityName", Value: "设备用户"},
+					{Key: "authorityType", Value: multi.GeneralAuthority},
+					{Key: "parentId", Value: 0},
+					{Key: "defaultRouter", Value: "dashboard"},
+					{Key: "updatedAt", Value: "", Type: "notempty"},
+					{Key: "createdAt", Value: "", Type: "notempty"},
+				},
+				{
+					{Key: "authorityId", Value: 997, Type: "ge"},
+					{Key: "authorityName", Value: "小程序用户"},
+					{Key: "authorityType", Value: multi.GeneralAuthority},
+					{Key: "parentId", Value: 0},
+					{Key: "defaultRouter", Value: "dashboard"},
+					{Key: "updatedAt", Value: "", Type: "notempty"},
+					{Key: "createdAt", Value: "", Type: "notempty"},
+				},
+			}},
+			{Key: "total", Value: 0, Type: "ge"},
+		}},
+	}
+	TestClient.GET(fmt.Sprintf("%s/getGeneralAuthorityList", url), pageKeys, tests.RequestParams)
 }
 
 func TestCreate(t *testing.T) {
@@ -58,9 +194,9 @@ func TestCreate(t *testing.T) {
 		return
 	}
 	data := map[string]interface{}{
-		"authorityId":   "999",
-		"authorityName": "测试角色",
-		"parentId":      "0",
+		"authorityId":   1,
+		"authorityName": "test_authorityName_for_create",
+		"parentId":      0,
 		"authorityType": multi.AdminAuthority,
 	}
 	id := Create(client, data)
@@ -81,9 +217,9 @@ func TestUpdate(t *testing.T) {
 		return
 	}
 	data := map[string]interface{}{
-		"authorityId":   "999",
-		"authorityName": "测试角色",
-		"parentId":      "0",
+		"authorityId":   2,
+		"authorityName": "test_authorityName_for_update",
+		"parentId":      0,
 		"authorityType": multi.AdminAuthority,
 	}
 	id := Create(client, data)
@@ -93,9 +229,8 @@ func TestUpdate(t *testing.T) {
 	defer Delete(client, id)
 
 	update := map[string]interface{}{
-		"authorityId":   "999",
-		"authorityName": "测试角色",
-		"parentId":      "0",
+		"authorityName": "test_authorityName_for_update1",
+		"parentId":      0,
 		"authorityType": multi.AdminAuthority,
 	}
 
@@ -103,10 +238,9 @@ func TestUpdate(t *testing.T) {
 		{Key: "status", Value: http.StatusOK},
 		{Key: "message", Value: response.ResponseOkMessage},
 	}
-	client.POST(fmt.Sprintf("%s/%d", url, id), pageKeys, update)
+	client.PUT(fmt.Sprintf("%s/updateAuthority/%d", url, id), pageKeys, update)
 }
-
-func TestGetById(t *testing.T) {
+func TestCopyAuthority(t *testing.T) {
 	if TestServer == nil {
 		t.Error("测试服务初始化失败")
 		return
@@ -117,32 +251,22 @@ func TestGetById(t *testing.T) {
 		return
 	}
 	data := map[string]interface{}{
-		"authorityId":   "999",
-		"authorityName": "测试角色",
-		"parentId":      "0",
+		"authorityId":   2,
+		"authorityName": "test_authorityName_for_update",
+		"parentId":      0,
 		"authorityType": multi.AdminAuthority,
 	}
 	id := Create(client, data)
 	if id == 0 {
-		t.Fatalf("测试添加失败 id=%d", id)
+		t.Fatalf("测试添加用户失败 id=%d", id)
 	}
 	defer Delete(client, id)
 
 	pageKeys := tests.Responses{
 		{Key: "status", Value: http.StatusOK},
 		{Key: "message", Value: response.ResponseOkMessage},
-		{Key: "data", Value: tests.Responses{
-			{Key: "id", Value: 1, Type: "ge"},
-			{Key: "name", Value: data["name"].(string)},
-			{Key: "displayName", Value: data["displayName"].(string)},
-			{Key: "description", Value: data["description"].(string)},
-			{Key: "updatedAt", Value: "", Type: "notempty"},
-			{Key: "createdAt", Value: "", Type: "notempty"},
-			{Key: "createdAt", Value: "", Type: "notempty"},
-		},
-		},
 	}
-	client.GET(fmt.Sprintf("%s/%d", url, id), pageKeys)
+	client.GET(fmt.Sprintf("%s/copyAuthority/%d", url, id), pageKeys)
 }
 
 func Create(client *tests.Client, data map[string]interface{}) uint {
@@ -154,7 +278,7 @@ func Create(client *tests.Client, data map[string]interface{}) uint {
 		},
 		},
 	}
-	return client.POST(url, pageKeys, data).GetId()
+	return client.POST(fmt.Sprintf("%s/createAuthority", url), pageKeys, data).GetId()
 }
 
 func Delete(client *tests.Client, id uint) {
@@ -162,5 +286,5 @@ func Delete(client *tests.Client, id uint) {
 		{Key: "status", Value: http.StatusOK},
 		{Key: "message", Value: response.ResponseOkMessage},
 	}
-	client.DELETE(fmt.Sprintf("%s/%d", url, id), pageKeys)
+	client.DELETE(fmt.Sprintf("%s/deleteAuthority/%d", url, id), pageKeys)
 }

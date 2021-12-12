@@ -102,16 +102,17 @@ func TestCreate(t *testing.T) {
 		return
 	}
 	data := map[string]interface{}{
-		"authorityId":   "999",
-		"authorityName": "测试角色",
-		"parentId":      "0",
+		"path":          "getbyid_test_route_name",
+		"apiGroup":      "apiGroup",
+		"description":   "测试描述信息",
+		"method":        "GET",
 		"authorityType": multi.AdminAuthority,
 	}
 	id := Create(client, data)
 	if id == 0 {
 		t.Fatalf("测试添加用户失败 id=%d", id)
 	}
-	defer Delete(client, id)
+	defer Delete(client, id, data)
 }
 
 func TestUpdate(t *testing.T) {
@@ -125,29 +126,31 @@ func TestUpdate(t *testing.T) {
 		return
 	}
 	data := map[string]interface{}{
-		"name":        "update_test_route_name",
-		"displayName": "测试描述信息",
-		"description": "测试描述信息",
-		"act":         "GET",
+		"path":          "getbyid_test_route_name",
+		"apiGroup":      "apiGroup",
+		"description":   "测试描述信息",
+		"method":        "GET",
+		"authorityType": multi.AdminAuthority,
 	}
 	id := Create(client, data)
 	if id == 0 {
 		t.Fatalf("测试添加用户失败 id=%d", id)
 	}
-	defer Delete(client, id)
+	defer Delete(client, id, data)
 
 	update := map[string]interface{}{
-		"name":        "update_test_route_name",
-		"displayName": "更新测试描述信息",
-		"description": "更新测试描述信息",
-		"act":         "POST",
+		"path":          "getbyid_test_route_name",
+		"apiGroup":      "apiGroup",
+		"description":   "测试描述信息",
+		"method":        "GET",
+		"authorityType": multi.AdminAuthority,
 	}
 
 	pageKeys := tests.Responses{
 		{Key: "status", Value: http.StatusOK},
 		{Key: "message", Value: response.ResponseOkMessage},
 	}
-	client.PUT(fmt.Sprintf("%s//%d", url, id), pageKeys, update)
+	client.PUT(fmt.Sprintf("%s/updateApi/%d", url, id), pageKeys, update)
 }
 
 func TestGetById(t *testing.T) {
@@ -161,32 +164,34 @@ func TestGetById(t *testing.T) {
 		return
 	}
 	data := map[string]interface{}{
-		"name":        "getbyid_test_route_name",
-		"displayName": "测试描述信息",
-		"description": "测试描述信息",
-		"act":         "GET",
+		"path":          "getbyid_test_route_name",
+		"apiGroup":      "apiGroup",
+		"description":   "测试描述信息",
+		"method":        "GET",
+		"authorityType": multi.AdminAuthority,
 	}
 	id := Create(client, data)
 	if id == 0 {
 		t.Fatalf("测试添加用户失败 id=%d", id)
 	}
-	defer Delete(client, id)
+	defer Delete(client, id, data)
 
 	pageKeys := tests.Responses{
 		{Key: "status", Value: http.StatusOK},
 		{Key: "message", Value: response.ResponseOkMessage},
 		{Key: "data", Value: tests.Responses{
 			{Key: "id", Value: 1, Type: "ge"},
-			{Key: "name", Value: data["name"].(string)},
-			{Key: "displayName", Value: data["displayName"].(string)},
+			{Key: "path", Value: data["path"].(string)},
+			{Key: "apiGroup", Value: data["apiGroup"].(string)},
 			{Key: "description", Value: data["description"].(string)},
-			{Key: "act", Value: data["act"].(string)},
+			{Key: "method", Value: data["method"].(string)},
+			{Key: "authorityType", Value: data["authorityType"].(int)},
 			{Key: "updatedAt", Value: "", Type: "notempty"},
 			{Key: "createdAt", Value: "", Type: "notempty"},
 		},
 		},
 	}
-	client.GET(fmt.Sprintf("%s/%d", url, id), pageKeys)
+	client.GET(fmt.Sprintf("%s/getApiById/%d", url, id), pageKeys)
 }
 
 func Create(client *tests.Client, data map[string]interface{}) uint {
@@ -201,12 +206,12 @@ func Create(client *tests.Client, data map[string]interface{}) uint {
 	return client.POST(fmt.Sprintf("%s/createApi", url), pageKeys, data).GetId()
 }
 
-func Delete(client *tests.Client, id uint) {
+func Delete(client *tests.Client, id uint, data map[string]interface{}) {
 	pageKeys := tests.Responses{
 		{Key: "status", Value: http.StatusOK},
 		{Key: "message", Value: response.ResponseOkMessage},
 	}
-	client.DELETE(fmt.Sprintf("%s/deleteApi/%d", url, id), pageKeys)
+	client.DELETE(fmt.Sprintf("%s/deleteApi/%d", url, id), pageKeys, data)
 }
 
 func getAllApis(authorityType int) ([]tests.Responses, error) {

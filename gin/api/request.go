@@ -5,9 +5,8 @@ import (
 )
 
 type DeleteApiReq struct {
-	Id     uint   `json:"id" form:"id" binding:"required,gt=0"`
-	Path   string `json:"path" binding:"required"`
-	Method string `json:"method" binding:"required"`
+	Path   string `json:"path" form:"path" binding:"required"`
+	Method string `json:"method" form:"method" binding:"required"`
 }
 
 type AuthorityType struct {

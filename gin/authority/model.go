@@ -26,7 +26,7 @@ type Authority struct {
 type BaseAuthority struct {
 	AuthorityName string `json:"authorityName" gorm:"comment:角色名" binding:"required"`
 	AuthorityType int    `json:"authorityType" gorm:"comment:角色类型"`
-	ParentId      uint   `json:"parentId" gorm:"comment:父角色ID" binding:"required"`
+	ParentId      uint   `json:"parentId" gorm:"default:0;comment:父角色ID"`
 	DefaultRouter string `json:"defaultRouter" gorm:"comment:默认菜单;default:dashboard"`
 }
 
@@ -57,7 +57,7 @@ func (item *Authority) Create(db *gorm.DB) (uint, error) {
 }
 
 // Update 更新
-func (item *Authority) Update(db *gorm.DB, id uint, scopes ...func(db *gorm.DB) *gorm.DB) error {
+func (item *Authority) Update(db *gorm.DB, scopes ...func(db *gorm.DB) *gorm.DB) error {
 	err := db.Model(item).Scopes(scopes...).Updates(item).Error
 	if err != nil {
 		zap_server.ZAPLOG.Error("更新失败", zap.String("(item *Authority) Update() ", err.Error()))

@@ -15,12 +15,11 @@ var TestServer *web_gin.WebServer
 var TestClient *tests.Client
 
 func TestMain(m *testing.M) {
-	mysqlPwd := os.Getenv("mysqlPwd")
-	redisPwd := os.Getenv("redisPwd")
+
 	var uuid string
-	uuid, TestServer = web_tests.BeforeTestMainGin(mysqlPwd, redisPwd, 2, rbac.PartyFunc, rbac.SeedFunc)
+	uuid, TestServer = web_tests.BeforeTestMainGin(2, rbac.PartyFunc, rbac.SeedFunc)
 	code := m.Run()
-	web_tests.AfterTestMain(uuid)
+	web_tests.AfterTestMain(uuid, true)
 
 	os.Exit(code)
 }

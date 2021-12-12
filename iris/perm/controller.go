@@ -2,6 +2,7 @@ package perm
 
 import (
 	"github.com/kataras/iris/v12"
+	"github.com/snowlyg/helper/str"
 	"github.com/snowlyg/iris-admin/server/database"
 	"github.com/snowlyg/iris-admin/server/database/orm"
 	"github.com/snowlyg/iris-admin/server/database/scope"
@@ -30,6 +31,10 @@ func CreatePerm(ctx iris.Context) {
 		ctx.JSON(orm.Response{Code: orm.ParamErr.Code, Data: nil, Msg: orm.ParamErr.Msg})
 		return
 	}
+	if !CheckNameAndAct(NameScope(req.Name), ActScope(req.Act)) {
+		ctx.JSON(orm.Response{Code: orm.ParamErr.Code, Data: nil, Msg: str.Join("权限[", req.Name, "-", req.Act, "]已存在")})
+		return
+	}
 	perm := &Permission{BasePermission: req.BasePermission}
 	id, err := orm.Create(database.Instance(), perm)
 	if err != nil {
@@ -51,7 +56,10 @@ func UpdatePerm(ctx iris.Context) {
 		ctx.JSON(orm.Response{Code: orm.ParamErr.Code, Data: nil, Msg: orm.ParamErr.Msg})
 		return
 	}
-
+	if !CheckNameAndAct(NameScope(req.Name), ActScope(req.Act), scope.NeIdScope(reqId.Id)) {
+		ctx.JSON(orm.Response{Code: orm.ParamErr.Code, Data: nil, Msg: str.Join("权限[", req.Name, "-", req.Act, "]已存在")})
+		return
+	}
 	perm := &Permission{BasePermission: req.BasePermission}
 	err := orm.Update(database.Instance(), reqId.Id, perm)
 	if err != nil {
