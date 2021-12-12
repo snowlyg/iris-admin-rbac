@@ -48,7 +48,7 @@ func transform(admins ...*Response) {
 	}
 	for _, admin := range admins {
 		for _, role := range roles {
-			sRoleId := strconv.FormatInt(int64(role.AuthorityId), 10)
+			sRoleId := strconv.FormatInt(int64(role.Id), 10)
 			if arr.InArrayS(userRoleIds[admin.Id], sRoleId) {
 				admin.Authorities = append(admin.Authorities, role.AuthorityName)
 			}
@@ -73,7 +73,7 @@ func FindPasswordByUserName(db *gorm.DB, username string, ids ...uint) (*LoginRe
 	if len(ids) == 1 {
 		db.Where("id != ?", ids[0])
 	}
-	err := db.First(&admin).Error
+	err := db.First(admin).Error
 	if err != nil {
 		zap_server.ZAPLOG.Error("根据用户名查询用户错误", zap.String("用户名:", username), zap.Uints("ids:", ids), zap.String("错误:", err.Error()))
 		return admin, err

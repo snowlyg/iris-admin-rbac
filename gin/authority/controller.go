@@ -4,6 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/snowlyg/iris-admin/server/database"
 	"github.com/snowlyg/iris-admin/server/database/orm"
+	"github.com/snowlyg/iris-admin/server/database/scope"
 	"github.com/snowlyg/iris-admin/server/web/web_gin/response"
 	"github.com/snowlyg/iris-admin/server/zap_server"
 	"github.com/snowlyg/multi"
@@ -12,8 +13,8 @@ import (
 
 // CreateAuthority 创建角色
 func CreateAuthority(ctx *gin.Context) {
-	req := &Authority{}
-	if errs := ctx.ShouldBindJSON(&req); errs != nil {
+	req := &AuthorityRequest{}
+	if errs := req.Request(ctx); errs != nil {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
@@ -33,33 +34,19 @@ func CopyAuthority(ctx *gin.Context) {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
-	copyInfo := &AuthorityCopyRequest{}
-	if errs := copyInfo.Request(ctx); errs != nil {
+
+	req := &AuthorityRequest{}
+	if errs := req.Request(ctx); errs != nil {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
 
-	if id, err := Copy(copyInfo); err != nil {
+	if id, err := Copy(reqId.Id, req); err != nil {
 		zap_server.ZAPLOG.Error("拷贝失败!", zap.Any("err", err))
 		response.FailWithMessage(err.Error(), ctx)
 	} else {
 		response.OkWithData(gin.H{"id": id}, ctx)
 	}
-}
-
-// DeleteAuthority 删除角色
-func DeleteAuthority(ctx *gin.Context) {
-	reqId := &orm.ReqId{}
-	if errs := ctx.ShouldBindUri(&reqId); errs != nil {
-		response.FailWithMessage(errs.Error(), ctx)
-		return
-	}
-	err := orm.Delete(database.Instance(), &Authority{}, AuthorityIdScope(reqId.Id))
-	if err != nil {
-		response.FailWithMessage(err.Error(), ctx)
-		return
-	}
-	response.Ok(ctx)
 }
 
 // UpdateAuthority 更新角色信息
@@ -70,14 +57,14 @@ func UpdateAuthority(ctx *gin.Context) {
 		return
 	}
 
-	req := &AuthorityUpdateRequest{}
-	if errs := ctx.ShouldBindJSON(&req); errs != nil {
+	req := &AuthorityRequest{}
+	if errs := req.Request(ctx); errs != nil {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
 
 	admin := &Authority{BaseAuthority: req.BaseAuthority}
-	err := Update( reqId.Id, admin)
+	err := Update(reqId.Id, admin)
 	if err != nil {
 		response.FailWithMessage(err.Error(), ctx)
 		return
@@ -171,4 +158,19 @@ func GetAuthorityList(ctx *gin.Context) {
 		Page:     req.Page,
 		PageSize: req.PageSize,
 	}, ctx)
+}
+
+// DeleteAuthority 删除角色
+func DeleteAuthority(ctx *gin.Context) {
+	reqId := &orm.ReqId{}
+	if errs := ctx.ShouldBindUri(&reqId); errs != nil {
+		response.FailWithMessage(errs.Error(), ctx)
+		return
+	}
+	err := orm.Delete(database.Instance(), &Authority{}, scope.IdScope(reqId.Id))
+	if err != nil {
+		response.FailWithMessage(err.Error(), ctx)
+		return
+	}
+	response.Ok(ctx)
 }

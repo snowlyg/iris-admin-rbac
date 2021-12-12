@@ -1,8 +1,6 @@
 package authority
 
 import (
-	"time"
-
 	"github.com/snowlyg/iris-admin/server/zap_server"
 	"go.uber.org/zap"
 	"gorm.io/gorm"
@@ -11,12 +9,7 @@ import (
 type AuthorityCollection []Authority
 
 type Authority struct {
-	CreatedAt time.Time  `json:"createdAt"`
-	UpdatedAt time.Time  `json:"updatedAt"`
-	DeletedAt *time.Time `json:"-" sql:"index"`
-
-	AuthorityId uint `json:"authorityId" gorm:"not null;primary_key;type:varchar(90)" binding:"required"`
-
+	gorm.Model
 	BaseAuthority
 	Menus    []BaseMenu  `json:"menus" gorm:"many2many:authority_menus;"`
 	Children []Authority `json:"children" gorm:"-"`
@@ -51,9 +44,9 @@ func (item *Authority) Create(db *gorm.DB) (uint, error) {
 	err := db.Model(item).Create(item).Error
 	if err != nil {
 		zap_server.ZAPLOG.Error("添加失败", zap.String("(item *Authority) Create()", err.Error()))
-		return item.AuthorityId, err
+		return item.ID, err
 	}
-	return item.AuthorityId, nil
+	return item.ID, nil
 }
 
 // Update 更新

@@ -9,11 +9,3 @@ func AuthorityTypeScope(authorityType int) func(db *gorm.DB) *gorm.DB {
 		return db.Where("authority_type = ?", authorityType)
 	}
 }
-
-// AuthorityIdScope 根据 name 查询
-// - authorityId 权限id
-func AuthorityIdScope(authorityId uint) func(db *gorm.DB) *gorm.DB {
-	return func(db *gorm.DB) *gorm.DB {
-		return db.Where("authority_id = ?", authorityId)
-	}
-}

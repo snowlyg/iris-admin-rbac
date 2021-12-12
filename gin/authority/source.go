@@ -5,6 +5,7 @@ import (
 	"github.com/snowlyg/iris-admin-rbac/gin/api"
 	"github.com/snowlyg/iris-admin/g"
 	"github.com/snowlyg/iris-admin/server/database"
+	"github.com/snowlyg/iris-admin/server/database/orm"
 	"github.com/snowlyg/multi"
 	"gorm.io/gorm"
 )
@@ -26,8 +27,8 @@ func GetSources() ([]*Authority, error) {
 				ParentId:      0,
 				DefaultRouter: "",
 			},
-			AuthorityId: g.AdminAuthorityId,
-			Perms:       apis[multi.AdminAuthority],
+			Model: gorm.Model{ID: g.AdminAuthorityId},
+			Perms: apis[multi.AdminAuthority],
 		},
 		{
 			BaseAuthority: BaseAuthority{
@@ -36,8 +37,8 @@ func GetSources() ([]*Authority, error) {
 				ParentId:      0,
 				DefaultRouter: "",
 			},
-			AuthorityId: g.TenancyAuthorityId,
-			Perms:       apis[multi.TenancyAuthority],
+			Model: gorm.Model{ID: g.TenancyAuthorityId},
+			Perms: apis[multi.TenancyAuthority],
 		},
 		{
 			BaseAuthority: BaseAuthority{
@@ -46,8 +47,8 @@ func GetSources() ([]*Authority, error) {
 				ParentId:      0,
 				DefaultRouter: "",
 			},
-			AuthorityId: g.LiteAuthorityId,
-			Perms:       apis[multi.GeneralAuthority],
+			Model: gorm.Model{ID: g.LiteAuthorityId},
+			Perms: apis[multi.GeneralAuthority],
 		},
 		{
 			BaseAuthority: BaseAuthority{
@@ -56,8 +57,8 @@ func GetSources() ([]*Authority, error) {
 				ParentId:      0,
 				DefaultRouter: "",
 			},
-			AuthorityId: g.DeviceAuthorityId,
-			Perms:       apis[multi.GeneralAuthority],
+			Model: gorm.Model{ID: g.DeviceAuthorityId},
+			Perms: apis[multi.GeneralAuthority],
 		},
 	}
 	return sources, nil
@@ -74,7 +75,12 @@ func (s *source) Init() error {
 			return err
 		}
 		for _, source := range sources {
-			if _, err := Create(source); err != nil { // 遇到错误时回滚事务
+			id, err := orm.Create(database.Instance(), source)
+			if err != nil {
+				return err
+			}
+			err = AddPermForRole(id, source.Perms)
+			if err != nil {
 				return err
 			}
 		}

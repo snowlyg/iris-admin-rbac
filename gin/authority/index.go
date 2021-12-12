@@ -15,7 +15,7 @@ func Group(group *gin.RouterGroup) {
 		authRouter.GET("/getGeneralAuthorityList", GetGeneralAuthorityList) // 获取普通用户角色列表
 		authRouter.POST("/createAuthority", CreateAuthority)                // 创建角色
 		authRouter.PUT("/updateAuthority/:id", UpdateAuthority)             // 更新角色
-		authRouter.GET("/copyAuthority:id", CopyAuthority)                  // 复制
+		authRouter.POST("/copyAuthority/:id", CopyAuthority)                 // 复制
 		authRouter.DELETE("/deleteAuthority/:id", DeleteAuthority)          // 删除角色
 	}
 }

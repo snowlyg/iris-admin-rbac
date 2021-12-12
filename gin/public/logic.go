@@ -32,16 +32,6 @@ func GetAccessToken(req *LoginRequest) (*LoginResponse, error) {
 		return nil, ErrUserNameOrPassword
 	}
 
-	// claims := &multi.CustomClaims{
-	// 	ID:            strconv.FormatUint(uint64(admin.Id), 10),
-	// 	Username:      req.Username,
-	// 	AuthorityId:   "",
-	// 	AuthorityType: req.AuthorityType,
-	// 	LoginType:     multi.LoginTypeWeb,
-	// 	AuthType:      multi.AuthPwd,
-	// 	CreationDate:  time.Now().Local().Unix(),
-	// 	ExpiresIn:     multi.RedisSessionTimeoutWeb.Milliseconds(),
-	// }
 	claims := multi.New(&multi.Multi{
 		Id:            admin.Id,
 		Username:      req.Username,

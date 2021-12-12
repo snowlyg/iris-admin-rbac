@@ -8,6 +8,7 @@ import (
 	"github.com/snowlyg/iris-admin/server/casbin"
 	"github.com/snowlyg/iris-admin/server/database"
 	"github.com/snowlyg/iris-admin/server/database/orm"
+	"github.com/snowlyg/iris-admin/server/database/scope"
 	"github.com/snowlyg/iris-admin/server/zap_server"
 	"go.uber.org/zap"
 	"gorm.io/gorm"
@@ -20,12 +21,34 @@ func GetAdminRoleName() string {
 	return "admin"
 }
 
-func Copy(req *AuthorityCopyRequest) (uint, error) {
-	return 0, nil
+// Copy 复制
+func Copy(id uint, req *AuthorityRequest) (uint, error) {
+	oldAuthority := &Response{}
+	err := oldAuthority.First(database.Instance(), scope.IdScope(id))
+	if err != nil {
+		return 0, err
+	}
+
+	if _, err := FindByName(AuthorityNameScope(req.AuthorityName)); !errors.Is(err, gorm.ErrRecordNotFound) {
+		return 0, ErrRoleNameInvalide
+	}
+	authority := &Authority{BaseAuthority: req.BaseAuthority}
+	authority.ParentId = oldAuthority.ParentId
+	authority.AuthorityType = oldAuthority.AuthorityType
+	authority.DefaultRouter = oldAuthority.DefaultRouter
+	id, err = orm.Create(database.Instance(), authority)
+	if err != nil {
+		return 0, err
+	}
+	err = AddPermForRole(id, authority.Perms)
+	if err != nil {
+		return 0, err
+	}
+	return id, nil
 }
 
 func Update(id uint, req *Authority) error {
-	err := database.Instance().Model(&Authority{}).Scopes(AuthorityIdScope(id)).Updates(req).Error
+	err := database.Instance().Model(&Authority{}).Scopes(scope.IdScope(id)).Updates(req).Error
 	if err != nil {
 		return err
 	}
@@ -33,15 +56,16 @@ func Update(id uint, req *Authority) error {
 }
 
 // Create 添加
-func Create(req *Authority) (uint, error) {
+func Create(req *AuthorityRequest) (uint, error) {
 	if _, err := FindByName(AuthorityNameScope(req.AuthorityName)); !errors.Is(err, gorm.ErrRecordNotFound) {
 		return 0, ErrRoleNameInvalide
 	}
-	id, err := orm.Create(database.Instance(), req)
+	authority := &Authority{BaseAuthority: req.BaseAuthority}
+	id, err := orm.Create(database.Instance(), authority)
 	if err != nil {
 		return 0, err
 	}
-	err = AddPermForRole(id, req.Perms)
+	err = AddPermForRole(id, authority.Perms)
 	if err != nil {
 		return 0, err
 	}
@@ -60,7 +84,7 @@ func FindByName(scopes ...func(db *gorm.DB) *gorm.DB) (*Response, error) {
 
 func IsAdminRole(id uint) error {
 	authority := &Response{}
-	err := authority.First(database.Instance(), AuthorityIdScope(id))
+	err := authority.First(database.Instance(), scope.IdScope(id))
 	if err != nil {
 		return err
 	}
@@ -72,7 +96,7 @@ func IsAdminRole(id uint) error {
 
 func FindInId(db *gorm.DB, ids []uint) ([]*Response, error) {
 	authorities := PageResponse{}
-	err := authorities.Find(database.Instance(), InAuthorityIdScope(ids))
+	err := authorities.Find(database.Instance(), scope.InIdsScope(ids))
 	if err != nil {
 		zap_server.ZAPLOG.Error("通过ids查询角色错误", zap.String("错误:", err.Error()))
 		return nil, err

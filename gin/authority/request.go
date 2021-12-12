@@ -12,15 +12,11 @@ type ReqPaginate struct {
 	Name string `json:"name"`
 }
 
-type AuthorityUpdateRequest struct {
+type AuthorityRequest struct {
 	BaseAuthority
 }
 
-type AuthorityCopyRequest struct {
-	BaseAuthority
-}
-
-func (req *AuthorityCopyRequest) Request(ctx *gin.Context) error {
+func (req *AuthorityRequest) Request(ctx *gin.Context) error {
 	if err := ctx.ShouldBindJSON(req); err != nil {
 		zap_server.ZAPLOG.Error("参数验证失败", zap.String("ReadParams()", err.Error()))
 		return orm.ErrParamValidate
