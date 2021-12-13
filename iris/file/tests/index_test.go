@@ -15,7 +15,6 @@ var (
 )
 
 func TestUpload(t *testing.T) {
-
 	if TestServer == nil {
 		t.Errorf("测试服务初始化失败")
 	}

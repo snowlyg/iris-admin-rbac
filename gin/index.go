@@ -12,9 +12,7 @@ import (
 	"github.com/snowlyg/iris-admin/migration"
 	"github.com/snowlyg/iris-admin/server/operation"
 	"github.com/snowlyg/iris-admin/server/web/web_gin"
-	"github.com/snowlyg/iris-admin/server/zap_server"
 	"github.com/snowlyg/multi"
-	"go.uber.org/zap"
 )
 
 // Party v1 模块
@@ -48,11 +46,8 @@ var PartyFunc = func(wi *web_gin.WebServer) {
 
 //  填充数据
 var SeedFunc = func(wi *web_gin.WebServer, mc *migration.MigrationCmd) {
-	mc.AddModel(&api.Api{}, &authority.Authority{}, &admin.Admin{}, &operation.Oplog{})
-	routes, err := wi.GetSources()
-	if err != nil {
-		zap_server.ZAPLOG.Error("获取路由数据失败", zap.Any("wi.GetSources", err))
-	}
+	mc.AddMigration(api.GetMigration(), authority.GetMigration(), admin.GetMigration(), operation.GetMigration())
+	routes, _ := wi.GetSources()
 	// 权鉴模块全部为管理员权限
 	authorityTypes := map[string]int{}
 	for _, route := range routes {

@@ -38,8 +38,7 @@ var PartyFunc = func(wi *web_iris.WebServer) {
 
 //  填充数据
 var SeedFunc = func(wi *web_iris.WebServer, mc *migration.MigrationCmd) {
-	// 添加 v1 内置模块数据表和数据
-	mc.AddModel(&perm.Permission{}, &role.Role{}, &user.User{}, &operation.Oplog{})
+	mc.AddMigration(perm.GetMigration(), role.GetMigration(), user.GetMigration(), operation.GetMigration())
 	routes, _ := wi.GetSources()
 	// notice : 注意模块顺序
 	mc.AddSeed(perm.New(routes), role.Source, user.Source)

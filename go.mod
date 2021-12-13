@@ -94,7 +94,7 @@ require (
 	github.com/satori/go.uuid v1.2.0 // indirect
 	github.com/schollz/closestmatch v2.1.0+incompatible // indirect
 	github.com/sergi/go-diff v1.2.0 // indirect
-	github.com/snowlyg/iris-admin v0.0.0-20211213024801-4b64a599cbb8 // indirect
+	github.com/snowlyg/iris-admin v0.0.0-20211213092506-bee1da28acfc // indirect
 	github.com/spf13/afero v1.6.0 // indirect
 	github.com/spf13/cast v1.3.1 // indirect
 	github.com/spf13/jwalterweatherman v1.1.0 // indirect
