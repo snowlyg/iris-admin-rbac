@@ -8,8 +8,7 @@ require (
 	github.com/kataras/iris/v12 v12.2.0-alpha4.0.20211013142751-e2f40ca06e5e
 	github.com/mojocn/base64Captcha v1.3.5
 	github.com/snowlyg/helper v0.0.0-20211211140133-76c34b3ebebd
-	github.com/snowlyg/iris-admin v0.0.0-20211213013308-67e956db9c8e
-	github.com/snowlyg/multi v0.0.0-20211210024630-97a71119f4b8
+	github.com/snowlyg/multi v0.0.0-20211213024614-23ebb6e09053
 	go.uber.org/zap v1.19.1
 	golang.org/x/crypto v0.0.0-20211209193657-4570a0811e8b
 	gorm.io/gorm v1.22.4
@@ -29,7 +28,7 @@ require (
 	github.com/bwmarrin/snowflake v0.3.1-0.20210825212239-3cf6d89d1fe9 // indirect
 	github.com/casbin/casbin/v2 v2.37.2 // indirect
 	github.com/casbin/gorm-adapter/v3 v3.4.2 // indirect
-	github.com/cespare/xxhash/v2 v2.1.1 // indirect
+	github.com/cespare/xxhash/v2 v2.1.2 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/denisenkom/go-mssqldb v0.0.0-20200428022330-06a60b6afbbc // indirect
 	github.com/dgryski/go-rendezvous v0.0.0-20200823014737-9f7001d12a5f // indirect
@@ -45,7 +44,7 @@ require (
 	github.com/go-playground/locales v0.14.0 // indirect
 	github.com/go-playground/universal-translator v0.18.0 // indirect
 	github.com/go-playground/validator/v10 v10.9.0 // indirect
-	github.com/go-redis/redis/v8 v8.11.3 // indirect
+	github.com/go-redis/redis/v8 v8.11.4 // indirect
 	github.com/go-sql-driver/mysql v1.6.0 // indirect
 	github.com/golang-sql/civil v0.0.0-20190719163853-cb61b32ac6fe // indirect
 	github.com/golang/freetype v0.0.0-20170609003504-e2365dfdc4a0 // indirect
@@ -95,6 +94,7 @@ require (
 	github.com/satori/go.uuid v1.2.0 // indirect
 	github.com/schollz/closestmatch v2.1.0+incompatible // indirect
 	github.com/sergi/go-diff v1.2.0 // indirect
+	github.com/snowlyg/iris-admin v0.0.0-20211213024801-4b64a599cbb8 // indirect
 	github.com/spf13/afero v1.6.0 // indirect
 	github.com/spf13/cast v1.3.1 // indirect
 	github.com/spf13/jwalterweatherman v1.1.0 // indirect
