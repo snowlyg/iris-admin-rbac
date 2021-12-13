@@ -31,7 +31,7 @@ func GetAdmin(ctx *gin.Context) {
 		return
 	}
 	admin := &Response{}
-	err := orm.First(database.Instance(), admin, scope.IdScope(req.Id))
+	err := admin.First(database.Instance(), scope.IdScope(req.Id))
 	if err != nil {
 		response.FailWithMessage(err.Error(), ctx)
 		return
@@ -57,13 +57,14 @@ func CreateAdmin(ctx *gin.Context) {
 // UpdateAdmin 更新
 func UpdateAdmin(ctx *gin.Context) {
 	reqId := &orm.ReqId{}
-	if errs := ctx.ShouldBindJSON(&reqId); errs != nil {
+	if errs := ctx.ShouldBindUri(&reqId); errs != nil {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
 
 	if err := IsAdminUser(reqId.Id); err != nil {
 		response.FailWithMessage(err.Error(), ctx)
+		return
 	}
 
 	req := &Request{}
@@ -74,6 +75,7 @@ func UpdateAdmin(ctx *gin.Context) {
 
 	if _, err := FindByUserName(UserNameScope(req.Username), scope.NeIdScope(reqId.Id)); !errors.Is(err, gorm.ErrRecordNotFound) {
 		response.FailWithMessage(err.Error(), ctx)
+		return
 	}
 
 	admin := &Admin{BaseAdmin: req.BaseAdmin}
@@ -85,6 +87,7 @@ func UpdateAdmin(ctx *gin.Context) {
 
 	if err := AddRoleForUser(admin); err != nil {
 		response.FailWithMessage(err.Error(), ctx)
+		return
 	}
 
 	response.Ok(ctx)
@@ -93,7 +96,7 @@ func UpdateAdmin(ctx *gin.Context) {
 // DeleteAdmin 删除
 func DeleteAdmin(ctx *gin.Context) {
 	reqId := &orm.ReqId{}
-	if errs := ctx.ShouldBindJSON(&reqId); errs != nil {
+	if errs := ctx.ShouldBindUri(&reqId); errs != nil {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
@@ -119,8 +122,6 @@ func GetAll(ctx *gin.Context) {
 		response.FailWithMessage(err.Error(), ctx)
 		return
 	}
-	// 查询用户角色
-	transform(items.Item...)
 	response.OkWithData(response.PageResult{
 		List:     items.Item,
 		Total:    total,

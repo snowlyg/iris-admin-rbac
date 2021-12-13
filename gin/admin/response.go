@@ -38,6 +38,8 @@ func (res *Response) First(db *gorm.DB, scopes ...func(db *gorm.DB) *gorm.DB) er
 		zap_server.ZAPLOG.Error("获取失败", zap.String("First()", err.Error()))
 		return err
 	}
+	// 查询用户角色
+	transform(res)
 	return nil
 }
 
@@ -59,7 +61,8 @@ func (res *PageResponse) Paginate(db *gorm.DB, pageScope func(db *gorm.DB) *gorm
 		zap_server.ZAPLOG.Error("获取分页数据失败", zap.String("Find()", err.Error()))
 		return count, err
 	}
-
+	// 查询用户角色
+	transform(res.Item...)
 	return count, nil
 }
 
@@ -70,6 +73,7 @@ func (res *PageResponse) Find(db *gorm.DB, scopes ...func(db *gorm.DB) *gorm.DB)
 		zap_server.ZAPLOG.Error("获取数据失败", zap.String("Find()", err.Error()))
 		return err
 	}
-
+	// 查询用户角色
+	transform(res.Item...)
 	return nil
 }

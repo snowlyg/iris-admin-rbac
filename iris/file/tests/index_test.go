@@ -49,14 +49,21 @@ func TestUpload(t *testing.T) {
 			Reader: fh,
 		},
 	}
+	local := file.GetPath(md5Name)
 	pageKeys := tests.Responses{
 		{Key: "code", Value: 2000},
 		{Key: "message", Value: "请求成功"},
 		{Key: "data", Value: tests.Responses{
-			{Key: "local", Value: file.GetPath(md5Name)},
+			{Key: "local", Value: local},
 			{Key: "qiniu", Value: ""},
 		}},
 	}
 
 	TestClient.UPLOAD(url, pageKeys, files)
+
+	local = filepath.Join(pwd, "static/upload")
+	err = os.RemoveAll(local)
+	if err != nil {
+		t.Error(err)
+	}
 }

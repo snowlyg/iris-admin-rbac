@@ -7,6 +7,7 @@ import (
 
 	"github.com/snowlyg/helper/tests"
 	rbac "github.com/snowlyg/iris-admin-rbac/gin"
+	"github.com/snowlyg/iris-admin/server/web"
 	"github.com/snowlyg/iris-admin/server/web/web_gin/response"
 	"github.com/snowlyg/multi"
 )
@@ -33,7 +34,7 @@ func TestList(t *testing.T) {
 			{Key: "page", Value: 1},
 			{Key: "list", Value: []tests.Responses{
 				{
-					{Key: "id", Value: 996, Type: "ge"},
+					{Key: "id", Value: web.DeviceAuthorityId, Type: "ge"},
 					{Key: "authorityName", Value: "设备用户"},
 					{Key: "authorityType", Value: multi.GeneralAuthority},
 					{Key: "parentId", Value: 0},
@@ -42,7 +43,7 @@ func TestList(t *testing.T) {
 					{Key: "createdAt", Value: "", Type: "notempty"},
 				},
 				{
-					{Key: "id", Value: 997, Type: "ge"},
+					{Key: "id", Value: web.LiteAuthorityId, Type: "ge"},
 					{Key: "authorityName", Value: "小程序用户"},
 					{Key: "authorityType", Value: multi.GeneralAuthority},
 					{Key: "parentId", Value: 0},
@@ -51,7 +52,7 @@ func TestList(t *testing.T) {
 					{Key: "createdAt", Value: "", Type: "notempty"},
 				},
 				{
-					{Key: "id", Value: 998, Type: "ge"},
+					{Key: "id", Value: web.TenancyAuthorityId, Type: "ge"},
 					{Key: "authorityName", Value: "商户管理员"},
 					{Key: "authorityType", Value: multi.TenancyAuthority},
 					{Key: "parentId", Value: 0},
@@ -60,7 +61,7 @@ func TestList(t *testing.T) {
 					{Key: "createdAt", Value: "", Type: "notempty"},
 				},
 				{
-					{Key: "id", Value: 999, Type: "ge"},
+					{Key: "id", Value: web.AdminAuthorityId, Type: "ge"},
 					{Key: "authorityName", Value: "超级管理员"},
 					{Key: "authorityType", Value: multi.AdminAuthority},
 					{Key: "parentId", Value: 0},
@@ -72,7 +73,8 @@ func TestList(t *testing.T) {
 			{Key: "total", Value: 0, Type: "ge"},
 		}},
 	}
-	TestClient.GET(fmt.Sprintf("%s/getAuthorityList", url), pageKeys, tests.RequestParams)
+	requestParams := map[string]interface{}{"page": 1, "pageSize": 10, "orderBy": "id"}
+	TestClient.GET(fmt.Sprintf("%s/getAuthorityList", url), pageKeys, requestParams)
 }
 
 func TestGetAdminAuthorityList(t *testing.T) {
@@ -93,7 +95,7 @@ func TestGetAdminAuthorityList(t *testing.T) {
 			{Key: "page", Value: 1},
 			{Key: "list", Value: []tests.Responses{
 				{
-					{Key: "id", Value: 999, Type: "ge"},
+					{Key: "id", Value: web.AdminAuthorityId, Type: "ge"},
 					{Key: "authorityName", Value: "超级管理员"},
 					{Key: "authorityType", Value: multi.AdminAuthority},
 					{Key: "parentId", Value: 0},
@@ -105,7 +107,8 @@ func TestGetAdminAuthorityList(t *testing.T) {
 			{Key: "total", Value: 0, Type: "ge"},
 		}},
 	}
-	TestClient.GET(fmt.Sprintf("%s/getAdminAuthorityList", url), pageKeys, tests.RequestParams)
+	requestParams := map[string]interface{}{"page": 1, "pageSize": 10, "orderBy": "id"}
+	TestClient.GET(fmt.Sprintf("%s/getAdminAuthorityList", url), pageKeys, requestParams)
 }
 
 func TestGetTenancyAuthorityList(t *testing.T) {
@@ -126,7 +129,7 @@ func TestGetTenancyAuthorityList(t *testing.T) {
 			{Key: "page", Value: 1},
 			{Key: "list", Value: []tests.Responses{
 				{
-					{Key: "id", Value: 998, Type: "ge"},
+					{Key: "id", Value: web.TenancyAuthorityId, Type: "ge"},
 					{Key: "authorityName", Value: "商户管理员"},
 					{Key: "authorityType", Value: multi.TenancyAuthority},
 					{Key: "parentId", Value: 0},
@@ -138,7 +141,8 @@ func TestGetTenancyAuthorityList(t *testing.T) {
 			{Key: "total", Value: 0, Type: "ge"},
 		}},
 	}
-	TestClient.GET(fmt.Sprintf("%s/getTenancyAuthorityList", url), pageKeys, tests.RequestParams)
+	requestParams := map[string]interface{}{"page": 1, "pageSize": 10, "orderBy": "id"}
+	TestClient.GET(fmt.Sprintf("%s/getTenancyAuthorityList", url), pageKeys, requestParams)
 }
 
 func TestGetGeneralAuthorityList(t *testing.T) {
@@ -159,7 +163,7 @@ func TestGetGeneralAuthorityList(t *testing.T) {
 			{Key: "page", Value: 1},
 			{Key: "list", Value: []tests.Responses{
 				{
-					{Key: "id", Value: 996, Type: "ge"},
+					{Key: "id", Value: web.DeviceAuthorityId, Type: "ge"},
 					{Key: "authorityName", Value: "设备用户"},
 					{Key: "authorityType", Value: multi.GeneralAuthority},
 					{Key: "parentId", Value: 0},
@@ -168,7 +172,7 @@ func TestGetGeneralAuthorityList(t *testing.T) {
 					{Key: "createdAt", Value: "", Type: "notempty"},
 				},
 				{
-					{Key: "id", Value: 997, Type: "ge"},
+					{Key: "id", Value: web.LiteAuthorityId, Type: "ge"},
 					{Key: "authorityName", Value: "小程序用户"},
 					{Key: "authorityType", Value: multi.GeneralAuthority},
 					{Key: "parentId", Value: 0},
@@ -180,7 +184,8 @@ func TestGetGeneralAuthorityList(t *testing.T) {
 			{Key: "total", Value: 0, Type: "ge"},
 		}},
 	}
-	TestClient.GET(fmt.Sprintf("%s/getGeneralAuthorityList", url), pageKeys, tests.RequestParams)
+	requestParams := map[string]interface{}{"page": 1, "pageSize": 10, "orderBy": "id"}
+	TestClient.GET(fmt.Sprintf("%s/getGeneralAuthorityList", url), pageKeys, requestParams)
 }
 
 func TestCreate(t *testing.T) {

@@ -3,9 +3,9 @@ package authority
 import (
 	"github.com/gookit/color"
 	"github.com/snowlyg/iris-admin-rbac/gin/api"
-	"github.com/snowlyg/iris-admin/g"
 	"github.com/snowlyg/iris-admin/server/database"
 	"github.com/snowlyg/iris-admin/server/database/orm"
+	"github.com/snowlyg/iris-admin/server/web"
 	"github.com/snowlyg/multi"
 	"gorm.io/gorm"
 )
@@ -27,7 +27,7 @@ func GetSources() ([]*Authority, error) {
 				ParentId:      0,
 				DefaultRouter: "",
 			},
-			Model: gorm.Model{ID: g.AdminAuthorityId},
+			Model: gorm.Model{ID: web.AdminAuthorityId},
 			Perms: apis[multi.AdminAuthority],
 		},
 		{
@@ -37,7 +37,7 @@ func GetSources() ([]*Authority, error) {
 				ParentId:      0,
 				DefaultRouter: "",
 			},
-			Model: gorm.Model{ID: g.TenancyAuthorityId},
+			Model: gorm.Model{ID: web.TenancyAuthorityId},
 			Perms: apis[multi.TenancyAuthority],
 		},
 		{
@@ -47,7 +47,7 @@ func GetSources() ([]*Authority, error) {
 				ParentId:      0,
 				DefaultRouter: "",
 			},
-			Model: gorm.Model{ID: g.LiteAuthorityId},
+			Model: gorm.Model{ID: web.LiteAuthorityId},
 			Perms: apis[multi.GeneralAuthority],
 		},
 		{
@@ -57,7 +57,7 @@ func GetSources() ([]*Authority, error) {
 				ParentId:      0,
 				DefaultRouter: "",
 			},
-			Model: gorm.Model{ID: g.DeviceAuthorityId},
+			Model: gorm.Model{ID: web.DeviceAuthorityId},
 			Perms: apis[multi.GeneralAuthority],
 		},
 	}

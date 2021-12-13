@@ -10,7 +10,7 @@ import (
 type Request struct {
 	BaseAdmin
 	Password     string `json:"password"`
-	AuthorityIds []uint `json:"authorityIds" binding:"required"`
+	AuthorityIds []uint `json:"authorityIds"`
 }
 
 func (req *Request) Request(ctx *gin.Context) error {

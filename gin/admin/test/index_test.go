@@ -8,6 +8,7 @@ import (
 	"github.com/snowlyg/helper/tests"
 	rbac "github.com/snowlyg/iris-admin-rbac/gin"
 	"github.com/snowlyg/iris-admin/g"
+	"github.com/snowlyg/iris-admin/server/web"
 	"github.com/snowlyg/iris-admin/server/web/web_gin/response"
 )
 
@@ -66,8 +67,9 @@ func TestCreate(t *testing.T) {
 	data := map[string]interface{}{
 		"nickName":     "测试名称",
 		"username":     "create_test_username",
-		"intro":        "测试描述信息",
-		"authorityIds": []uint{1},
+		"authorityIds": []uint{web.AdminAuthorityId},
+		"email":        "get@admin.com",
+		"phone":        "13800138001",
 		"password":     "123456",
 	}
 	id := Create(client, data)
@@ -88,11 +90,12 @@ func TestUpdate(t *testing.T) {
 		return
 	}
 	data := map[string]interface{}{
-		"name":     "测试名称",
-		"username": "update_test_username",
-		"intro":    "测试描述信息",
-		"avatar":   "",
-		"password": "123456",
+		"nickName":     "测试名称",
+		"username":     "create_test_username_for_update",
+		"authorityIds": []uint{web.AdminAuthorityId},
+		"email":        "get@admin.com",
+		"phone":        "13800138001",
+		"password":     "123456",
 	}
 	id := Create(client, data)
 	if id == 0 {
@@ -101,10 +104,9 @@ func TestUpdate(t *testing.T) {
 	defer Delete(client, id)
 
 	update := map[string]interface{}{
-		"name":     "更新测试名称",
-		"username": "update_test_username",
-		"intro":    "更新测试描述信息",
-		"avatar":   "",
+		"nickName": "测试名称",
+		"email":    "get@admin.com",
+		"phone":    "13800138003",
 		"password": "123456",
 	}
 
@@ -112,7 +114,7 @@ func TestUpdate(t *testing.T) {
 		{Key: "status", Value: http.StatusOK},
 		{Key: "message", Value: response.ResponseOkMessage},
 	}
-	client.POST(fmt.Sprintf("%s/%d", url, id), pageKeys, update)
+	client.PUT(fmt.Sprintf("%s/updateAdmin/%d", url, id), pageKeys, update)
 }
 
 func TestGetById(t *testing.T) {
@@ -126,35 +128,38 @@ func TestGetById(t *testing.T) {
 		return
 	}
 	data := map[string]interface{}{
-		"name":     "测试名称",
-		"username": "getbyid_test_username",
-		"intro":    "测试描述信息",
-		"avatar":   "",
-		"password": "123456",
+		"nickName":     "测试名称",
+		"username":     "create_test_username_for_get",
+		"email":        "get@admin.com",
+		"phone":        "13800138001",
+		"authorityIds": []uint{web.AdminAuthorityId},
+		"password":     "123456",
 	}
 	id := Create(client, data)
 	if id == 0 {
 		t.Fatalf("测试添加用户失败 id=%d", id)
 	}
 	defer Delete(client, id)
-
 	pageKeys := tests.Responses{
 		{Key: "status", Value: http.StatusOK},
 		{Key: "message", Value: response.ResponseOkMessage},
 		{Key: "data", Value: tests.Responses{
 			{Key: "id", Value: 1, Type: "ge"},
-			{Key: "name", Value: data["name"].(string)},
+			{Key: "nickName", Value: data["nickName"].(string)},
 			{Key: "username", Value: data["username"].(string)},
-			{Key: "intro", Value: data["intro"].(string)},
-			{Key: "avatar", Value: data["avatar"].(string)},
+			{Key: "status", Value: g.StatusTrue},
+			{Key: "email", Value: data["email"].(string)},
+			{Key: "phone", Value: data["phone"].(string)},
+			{Key: "is_show", Value: g.StatusTrue},
+			{Key: "headerImg", Value: "http://qmplusimg.henrongyi.top/head.png"},
 			{Key: "updatedAt", Value: "", Type: "notempty"},
 			{Key: "createdAt", Value: "", Type: "notempty"},
 			{Key: "createdAt", Value: "", Type: "notempty"},
-			{Key: "roles", Value: []string{}, Type: "null"},
+			{Key: "authorities", Value: []string{"超级管理员"}},
 		},
 		},
 	}
-	client.GET(fmt.Sprintf("%s/%d", url, id), pageKeys)
+	client.GET(fmt.Sprintf("%s/getAdmin/%d", url, id), pageKeys)
 }
 
 func Create(client *tests.Client, data map[string]interface{}) uint {
@@ -166,7 +171,7 @@ func Create(client *tests.Client, data map[string]interface{}) uint {
 		},
 		},
 	}
-	return client.POST(fmt.Sprintf("%s/%s", url, "create"), pageKeys, data).GetId()
+	return client.POST(fmt.Sprintf("%s/createAdmin", url), pageKeys, data).GetId()
 }
 
 func Delete(client *tests.Client, id uint) {
@@ -174,5 +179,5 @@ func Delete(client *tests.Client, id uint) {
 		{Key: "status", Value: http.StatusOK},
 		{Key: "message", Value: response.ResponseOkMessage},
 	}
-	client.DELETE(fmt.Sprintf("%s/%d", url, id), pageKeys)
+	client.DELETE(fmt.Sprintf("%s/deleteAdmin/%d", url, id), pageKeys)
 }
