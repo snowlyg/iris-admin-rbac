@@ -4,10 +4,12 @@ go 1.17
 
 require (
 	github.com/gin-gonic/gin v1.7.7
+	github.com/go-gormigrate/gormigrate/v2 v2.0.0
 	github.com/gookit/color v1.5.0
 	github.com/kataras/iris/v12 v12.2.0-alpha4.0.20211013142751-e2f40ca06e5e
 	github.com/mojocn/base64Captcha v1.3.5
 	github.com/snowlyg/helper v0.0.0-20211211140133-76c34b3ebebd
+	github.com/snowlyg/iris-admin v0.0.0-20211213092506-bee1da28acfc
 	github.com/snowlyg/multi v0.0.0-20211213024614-23ebb6e09053
 	go.uber.org/zap v1.19.1
 	golang.org/x/crypto v0.0.0-20211209193657-4570a0811e8b
@@ -40,7 +42,6 @@ require (
 	github.com/gavv/httpexpect/v2 v2.3.1 // indirect
 	github.com/gin-contrib/sse v0.1.0 // indirect
 	github.com/gin-contrib/static v0.0.1 // indirect
-	github.com/go-gormigrate/gormigrate/v2 v2.0.0 // indirect
 	github.com/go-playground/locales v0.14.0 // indirect
 	github.com/go-playground/universal-translator v0.18.0 // indirect
 	github.com/go-playground/validator/v10 v10.9.0 // indirect
@@ -94,7 +95,6 @@ require (
 	github.com/satori/go.uuid v1.2.0 // indirect
 	github.com/schollz/closestmatch v2.1.0+incompatible // indirect
 	github.com/sergi/go-diff v1.2.0 // indirect
-	github.com/snowlyg/iris-admin v0.0.0-20211213092506-bee1da28acfc // indirect
 	github.com/spf13/afero v1.6.0 // indirect
 	github.com/spf13/cast v1.3.1 // indirect
 	github.com/spf13/jwalterweatherman v1.1.0 // indirect
