@@ -15,7 +15,6 @@ var TestServer *web_gin.WebServer
 var TestClient *tests.Client
 
 func TestMain(m *testing.M) {
-
 	var uuid string
 	uuid, TestServer = web_tests.BeforeTestMainGin(3, rbac.PartyFunc, rbac.SeedFunc)
 	code := m.Run()

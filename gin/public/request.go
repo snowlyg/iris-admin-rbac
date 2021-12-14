@@ -9,10 +9,10 @@ import (
 
 // LoginRequest 登录请求字段
 type LoginRequest struct {
-	Username      string `json:"username" binding:"required"`
-	Password      string `json:"password" binding:"required"`
-	Captcha       string `json:"captcha" binding:"dev-required"`
-	CaptchaId     string `json:"captchaId" binding:"dev-required"`
+	Username      string `json:"username" form:"username" binding:"required"`
+	Password      string `json:"password" form:"password" binding:"required"`
+	Captcha       string `json:"captcha" form:"captcha" binding:"dev-required"`
+	CaptchaId     string `json:"captchaId" form:"captchaId" binding:"dev-required"`
 	AuthorityType int    `json:"authorityType" `
 }
 

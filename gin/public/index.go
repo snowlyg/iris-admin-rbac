@@ -7,6 +7,7 @@ import (
 
 // Group 认证模块
 func Group(group *gin.RouterGroup) {
+	group.Use(middleware.OperationRecord())
 	group.GET("/public/captcha", Captcha)
 	group.POST("/public/admin/login", AdminLogin)
 	// group.POST("/public/merchant/login", ClientLogin)

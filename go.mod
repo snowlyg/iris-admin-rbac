@@ -9,7 +9,7 @@ require (
 	github.com/kataras/iris/v12 v12.2.0-alpha4.0.20211013142751-e2f40ca06e5e
 	github.com/mojocn/base64Captcha v1.3.5
 	github.com/snowlyg/helper v0.0.0-20211211140133-76c34b3ebebd
-	github.com/snowlyg/iris-admin v0.0.0-20211213092506-bee1da28acfc
+	github.com/snowlyg/iris-admin v0.0.0-20211213095544-4670d733d798
 	github.com/snowlyg/multi v0.0.0-20211213024614-23ebb6e09053
 	go.uber.org/zap v1.19.1
 	golang.org/x/crypto v0.0.0-20211209193657-4570a0811e8b

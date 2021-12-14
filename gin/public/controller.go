@@ -17,14 +17,14 @@ var store = base64Captcha.DefaultMemStore
 // func ClientLogin(ctx *gin.Context) {
 // 	req := &LoginRequest{}
 // 	if errs := req.Request(ctx); errs != nil {
-// 		response.UnauthorizedFailWithMessage(errs.Error(), ctx)
+// 		response.FailWithMessage(errs.Error(), ctx)
 // 		return
 // 	}
 // 	req.AuthorityType = multi.TenancyAuthority
 // 	token, err := GetAccessToken(req)
 // 	if err != nil {
 // 		zap_server.ZAPLOG.Error("登陆失败!", zap.Any("err", err))
-// 		response.UnauthorizedFailWithMessage(err.Error(), ctx)
+// 		response.FailWithMessage(err.Error(), ctx)
 // 	} else {
 // 		response.OkWithData(token, ctx)
 // 	}
@@ -34,14 +34,14 @@ var store = base64Captcha.DefaultMemStore
 func AdminLogin(ctx *gin.Context) {
 	req := &LoginRequest{}
 	if errs := req.Request(ctx); errs != nil {
-		response.UnauthorizedFailWithMessage(errs.Error(), ctx)
+		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
 	req.AuthorityType = multi.AdminAuthority
 	token, err := GetAccessToken(req)
 	if err != nil {
 		zap_server.ZAPLOG.Error("登陆失败!", zap.Any("err", err))
-		response.UnauthorizedFailWithMessage(err.Error(), ctx)
+		response.FailWithMessage(err.Error(), ctx)
 	} else {
 		response.OkWithData(token, ctx)
 	}
