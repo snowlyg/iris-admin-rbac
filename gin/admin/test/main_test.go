@@ -6,6 +6,7 @@ import (
 
 	"github.com/snowlyg/httptest"
 	rbac "github.com/snowlyg/iris-admin-rbac/gin"
+	web_tests "github.com/snowlyg/iris-admin/server/web/tests"
 	"github.com/snowlyg/iris-admin/server/web/web_gin"
 )
 

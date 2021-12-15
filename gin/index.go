@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/snowlyg/httptest"
 	"github.com/snowlyg/iris-admin-rbac/gin/admin"
 	"github.com/snowlyg/iris-admin-rbac/gin/api"
 	"github.com/snowlyg/iris-admin-rbac/gin/authority"

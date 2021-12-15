@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"testing"
 
+	"github.com/snowlyg/httptest"
 	rbac "github.com/snowlyg/iris-admin-rbac/gin"
 	"github.com/snowlyg/iris-admin/server/web"
 	"github.com/snowlyg/iris-admin/server/web/web_gin/response"

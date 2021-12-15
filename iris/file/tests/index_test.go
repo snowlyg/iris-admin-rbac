@@ -5,6 +5,7 @@ import (
 	"path/filepath"
 	"testing"
 
+	"github.com/snowlyg/httptest"
 	rbac "github.com/snowlyg/iris-admin-rbac/iris"
 	"github.com/snowlyg/iris-admin-rbac/iris/file"
 )

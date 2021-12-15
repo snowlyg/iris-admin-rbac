@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"testing"
 
+	"github.com/snowlyg/httptest"
 	rbac "github.com/snowlyg/iris-admin-rbac/iris"
 )
 

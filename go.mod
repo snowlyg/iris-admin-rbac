@@ -8,16 +8,14 @@ require (
 	github.com/gookit/color v1.5.0
 	github.com/kataras/iris/v12 v12.2.0-alpha4.0.20211013142751-e2f40ca06e5e
 	github.com/mojocn/base64Captcha v1.3.5
-	github.com/snowlyg/helper v0.0.0-20211211140133-76c34b3ebebd
-	github.com/snowlyg/httptest v0.0.0-20211215080911-241a7ee7503c
-	github.com/snowlyg/iris-admin v0.0.0-20211210085502-a51dbf1f9a88
+	github.com/snowlyg/helper v0.0.0-20211215075956-864080017ffd
+	github.com/snowlyg/httptest v0.0.0-20211215083527-faf4a41eb8cd
+	github.com/snowlyg/iris-admin v0.0.0-20211215083844-35aba0223570
 	github.com/snowlyg/multi v0.0.0-20211213024614-23ebb6e09053
 	go.uber.org/zap v1.19.1
 	golang.org/x/crypto v0.0.0-20211209193657-4570a0811e8b
 	gorm.io/gorm v1.22.4
 )
-
-replace github.com/snowlyg/iris-admin v0.0.0-20211213095544-4670d733d798 => D:\admin\go\src\github.com\snowlyg\iris-admin
 
 require (
 	github.com/BurntSushi/toml v0.4.1 // indirect
@@ -26,7 +24,7 @@ require (
 	github.com/Knetic/govaluate v3.0.1-0.20171022003610-9aa49832a739+incompatible // indirect
 	github.com/Shopify/goreferrer v0.0.0-20210630161223-536fa16abd6f // indirect
 	github.com/ajg/form v1.5.1 // indirect
-	github.com/andybalholm/brotli v1.0.3 // indirect
+	github.com/andybalholm/brotli v1.0.4 // indirect
 	github.com/aviddiviner/gin-limit v0.0.0-20170918012823-43b5f79762c1 // indirect
 	github.com/aymerick/douceur v0.2.0 // indirect
 	github.com/aymerick/raymond v2.0.3-0.20180322193309-b565731e1464+incompatible // indirect
@@ -110,10 +108,10 @@ require (
 	github.com/ugorji/go/codec v1.1.7 // indirect
 	github.com/unrolled/secure v1.0.9 // indirect
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
-	github.com/valyala/fasthttp v1.30.0 // indirect
+	github.com/valyala/fasthttp v1.31.0 // indirect
 	github.com/vmihailenco/msgpack/v5 v5.3.5 // indirect
 	github.com/vmihailenco/tagparser/v2 v2.0.0 // indirect
-	github.com/xeipuuv/gojsonpointer v0.0.0-20180127040702-4e3ac2762d5f // indirect
+	github.com/xeipuuv/gojsonpointer v0.0.0-20190905194746-02993c407bfb // indirect
 	github.com/xeipuuv/gojsonreference v0.0.0-20180127040603-bd5ef7bd5415 // indirect
 	github.com/xeipuuv/gojsonschema v1.2.0 // indirect
 	github.com/xo/terminfo v0.0.0-20210125001918-ca9a967f8778 // indirect
@@ -124,7 +122,7 @@ require (
 	go.uber.org/atomic v1.7.0 // indirect
 	go.uber.org/multierr v1.6.0 // indirect
 	golang.org/x/image v0.0.0-20190802002840-cff245a6509b // indirect
-	golang.org/x/net v0.0.0-20211112202133-69e39bad7dc2 // indirect
+	golang.org/x/net v0.0.0-20211215060638-4ddde0e984e9 // indirect
 	golang.org/x/sys v0.0.0-20211106132015-ebca88c72f68 // indirect
 	golang.org/x/text v0.3.7 // indirect
 	golang.org/x/time v0.0.0-20210723032227-1f47c861a9ac // indirect
