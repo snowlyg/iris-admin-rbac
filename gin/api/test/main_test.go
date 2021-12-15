@@ -5,14 +5,13 @@ import (
 	"os"
 	"testing"
 
-	"github.com/snowlyg/helper/tests"
+	"github.com/snowlyg/httptest"
 	rbac "github.com/snowlyg/iris-admin-rbac/gin"
-	web_tests "github.com/snowlyg/iris-admin/server/web/tests"
 	"github.com/snowlyg/iris-admin/server/web/web_gin"
 )
 
 var TestServer *web_gin.WebServer
-var TestClient *tests.Client
+var TestClient *httptest.Client
 
 func TestMain(m *testing.M) {
 

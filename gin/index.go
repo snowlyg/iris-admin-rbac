@@ -4,7 +4,6 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/snowlyg/helper/tests"
 	"github.com/snowlyg/iris-admin-rbac/gin/admin"
 	"github.com/snowlyg/iris-admin-rbac/gin/api"
 	"github.com/snowlyg/iris-admin-rbac/gin/authority"
@@ -25,16 +24,16 @@ func Party(group *gin.RouterGroup) {
 
 var LoginUrl = "/api/v1/public/admin/login"
 var LogoutUrl = "/api/v1/public/logout"
-var LoginResponse = tests.Responses{
+var LoginResponse = httptest.Responses{
 	{Key: "status", Value: http.StatusOK},
 	{Key: "message", Value: "操作成功"},
 	{Key: "data",
-		Value: tests.Responses{
+		Value: httptest.Responses{
 			{Key: "accessToken", Value: "", Type: "notempty"},
 		},
 	},
 }
-var LogoutResponse = tests.Responses{
+var LogoutResponse = httptest.Responses{
 	{Key: "status", Value: http.StatusOK},
 	{Key: "message", Value: "操作成功"},
 }

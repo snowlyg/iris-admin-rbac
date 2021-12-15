@@ -5,7 +5,6 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/snowlyg/helper/tests"
 	rbac "github.com/snowlyg/iris-admin-rbac/iris"
 	"github.com/snowlyg/iris-admin-rbac/iris/file"
 )
@@ -41,7 +40,7 @@ func TestUpload(t *testing.T) {
 		return
 	}
 	defer fh.Close()
-	files := []tests.File{
+	files := []httptest.File{
 		{
 			Key:    "file",
 			Path:   name,
@@ -49,10 +48,10 @@ func TestUpload(t *testing.T) {
 		},
 	}
 	local := file.GetPath(md5Name)
-	pageKeys := tests.Responses{
+	pageKeys := httptest.Responses{
 		{Key: "code", Value: 2000},
 		{Key: "message", Value: "请求成功"},
-		{Key: "data", Value: tests.Responses{
+		{Key: "data", Value: httptest.Responses{
 			{Key: "local", Value: local},
 			{Key: "qiniu", Value: ""},
 		}},

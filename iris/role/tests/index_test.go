@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/snowlyg/helper/tests"
 	rbac "github.com/snowlyg/iris-admin-rbac/iris"
 )
 
@@ -21,13 +20,13 @@ func TestList(t *testing.T) {
 		return
 	}
 
-	pageKeys := tests.Responses{
+	pageKeys := httptest.Responses{
 		{Key: "code", Value: 2000},
 		{Key: "message", Value: "请求成功"},
-		{Key: "data", Value: tests.Responses{
+		{Key: "data", Value: httptest.Responses{
 			{Key: "pageSize", Value: 10},
 			{Key: "page", Value: 1},
-			{Key: "items", Value: []tests.Responses{
+			{Key: "items", Value: []httptest.Responses{
 				{
 					{Key: "id", Value: 1, Type: "ge"},
 					{Key: "name", Value: "SuperAdmin"},
@@ -40,7 +39,7 @@ func TestList(t *testing.T) {
 			{Key: "total", Value: 0, Type: "ge"},
 		}},
 	}
-	TestClient.GET(url, pageKeys, tests.RequestParams)
+	TestClient.GET(url, pageKeys, httptest.RequestParams)
 }
 
 func TestCreate(t *testing.T) {
@@ -84,7 +83,7 @@ func TestUpdate(t *testing.T) {
 		"description": "更新测试描述信息",
 	}
 
-	pageKeys := tests.Responses{
+	pageKeys := httptest.Responses{
 		{Key: "code", Value: 2000},
 		{Key: "message", Value: "请求成功"},
 	}
@@ -108,10 +107,10 @@ func TestGetById(t *testing.T) {
 	}
 	defer Delete(TestClient, id)
 
-	pageKeys := tests.Responses{
+	pageKeys := httptest.Responses{
 		{Key: "code", Value: 2000},
 		{Key: "message", Value: "请求成功"},
-		{Key: "data", Value: tests.Responses{
+		{Key: "data", Value: httptest.Responses{
 			{Key: "id", Value: 1, Type: "ge"},
 			{Key: "name", Value: data["name"].(string)},
 			{Key: "displayName", Value: data["displayName"].(string)},
@@ -125,11 +124,11 @@ func TestGetById(t *testing.T) {
 	TestClient.GET(fmt.Sprintf("%s/%d", url, id), pageKeys)
 }
 
-func Create(TestClient *tests.Client, data map[string]interface{}) uint {
-	pageKeys := tests.Responses{
+func Create(TestClient *httptest.Client, data map[string]interface{}) uint {
+	pageKeys := httptest.Responses{
 		{Key: "code", Value: 2000},
 		{Key: "message", Value: "请求成功"},
-		{Key: "data", Value: tests.Responses{
+		{Key: "data", Value: httptest.Responses{
 			{Key: "id", Value: 1, Type: "ge"},
 		},
 		},
@@ -137,8 +136,8 @@ func Create(TestClient *tests.Client, data map[string]interface{}) uint {
 	return TestClient.POST(url, pageKeys, data).GetId()
 }
 
-func Delete(TestClient *tests.Client, id uint) {
-	pageKeys := tests.Responses{
+func Delete(TestClient *httptest.Client, id uint) {
+	pageKeys := httptest.Responses{
 		{Key: "code", Value: 2000},
 		{Key: "message", Value: "请求成功"},
 	}

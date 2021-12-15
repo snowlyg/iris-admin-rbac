@@ -5,7 +5,6 @@ import (
 	"net/http"
 	"testing"
 
-	"github.com/snowlyg/helper/tests"
 	rbac "github.com/snowlyg/iris-admin-rbac/gin"
 	"github.com/snowlyg/iris-admin/server/web"
 	"github.com/snowlyg/iris-admin/server/web/web_gin/response"
@@ -26,13 +25,13 @@ func TestList(t *testing.T) {
 	if TestClient == nil {
 		return
 	}
-	pageKeys := tests.Responses{
+	pageKeys := httptest.Responses{
 		{Key: "status", Value: http.StatusOK},
 		{Key: "message", Value: response.ResponseOkMessage},
-		{Key: "data", Value: tests.Responses{
+		{Key: "data", Value: httptest.Responses{
 			{Key: "pageSize", Value: 10},
 			{Key: "page", Value: 1},
-			{Key: "list", Value: []tests.Responses{
+			{Key: "list", Value: []httptest.Responses{
 				{
 					{Key: "id", Value: web.DeviceAuthorityId, Type: "ge"},
 					{Key: "authorityName", Value: "设备用户"},
@@ -87,13 +86,13 @@ func TestGetAdminAuthorityList(t *testing.T) {
 	if TestClient == nil {
 		return
 	}
-	pageKeys := tests.Responses{
+	pageKeys := httptest.Responses{
 		{Key: "status", Value: http.StatusOK},
 		{Key: "message", Value: response.ResponseOkMessage},
-		{Key: "data", Value: tests.Responses{
+		{Key: "data", Value: httptest.Responses{
 			{Key: "pageSize", Value: 10},
 			{Key: "page", Value: 1},
-			{Key: "list", Value: []tests.Responses{
+			{Key: "list", Value: []httptest.Responses{
 				{
 					{Key: "id", Value: web.AdminAuthorityId, Type: "ge"},
 					{Key: "authorityName", Value: "超级管理员"},
@@ -121,13 +120,13 @@ func TestGetTenancyAuthorityList(t *testing.T) {
 	if TestClient == nil {
 		return
 	}
-	pageKeys := tests.Responses{
+	pageKeys := httptest.Responses{
 		{Key: "status", Value: http.StatusOK},
 		{Key: "message", Value: response.ResponseOkMessage},
-		{Key: "data", Value: tests.Responses{
+		{Key: "data", Value: httptest.Responses{
 			{Key: "pageSize", Value: 10},
 			{Key: "page", Value: 1},
-			{Key: "list", Value: []tests.Responses{
+			{Key: "list", Value: []httptest.Responses{
 				{
 					{Key: "id", Value: web.TenancyAuthorityId, Type: "ge"},
 					{Key: "authorityName", Value: "商户管理员"},
@@ -155,13 +154,13 @@ func TestGetGeneralAuthorityList(t *testing.T) {
 	if TestClient == nil {
 		return
 	}
-	pageKeys := tests.Responses{
+	pageKeys := httptest.Responses{
 		{Key: "status", Value: http.StatusOK},
 		{Key: "message", Value: response.ResponseOkMessage},
-		{Key: "data", Value: tests.Responses{
+		{Key: "data", Value: httptest.Responses{
 			{Key: "pageSize", Value: 10},
 			{Key: "page", Value: 1},
-			{Key: "list", Value: []tests.Responses{
+			{Key: "list", Value: []httptest.Responses{
 				{
 					{Key: "id", Value: web.DeviceAuthorityId, Type: "ge"},
 					{Key: "authorityName", Value: "设备用户"},
@@ -237,7 +236,7 @@ func TestUpdate(t *testing.T) {
 		"authorityType": multi.AdminAuthority,
 	}
 
-	pageKeys := tests.Responses{
+	pageKeys := httptest.Responses{
 		{Key: "status", Value: http.StatusOK},
 		{Key: "message", Value: response.ResponseOkMessage},
 	}
@@ -265,7 +264,7 @@ func TestCopyAuthority(t *testing.T) {
 	}
 	defer Delete(client, id)
 
-	pageKeys := tests.Responses{
+	pageKeys := httptest.Responses{
 		{Key: "status", Value: http.StatusOK},
 		{Key: "message", Value: response.ResponseOkMessage},
 	}
@@ -276,11 +275,11 @@ func TestCopyAuthority(t *testing.T) {
 	client.POST(fmt.Sprintf("%s/copyAuthority/%d", url, id), pageKeys, copy)
 }
 
-func Create(client *tests.Client, data map[string]interface{}) uint {
-	pageKeys := tests.Responses{
+func Create(client *httptest.Client, data map[string]interface{}) uint {
+	pageKeys := httptest.Responses{
 		{Key: "status", Value: http.StatusOK},
 		{Key: "message", Value: response.ResponseOkMessage},
-		{Key: "data", Value: tests.Responses{
+		{Key: "data", Value: httptest.Responses{
 			{Key: "id", Value: 1, Type: "ge"},
 		},
 		},
@@ -288,8 +287,8 @@ func Create(client *tests.Client, data map[string]interface{}) uint {
 	return client.POST(fmt.Sprintf("%s/createAuthority", url), pageKeys, data).GetId()
 }
 
-func Delete(client *tests.Client, id uint) {
-	pageKeys := tests.Responses{
+func Delete(client *httptest.Client, id uint) {
+	pageKeys := httptest.Responses{
 		{Key: "status", Value: http.StatusOK},
 		{Key: "message", Value: response.ResponseOkMessage},
 	}

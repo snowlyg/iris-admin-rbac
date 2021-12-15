@@ -5,7 +5,6 @@ import (
 	"net/http"
 	"testing"
 
-	"github.com/snowlyg/helper/tests"
 	rbac "github.com/snowlyg/iris-admin-rbac/gin"
 	"github.com/snowlyg/iris-admin/g"
 	"github.com/snowlyg/iris-admin/server/web"
@@ -26,13 +25,13 @@ func TestList(t *testing.T) {
 	if TestClient == nil {
 		return
 	}
-	pageKeys := tests.Responses{
+	pageKeys := httptest.Responses{
 		{Key: "status", Value: http.StatusOK},
 		{Key: "message", Value: response.ResponseOkMessage},
-		{Key: "data", Value: tests.Responses{
+		{Key: "data", Value: httptest.Responses{
 			{Key: "pageSize", Value: 10},
 			{Key: "page", Value: 1},
-			{Key: "list", Value: []tests.Responses{
+			{Key: "list", Value: []httptest.Responses{
 				{
 					{Key: "id", Value: 1, Type: "ge"},
 					{Key: "nickName", Value: "超级管理员"},
@@ -50,7 +49,7 @@ func TestList(t *testing.T) {
 			{Key: "total", Value: 0, Type: "ge"},
 		}},
 	}
-	TestClient.GET(fmt.Sprintf("%s/getAll", url), pageKeys, tests.RequestParams)
+	TestClient.GET(fmt.Sprintf("%s/getAll", url), pageKeys, httptest.RequestParams)
 }
 
 func TestCreate(t *testing.T) {
@@ -110,7 +109,7 @@ func TestUpdate(t *testing.T) {
 		"password": "123456",
 	}
 
-	pageKeys := tests.Responses{
+	pageKeys := httptest.Responses{
 		{Key: "status", Value: http.StatusOK},
 		{Key: "message", Value: response.ResponseOkMessage},
 	}
@@ -140,10 +139,10 @@ func TestGetById(t *testing.T) {
 		t.Fatalf("测试添加用户失败 id=%d", id)
 	}
 	defer Delete(client, id)
-	pageKeys := tests.Responses{
+	pageKeys := httptest.Responses{
 		{Key: "status", Value: http.StatusOK},
 		{Key: "message", Value: response.ResponseOkMessage},
-		{Key: "data", Value: tests.Responses{
+		{Key: "data", Value: httptest.Responses{
 			{Key: "id", Value: 1, Type: "ge"},
 			{Key: "nickName", Value: data["nickName"].(string)},
 			{Key: "username", Value: data["username"].(string)},
@@ -162,11 +161,11 @@ func TestGetById(t *testing.T) {
 	client.GET(fmt.Sprintf("%s/getAdmin/%d", url, id), pageKeys)
 }
 
-func Create(client *tests.Client, data map[string]interface{}) uint {
-	pageKeys := tests.Responses{
+func Create(client *httptest.Client, data map[string]interface{}) uint {
+	pageKeys := httptest.Responses{
 		{Key: "status", Value: http.StatusOK},
 		{Key: "message", Value: response.ResponseOkMessage},
-		{Key: "data", Value: tests.Responses{
+		{Key: "data", Value: httptest.Responses{
 			{Key: "id", Value: 1, Type: "ge"},
 		},
 		},
@@ -174,8 +173,8 @@ func Create(client *tests.Client, data map[string]interface{}) uint {
 	return client.POST(fmt.Sprintf("%s/createAdmin", url), pageKeys, data).GetId()
 }
 
-func Delete(client *tests.Client, id uint) {
-	pageKeys := tests.Responses{
+func Delete(client *httptest.Client, id uint) {
+	pageKeys := httptest.Responses{
 		{Key: "status", Value: http.StatusOK},
 		{Key: "message", Value: response.ResponseOkMessage},
 	}

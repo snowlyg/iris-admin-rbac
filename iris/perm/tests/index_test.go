@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/snowlyg/helper/tests"
 	rbac "github.com/snowlyg/iris-admin-rbac/iris"
 	"github.com/snowlyg/iris-admin-rbac/iris/perm"
 	"github.com/snowlyg/iris-admin/server/database"
@@ -40,10 +39,10 @@ func TestList(t *testing.T) {
 			if err != nil {
 				t.Fatalf("获取路由权限错误")
 			}
-			pageKeys := tests.Responses{
+			pageKeys := httptest.Responses{
 				{Key: "code", Value: pageParam.Code},
 				{Key: "message", Value: pageParam.Message},
-				{Key: "data", Value: tests.Responses{
+				{Key: "data", Value: httptest.Responses{
 					{Key: "pageSize", Value: pageParam.PageSize},
 					{Key: "page", Value: pageParam.Page},
 					{Key: "items", Value: items},
@@ -101,7 +100,7 @@ func TestUpdate(t *testing.T) {
 		"act":         "POST",
 	}
 
-	pageKeys := tests.Responses{
+	pageKeys := httptest.Responses{
 		{Key: "code", Value: 2000},
 		{Key: "message", Value: "请求成功"},
 	}
@@ -126,10 +125,10 @@ func TestGetById(t *testing.T) {
 	}
 	defer Delete(TestClient, id)
 
-	pageKeys := tests.Responses{
+	pageKeys := httptest.Responses{
 		{Key: "code", Value: 2000},
 		{Key: "message", Value: "请求成功"},
-		{Key: "data", Value: tests.Responses{
+		{Key: "data", Value: httptest.Responses{
 			{Key: "id", Value: 1, Type: "ge"},
 			{Key: "name", Value: data["name"].(string)},
 			{Key: "displayName", Value: data["displayName"].(string)},
@@ -143,11 +142,11 @@ func TestGetById(t *testing.T) {
 	TestClient.GET(fmt.Sprintf("%s/%d", url, id), pageKeys)
 }
 
-func Create(TestClient *tests.Client, data map[string]interface{}) uint {
-	pageKeys := tests.Responses{
+func Create(TestClient *httptest.Client, data map[string]interface{}) uint {
+	pageKeys := httptest.Responses{
 		{Key: "code", Value: 2000},
 		{Key: "message", Value: "请求成功"},
-		{Key: "data", Value: tests.Responses{
+		{Key: "data", Value: httptest.Responses{
 			{Key: "id", Value: 1, Type: "ge"},
 		},
 		},
@@ -155,17 +154,17 @@ func Create(TestClient *tests.Client, data map[string]interface{}) uint {
 	return TestClient.POST(url, pageKeys, data).GetId()
 }
 
-func Delete(TestClient *tests.Client, id uint) {
-	pageKeys := tests.Responses{
+func Delete(TestClient *httptest.Client, id uint) {
+	pageKeys := httptest.Responses{
 		{Key: "code", Value: 2000},
 		{Key: "message", Value: "请求成功"},
 	}
 	TestClient.DELETE(fmt.Sprintf("%s/%d", url, id), pageKeys)
 }
 
-func getPerms(pageParam PageParam) ([]tests.Responses, error) {
+func getPerms(pageParam PageParam) ([]httptest.Responses, error) {
 	l := pageParam.PageLen
-	routes := make([]tests.Responses, 0, l)
+	routes := make([]httptest.Responses, 0, l)
 	req := &orm.Paginate{
 		Page:     pageParam.Page,
 		PageSize: pageParam.PageSize,
@@ -176,7 +175,7 @@ func getPerms(pageParam PageParam) ([]tests.Responses, error) {
 		return routes, err
 	}
 	for _, route := range perms.Item {
-		perm := tests.Responses{
+		perm := httptest.Responses{
 			{Key: "id", Value: route.Id},
 			{Key: "name", Value: route.Name},
 			{Key: "displayName", Value: route.DisplayName},

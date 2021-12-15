@@ -29,7 +29,7 @@ func (res *Response) ToString() {
 type LoginResponse struct {
 	orm.ReqId
 	Password     string   `json:"password"`
-	AuthorityIds []string `json:"authorityIds"`
+	AuthorityIds []string `gorm:"-" json:"authorityIds"`
 }
 
 func (res *Response) First(db *gorm.DB, scopes ...func(db *gorm.DB) *gorm.DB) error {

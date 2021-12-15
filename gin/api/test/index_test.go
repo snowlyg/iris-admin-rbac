@@ -5,7 +5,6 @@ import (
 	"net/http"
 	"testing"
 
-	"github.com/snowlyg/helper/tests"
 	rbac "github.com/snowlyg/iris-admin-rbac/gin"
 	"github.com/snowlyg/iris-admin-rbac/gin/api"
 	"github.com/snowlyg/iris-admin/server/database"
@@ -45,10 +44,10 @@ func TestList(t *testing.T) {
 			if err != nil {
 				t.Fatalf("获取路由权限错误")
 			}
-			pageKeys := tests.Responses{
+			pageKeys := httptest.Responses{
 				{Key: "status", Value: http.StatusOK},
 				{Key: "message", Value: pageParam.Message},
-				{Key: "data", Value: tests.Responses{
+				{Key: "data", Value: httptest.Responses{
 					{Key: "pageSize", Value: pageParam.PageSize},
 					{Key: "page", Value: pageParam.Page},
 					{Key: "list", Value: items},
@@ -81,7 +80,7 @@ func TestGetAll(t *testing.T) {
 		if len(routes) != len(items) {
 			t.Errorf("接口需要返回 %d 个路由，实际返回了 %d 个数据", len(routes), len(items))
 		}
-		pageKeys := tests.Responses{
+		pageKeys := httptest.Responses{
 			{Key: "status", Value: http.StatusOK},
 			{Key: "message", Value: response.ResponseOkMessage},
 			{Key: "data", Value: items},
@@ -146,7 +145,7 @@ func TestUpdate(t *testing.T) {
 		"authorityType": multi.AdminAuthority,
 	}
 
-	pageKeys := tests.Responses{
+	pageKeys := httptest.Responses{
 		{Key: "status", Value: http.StatusOK},
 		{Key: "message", Value: response.ResponseOkMessage},
 	}
@@ -176,10 +175,10 @@ func TestGetById(t *testing.T) {
 	}
 	defer Delete(client, id, data)
 
-	pageKeys := tests.Responses{
+	pageKeys := httptest.Responses{
 		{Key: "status", Value: http.StatusOK},
 		{Key: "message", Value: response.ResponseOkMessage},
-		{Key: "data", Value: tests.Responses{
+		{Key: "data", Value: httptest.Responses{
 			{Key: "id", Value: 1, Type: "ge"},
 			{Key: "path", Value: data["path"].(string)},
 			{Key: "apiGroup", Value: data["apiGroup"].(string)},
@@ -194,11 +193,11 @@ func TestGetById(t *testing.T) {
 	client.GET(fmt.Sprintf("%s/getApiById/%d", url, id), pageKeys)
 }
 
-func Create(client *tests.Client, data map[string]interface{}) uint {
-	pageKeys := tests.Responses{
+func Create(client *httptest.Client, data map[string]interface{}) uint {
+	pageKeys := httptest.Responses{
 		{Key: "status", Value: http.StatusOK},
 		{Key: "message", Value: response.ResponseOkMessage},
-		{Key: "data", Value: tests.Responses{
+		{Key: "data", Value: httptest.Responses{
 			{Key: "id", Value: 1, Type: "ge"},
 		},
 		},
@@ -206,16 +205,16 @@ func Create(client *tests.Client, data map[string]interface{}) uint {
 	return client.POST(fmt.Sprintf("%s/createApi", url), pageKeys, data).GetId()
 }
 
-func Delete(client *tests.Client, id uint, data map[string]interface{}) {
-	pageKeys := tests.Responses{
+func Delete(client *httptest.Client, id uint, data map[string]interface{}) {
+	pageKeys := httptest.Responses{
 		{Key: "status", Value: http.StatusOK},
 		{Key: "message", Value: response.ResponseOkMessage},
 	}
 	client.DELETE(fmt.Sprintf("%s/deleteApi/%d", url, id), pageKeys, data)
 }
 
-func getAllApis(authorityType int) ([]tests.Responses, error) {
-	routes := []tests.Responses{}
+func getAllApis(authorityType int) ([]httptest.Responses, error) {
+	routes := []httptest.Responses{}
 	apis := api.PageResponse{}
 	err := apis.Find(database.Instance(), api.AuthorityTypeScope(authorityType))
 	if err != nil {
@@ -223,7 +222,7 @@ func getAllApis(authorityType int) ([]tests.Responses, error) {
 	}
 
 	for _, route := range apis.Item {
-		api := tests.Responses{
+		api := httptest.Responses{
 			{Key: "id", Value: route.Id},
 			{Key: "path", Value: route.Path},
 			{Key: "description", Value: route.Description},
@@ -239,9 +238,9 @@ func getAllApis(authorityType int) ([]tests.Responses, error) {
 	return routes, err
 }
 
-func getPageApis(pageParam PageParam) ([]tests.Responses, error) {
+func getPageApis(pageParam PageParam) ([]httptest.Responses, error) {
 	l := pageParam.PageLen
-	routes := make([]tests.Responses, 0, l)
+	routes := make([]httptest.Responses, 0, l)
 	req := &orm.Paginate{
 		Page:     pageParam.Page,
 		PageSize: pageParam.PageSize,
@@ -253,7 +252,7 @@ func getPageApis(pageParam PageParam) ([]tests.Responses, error) {
 	}
 
 	for _, route := range apis.Item {
-		api := tests.Responses{
+		api := httptest.Responses{
 			{Key: "id", Value: route.Id},
 			{Key: "path", Value: route.Path},
 			{Key: "description", Value: route.Description},
