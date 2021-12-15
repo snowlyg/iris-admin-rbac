@@ -59,8 +59,8 @@ func TestCreate(t *testing.T) {
 		return
 	}
 
-	client := TestServer.GetTestLogin(t, rbac.LoginUrl, rbac.LoginResponse)
-	if client == nil {
+	TestClient = TestServer.GetTestLogin(t, rbac.LoginUrl, rbac.LoginResponse)
+	if TestClient == nil {
 		return
 	}
 
@@ -72,11 +72,11 @@ func TestCreate(t *testing.T) {
 		"phone":        "13800138001",
 		"password":     "123456",
 	}
-	id := Create(client, data)
+	id := Create(TestClient, data)
 	if id == 0 {
 		t.Fatalf("测试添加用户失败 id=%d", id)
 	}
-	defer Delete(client, id)
+	defer Delete(TestClient, id)
 }
 
 func TestUpdate(t *testing.T) {
@@ -85,8 +85,8 @@ func TestUpdate(t *testing.T) {
 		return
 	}
 
-	client := TestServer.GetTestLogin(t, rbac.LoginUrl, rbac.LoginResponse)
-	if client == nil {
+	TestClient = TestServer.GetTestLogin(t, rbac.LoginUrl, rbac.LoginResponse)
+	if TestClient == nil {
 		return
 	}
 	data := map[string]interface{}{
@@ -97,11 +97,11 @@ func TestUpdate(t *testing.T) {
 		"phone":        "13800138001",
 		"password":     "123456",
 	}
-	id := Create(client, data)
+	id := Create(TestClient, data)
 	if id == 0 {
 		t.Fatalf("测试添加用户失败 id=%d", id)
 	}
-	defer Delete(client, id)
+	defer Delete(TestClient, id)
 
 	update := map[string]interface{}{
 		"nickName": "测试名称",
@@ -114,7 +114,7 @@ func TestUpdate(t *testing.T) {
 		{Key: "status", Value: http.StatusOK},
 		{Key: "message", Value: response.ResponseOkMessage},
 	}
-	client.PUT(fmt.Sprintf("%s/updateAdmin/%d", url, id), pageKeys, update)
+	TestClient.PUT(fmt.Sprintf("%s/updateAdmin/%d", url, id), pageKeys, update)
 }
 
 func TestGetById(t *testing.T) {
@@ -123,8 +123,8 @@ func TestGetById(t *testing.T) {
 		return
 	}
 
-	client := TestServer.GetTestLogin(t, rbac.LoginUrl, rbac.LoginResponse)
-	if client == nil {
+	TestClient = TestServer.GetTestLogin(t, rbac.LoginUrl, rbac.LoginResponse)
+	if TestClient == nil {
 		return
 	}
 	data := map[string]interface{}{
@@ -135,11 +135,11 @@ func TestGetById(t *testing.T) {
 		"authorityIds": []uint{web.AdminAuthorityId},
 		"password":     "123456",
 	}
-	id := Create(client, data)
+	id := Create(TestClient, data)
 	if id == 0 {
 		t.Fatalf("测试添加用户失败 id=%d", id)
 	}
-	defer Delete(client, id)
+	defer Delete(TestClient, id)
 	pageKeys := httptest.Responses{
 		{Key: "status", Value: http.StatusOK},
 		{Key: "message", Value: response.ResponseOkMessage},
@@ -159,10 +159,10 @@ func TestGetById(t *testing.T) {
 		},
 		},
 	}
-	client.GET(fmt.Sprintf("%s/getAdmin/%d", url, id), pageKeys)
+	TestClient.GET(fmt.Sprintf("%s/getAdmin/%d", url, id), pageKeys)
 }
 
-func Create(client *httptest.Client, data map[string]interface{}) uint {
+func Create(TestClient *httptest.Client, data map[string]interface{}) uint {
 	pageKeys := httptest.Responses{
 		{Key: "status", Value: http.StatusOK},
 		{Key: "message", Value: response.ResponseOkMessage},
@@ -171,13 +171,13 @@ func Create(client *httptest.Client, data map[string]interface{}) uint {
 		},
 		},
 	}
-	return client.POST(fmt.Sprintf("%s/createAdmin", url), pageKeys, data).GetId()
+	return TestClient.POST(fmt.Sprintf("%s/createAdmin", url), pageKeys, data).GetId()
 }
 
-func Delete(client *httptest.Client, id uint) {
+func Delete(TestClient *httptest.Client, id uint) {
 	pageKeys := httptest.Responses{
 		{Key: "status", Value: http.StatusOK},
 		{Key: "message", Value: response.ResponseOkMessage},
 	}
-	client.DELETE(fmt.Sprintf("%s/deleteAdmin/%d", url, id), pageKeys)
+	TestClient.DELETE(fmt.Sprintf("%s/deleteAdmin/%d", url, id), pageKeys)
 }
