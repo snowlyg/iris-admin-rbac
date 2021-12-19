@@ -1,2 +1,2 @@
 # iris-admin-rabc
-rabc for iris-admin
+rbac for iris-admin
