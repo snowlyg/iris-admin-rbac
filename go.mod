@@ -8,9 +8,9 @@ require (
 	github.com/gookit/color v1.5.0
 	github.com/kataras/iris/v12 v12.2.0-alpha5
 	github.com/mojocn/base64Captcha v1.3.5
-	github.com/snowlyg/helper v0.0.2
+	github.com/snowlyg/helper v0.0.3
 	github.com/snowlyg/httptest v0.0.1
-	github.com/snowlyg/iris-admin v1.1.1-alpha1
+	github.com/snowlyg/iris-admin v1.1.1-alpha2
 	github.com/snowlyg/multi v0.0.1-alpha1
 	go.uber.org/zap v1.19.1
 	golang.org/x/crypto v0.0.0-20211215153901-e495a2d5b3d3
