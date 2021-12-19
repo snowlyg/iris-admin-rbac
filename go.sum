@@ -609,14 +609,10 @@ github.com/smartystreets/goconvey v1.6.4/go.mod h1:syvi0/a8iFYH4r/RixwvyeAJjdLS9
 github.com/smartystreets/goconvey v1.7.2/go.mod h1:Vw0tHAZW6lzCRk3xgdin6fKYcG+G3Pg9vgXWeJpQFMM=
 github.com/snowlyg/helper v0.0.0-20211210061610-8518caad80b5/go.mod h1:rTYQ60yQZVDLOyrCB6VwZAWD9Coxwg/Cb4bGFpiJY64=
 github.com/snowlyg/helper v0.0.1/go.mod h1:rTYQ60yQZVDLOyrCB6VwZAWD9Coxwg/Cb4bGFpiJY64=
-github.com/snowlyg/helper v0.0.2 h1:QLk1gnL2NMcEEjhdB5eDEdonrM1oXxM6b+t4iOAYrnA=
-github.com/snowlyg/helper v0.0.2/go.mod h1:ZjUlb5al1RTLkVoHnr33V/sMilAd9238tShegsceUwo=
 github.com/snowlyg/helper v0.0.3 h1:NmBy8x9K9Av1IAU9DeFyhTFDpdiLZYdP/kb/m9Oej1I=
 github.com/snowlyg/helper v0.0.3/go.mod h1:BlXkUrQVo5uCaNF35ss65uffDo5L/qwAOEHA3FwnudI=
 github.com/snowlyg/httptest v0.0.1 h1:xFCcC4vErHwtJ8VoHJcAXhy79FRh8CaG2dYx0UkfZ6Y=
 github.com/snowlyg/httptest v0.0.1/go.mod h1:SwXYsgCwkWuAKcdVk0JDBVTslxLJ7A2LqXP1eXgBkhc=
-github.com/snowlyg/iris-admin v1.1.1-alpha1 h1:55YOy0ajPzqDLYNWGPaFDoNf3DRJ2/UZRte2GYXFGiE=
-github.com/snowlyg/iris-admin v1.1.1-alpha1/go.mod h1:RFucdSBoqk/p8E5vbLvh/d3PqLqZNKKxTFCf/mcq6BM=
 github.com/snowlyg/iris-admin v1.1.1-alpha2 h1:x99yHkVtwyeriBovLlbW6+g3rNuWBxYM+nLPhte49f0=
 github.com/snowlyg/iris-admin v1.1.1-alpha2/go.mod h1:oS/hh/GIIiQirmARDw8U5xcddnUpwrSjNLWCiH6qLqQ=
 github.com/snowlyg/multi v0.0.1-alpha1 h1:ePv7h0r3WiN+dXCBds+wT8Eatkf8MM6wfUxjhF5XR6c=
