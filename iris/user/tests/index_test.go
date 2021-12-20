@@ -138,6 +138,43 @@ func TestGetById(t *testing.T) {
 	}
 	TestClient.GET(fmt.Sprintf("%s/%d", url, id), pageKeys)
 }
+func TestProfile(t *testing.T) {
+	TestClient = TestServer.GetTestLogin(t, rbac.LoginUrl, nil)
+	if TestClient == nil {
+		return
+	}
+
+	pageKeys := httptest.Responses{
+		{Key: "code", Value: 2000},
+		{Key: "message", Value: "请求成功"},
+		{Key: "data", Value: httptest.Responses{
+			{Key: "id", Value: 1, Type: "ge"},
+			{Key: "name", Value: "超级管理员"},
+			{Key: "username", Value: "admin"},
+			{Key: "intro", Value: "超级管理员"},
+			{Key: "avatar", Value: str.Join("http://", web_iris.CONFIG.System.Addr, web_iris.CONFIG.System.StaticPrefix, "/images/avatar.jpg")},
+			{Key: "roles", Value: []string{"超级管理员"}},
+			{Key: "updatedAt", Value: "", Type: "notempty"},
+			{Key: "createdAt", Value: "", Type: "notempty"},
+		},
+		},
+	}
+	TestClient.GET(fmt.Sprintf("%s/profile", url), pageKeys)
+}
+func TestChangeAvatar(t *testing.T) {
+	TestClient = TestServer.GetTestLogin(t, rbac.LoginUrl, nil)
+	if TestClient == nil {
+		return
+	}
+	data := map[string]interface{}{
+		"avatar": "/avatar.png",
+	}
+	pageKeys := httptest.Responses{
+		{Key: "code", Value: 2000},
+		{Key: "message", Value: "请求成功"},
+	}
+	TestClient.POST(fmt.Sprintf("%s/changeAvatar", url), pageKeys, data)
+}
 
 func Create(TestClient *httptest.Client, data map[string]interface{}) uint {
 	pageKeys := httptest.Responses{

@@ -14,6 +14,6 @@ func Group(group *gin.RouterGroup) {
 		adminRouter.PUT("/updateAdmin/:id", UpdateAdmin)
 		adminRouter.DELETE("/deleteAdmin/:id", DeleteAdmin)
 		adminRouter.GET("/profile", Profile)
-		adminRouter.POST("/change_avatar", ChangeAvatar)
+		adminRouter.POST("/changeAvatar", ChangeAvatar)
 	}
 }

@@ -17,7 +17,7 @@ func Party() func(index iris.Party) {
 		index.Get("/logout", Logout).Name = "退出"
 		index.Get("/clear", Clear).Name = "清空 token"
 		index.Get("/profile", Profile).Name = "个人信息"
-		index.Post("/change_avatar", ChangeAvatar).Name = "修改头像"
+		index.Post("/changeAvatar", ChangeAvatar).Name = "修改头像"
 		// index.Get("/expire", controllers.Expire).Name = "刷新 token"
 	}
 }

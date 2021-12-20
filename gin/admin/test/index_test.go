@@ -162,6 +162,57 @@ func TestGetById(t *testing.T) {
 	TestClient.GET(fmt.Sprintf("%s/getAdmin/%d", url, id), pageKeys)
 }
 
+func TestChangeAvatar(t *testing.T) {
+	if TestServer == nil {
+		t.Error("测试服务初始化失败")
+		return
+	}
+
+	TestClient = TestServer.GetTestLogin(t, rbac.LoginUrl, rbac.LoginResponse)
+	if TestClient == nil {
+		return
+	}
+	data := map[string]interface{}{
+		"avatar": "/avatar.png",
+	}
+	pageKeys := httptest.Responses{
+		{Key: "status", Value: http.StatusOK},
+		{Key: "message", Value: response.ResponseOkMessage},
+	}
+	TestClient.POST(fmt.Sprintf("%s/changeAvatar", url), pageKeys, data)
+}
+
+func TestProfile(t *testing.T) {
+	if TestServer == nil {
+		t.Error("测试服务初始化失败")
+		return
+	}
+
+	TestClient = TestServer.GetTestLogin(t, rbac.LoginUrl, rbac.LoginResponse)
+	if TestClient == nil {
+		return
+	}
+	pageKeys := httptest.Responses{
+		{Key: "status", Value: http.StatusOK},
+		{Key: "message", Value: response.ResponseOkMessage},
+		{Key: "data", Value: httptest.Responses{
+			{Key: "id", Value: 1, Type: "ge"},
+			{Key: "nickName", Value: "超级管理员"},
+			{Key: "username", Value: "admin"},
+			{Key: "headerImg", Value: "http://qmplusimg.henrongyi.top/head.png"},
+			{Key: "status", Value: g.StatusTrue},
+			{Key: "isShow", Value: g.StatusFalse},
+			{Key: "phone", Value: "13800138000"},
+			{Key: "email", Value: "admin@admin.com"},
+			{Key: "authorities", Value: []string{"超级管理员"}},
+			{Key: "updatedAt", Value: "", Type: "notempty"},
+			{Key: "createdAt", Value: "", Type: "notempty"},
+		},
+		},
+	}
+	TestClient.GET(fmt.Sprintf("%s/profile", url), pageKeys)
+}
+
 func Create(TestClient *httptest.Client, data map[string]interface{}) uint {
 	pageKeys := httptest.Responses{
 		{Key: "status", Value: http.StatusOK},

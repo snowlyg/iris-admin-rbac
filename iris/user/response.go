@@ -38,6 +38,7 @@ func (res *Response) First(db *gorm.DB, scopes ...func(db *gorm.DB) *gorm.DB) er
 		zap_server.ZAPLOG.Error("获取失败", zap.String("First()", err.Error()))
 		return err
 	}
+	getRoles(db, res)
 	return nil
 }
 
@@ -59,17 +60,16 @@ func (res *PageResponse) Paginate(db *gorm.DB, pageScope func(db *gorm.DB) *gorm
 		zap_server.ZAPLOG.Error("获取分页数据失败", zap.String("Find()", err.Error()))
 		return count, err
 	}
-
+	getRoles(db, res.Item...)
 	return count, nil
 }
 
 func (res *PageResponse) Find(db *gorm.DB, scopes ...func(db *gorm.DB) *gorm.DB) error {
-	db = db.Model(&User{})
-	err := db.Scopes(scopes...).Find(&res.Item).Error
+	err := db.Model(&User{}).Scopes(scopes...).Find(&res.Item).Error
 	if err != nil {
 		zap_server.ZAPLOG.Error("获取数据失败", zap.String("Find()", err.Error()))
 		return err
 	}
-
+	getRoles(db, res.Item...)
 	return nil
 }

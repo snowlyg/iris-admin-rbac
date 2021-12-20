@@ -123,8 +123,6 @@ func GetAll(ctx iris.Context) {
 		ctx.JSON(orm.Response{Code: orm.SystemErr.Code, Data: nil, Msg: err.Error()})
 		return
 	}
-	// 查询用户角色
-	getRoles(database.Instance(), items.Item...)
 	list := iris.Map{"items": items.Item, "total": total, "pageSize": req.PageSize, "page": req.Page}
 	ctx.JSON(orm.Response{Code: orm.NoErr.Code, Data: list, Msg: orm.NoErr.Msg})
 }
