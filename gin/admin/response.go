@@ -3,7 +3,6 @@ package admin
 import (
 	"regexp"
 
-	"github.com/snowlyg/helper/str"
 	"github.com/snowlyg/iris-admin/server/database/orm"
 	"github.com/snowlyg/iris-admin/server/web/web_gin"
 	"github.com/snowlyg/iris-admin/server/zap_server"
@@ -23,7 +22,7 @@ func (res *Response) ToString() {
 	}
 	re := regexp.MustCompile("^http")
 	if !re.MatchString(res.Avatar.HeaderImg) {
-		res.Avatar.HeaderImg = str.Join(web_gin.StaticUrl(), res.Avatar.HeaderImg)
+		res.Avatar.HeaderImg = web_gin.ToStaticUrl(res.Avatar.HeaderImg)
 	}
 }
 

@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/snowlyg/helper/str"
 	"github.com/snowlyg/httptest"
 	rbac "github.com/snowlyg/iris-admin-rbac/iris"
 	"github.com/snowlyg/iris-admin/server/web/web_iris"
@@ -35,7 +34,7 @@ func TestList(t *testing.T) {
 					{Key: "name", Value: "超级管理员"},
 					{Key: "username", Value: "admin"},
 					{Key: "intro", Value: "超级管理员"},
-					{Key: "avatar", Value: str.Join(web_iris.StaticUrl(), "/images/avatar.jpg")},
+					{Key: "avatar", Value: web_iris.ToStaticUrl("/images/avatar.jpg")},
 					{Key: "roles", Value: []string{"超级管理员"}},
 					{Key: "updatedAt", Value: "", Type: "notempty"},
 					{Key: "createdAt", Value: "", Type: "notempty"},
@@ -160,7 +159,7 @@ func TestChangeAvatar(t *testing.T) {
 			{Key: "name", Value: "超级管理员"},
 			{Key: "username", Value: "admin"},
 			{Key: "intro", Value: "超级管理员"},
-			{Key: "avatar", Value: str.Join(web_iris.StaticUrl(), "/avatar.png")},
+			{Key: "avatar", Value: web_iris.ToStaticUrl("/avatar.png")},
 			{Key: "roles", Value: []string{"超级管理员"}},
 			{Key: "updatedAt", Value: "", Type: "notempty"},
 			{Key: "createdAt", Value: "", Type: "notempty"},
