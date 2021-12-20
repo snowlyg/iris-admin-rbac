@@ -5,10 +5,12 @@ import (
 	"net/http"
 	"testing"
 
+	"github.com/snowlyg/helper/str"
 	"github.com/snowlyg/httptest"
 	rbac "github.com/snowlyg/iris-admin-rbac/gin"
 	"github.com/snowlyg/iris-admin/g"
 	"github.com/snowlyg/iris-admin/server/web"
+	"github.com/snowlyg/iris-admin/server/web/web_gin"
 	"github.com/snowlyg/iris-admin/server/web/web_gin/response"
 )
 
@@ -173,33 +175,22 @@ func TestChangeAvatar(t *testing.T) {
 		return
 	}
 	data := map[string]interface{}{
-		"avatar": "/avatar.png",
+		"headerImg": "/avatar.png",
 	}
 	pageKeys := httptest.Responses{
 		{Key: "status", Value: http.StatusOK},
 		{Key: "message", Value: response.ResponseOkMessage},
 	}
 	TestClient.POST(fmt.Sprintf("%s/changeAvatar", url), pageKeys, data)
-}
 
-func TestProfile(t *testing.T) {
-	if TestServer == nil {
-		t.Error("测试服务初始化失败")
-		return
-	}
-
-	TestClient = TestServer.GetTestLogin(t, rbac.LoginUrl, rbac.LoginResponse)
-	if TestClient == nil {
-		return
-	}
-	pageKeys := httptest.Responses{
+	profile := httptest.Responses{
 		{Key: "status", Value: http.StatusOK},
 		{Key: "message", Value: response.ResponseOkMessage},
 		{Key: "data", Value: httptest.Responses{
 			{Key: "id", Value: 1, Type: "ge"},
 			{Key: "nickName", Value: "超级管理员"},
 			{Key: "username", Value: "admin"},
-			{Key: "headerImg", Value: "http://qmplusimg.henrongyi.top/head.png"},
+			{Key: "headerImg", Value: str.Join(web_gin.StaticUrl(), "/avatar.png")},
 			{Key: "status", Value: g.StatusTrue},
 			{Key: "isShow", Value: g.StatusFalse},
 			{Key: "phone", Value: "13800138000"},
@@ -210,7 +201,7 @@ func TestProfile(t *testing.T) {
 		},
 		},
 	}
-	TestClient.GET(fmt.Sprintf("%s/profile", url), pageKeys)
+	TestClient.GET(fmt.Sprintf("%s/profile", url), profile)
 }
 
 func Create(TestClient *httptest.Client, data map[string]interface{}) uint {

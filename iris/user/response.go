@@ -5,6 +5,7 @@ import (
 
 	"github.com/snowlyg/helper/str"
 	"github.com/snowlyg/iris-admin/server/database/orm"
+	"github.com/snowlyg/iris-admin/server/web/web_iris"
 	"github.com/snowlyg/iris-admin/server/zap_server"
 	"go.uber.org/zap"
 	"gorm.io/gorm"
@@ -22,7 +23,7 @@ func (res *Response) ToString() {
 	}
 	re := regexp.MustCompile("^http")
 	if !re.MatchString(res.Avatar) {
-		res.Avatar = str.Join("http://127.0.0.1:8085/upload/", res.Avatar)
+		res.Avatar = str.Join(web_iris.StaticUrl(), res.Avatar)
 	}
 }
 

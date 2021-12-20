@@ -10,7 +10,7 @@ require (
 	github.com/mojocn/base64Captcha v1.3.5
 	github.com/snowlyg/helper v0.0.3
 	github.com/snowlyg/httptest v0.0.1
-	github.com/snowlyg/iris-admin v1.1.1-alpha2
+	github.com/snowlyg/iris-admin v1.1.1-alpha4
 	github.com/snowlyg/multi v0.0.1-alpha1
 	go.uber.org/zap v1.19.1
 	golang.org/x/crypto v0.0.0-20211215153901-e495a2d5b3d3
@@ -60,6 +60,7 @@ require (
 	github.com/imkira/go-interpol v1.1.0 // indirect
 	github.com/iris-contrib/jade v1.1.4 // indirect
 	github.com/iris-contrib/middleware/cors v0.0.0-20210110101738-6d0a4d799b5d // indirect
+	github.com/iris-contrib/middleware/secure v0.0.0-20211207164801-081c558a02bb // indirect
 	github.com/iris-contrib/schema v0.0.6 // indirect
 	github.com/jackc/chunkreader/v2 v2.0.1 // indirect
 	github.com/jackc/pgconn v1.10.1 // indirect

@@ -35,7 +35,7 @@ func TestList(t *testing.T) {
 					{Key: "name", Value: "超级管理员"},
 					{Key: "username", Value: "admin"},
 					{Key: "intro", Value: "超级管理员"},
-					{Key: "avatar", Value: str.Join("http://", web_iris.CONFIG.System.Addr, web_iris.CONFIG.System.StaticPrefix, "/images/avatar.jpg")},
+					{Key: "avatar", Value: str.Join(web_iris.StaticUrl(), "/images/avatar.jpg")},
 					{Key: "roles", Value: []string{"超级管理员"}},
 					{Key: "updatedAt", Value: "", Type: "notempty"},
 					{Key: "createdAt", Value: "", Type: "notempty"},
@@ -138,29 +138,6 @@ func TestGetById(t *testing.T) {
 	}
 	TestClient.GET(fmt.Sprintf("%s/%d", url, id), pageKeys)
 }
-func TestProfile(t *testing.T) {
-	TestClient = TestServer.GetTestLogin(t, rbac.LoginUrl, nil)
-	if TestClient == nil {
-		return
-	}
-
-	pageKeys := httptest.Responses{
-		{Key: "code", Value: 2000},
-		{Key: "message", Value: "请求成功"},
-		{Key: "data", Value: httptest.Responses{
-			{Key: "id", Value: 1, Type: "ge"},
-			{Key: "name", Value: "超级管理员"},
-			{Key: "username", Value: "admin"},
-			{Key: "intro", Value: "超级管理员"},
-			{Key: "avatar", Value: str.Join("http://", web_iris.CONFIG.System.Addr, web_iris.CONFIG.System.StaticPrefix, "/images/avatar.jpg")},
-			{Key: "roles", Value: []string{"超级管理员"}},
-			{Key: "updatedAt", Value: "", Type: "notempty"},
-			{Key: "createdAt", Value: "", Type: "notempty"},
-		},
-		},
-	}
-	TestClient.GET(fmt.Sprintf("%s/profile", url), pageKeys)
-}
 func TestChangeAvatar(t *testing.T) {
 	TestClient = TestServer.GetTestLogin(t, rbac.LoginUrl, nil)
 	if TestClient == nil {
@@ -174,6 +151,23 @@ func TestChangeAvatar(t *testing.T) {
 		{Key: "message", Value: "请求成功"},
 	}
 	TestClient.POST(fmt.Sprintf("%s/changeAvatar", url), pageKeys, data)
+
+	profile := httptest.Responses{
+		{Key: "code", Value: 2000},
+		{Key: "message", Value: "请求成功"},
+		{Key: "data", Value: httptest.Responses{
+			{Key: "id", Value: 1, Type: "ge"},
+			{Key: "name", Value: "超级管理员"},
+			{Key: "username", Value: "admin"},
+			{Key: "intro", Value: "超级管理员"},
+			{Key: "avatar", Value: str.Join(web_iris.StaticUrl(), "/avatar.png")},
+			{Key: "roles", Value: []string{"超级管理员"}},
+			{Key: "updatedAt", Value: "", Type: "notempty"},
+			{Key: "createdAt", Value: "", Type: "notempty"},
+		},
+		},
+	}
+	TestClient.GET(fmt.Sprintf("%s/profile", url), profile)
 }
 
 func Create(TestClient *httptest.Client, data map[string]interface{}) uint {

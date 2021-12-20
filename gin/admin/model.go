@@ -24,7 +24,7 @@ type BaseAdmin struct {
 }
 
 type Avatar struct {
-	HeaderImg string `json:"headerImg" gorm:"default:http://qmplusimg.henrongyi.top/head.png;comment:用户头像"`
+	HeaderImg string `json:"headerImg" gorm:"default:http://qmplusimg.henrongyi.top/head.png;comment:用户头像" form:"headerImg"`
 }
 
 // Create 添加

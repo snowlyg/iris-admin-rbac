@@ -182,5 +182,11 @@ func AddRoleForUser(admin *Admin) error {
 }
 
 func UpdateAvatar(db *gorm.DB, id uint, avatar string) error {
+	err := db.Model(&Admin{}).Where("id = ?", id).Update("header_img", avatar).Error
+	if err != nil {
+		zap_server.ZAPLOG.Error("更新头像失败", zap.String("UpdateAvatar", err.Error()))
+		return err
+	}
+
 	return nil
 }

@@ -199,5 +199,11 @@ func CleanToken(authorityType int, userId string) error {
 }
 
 func UpdateAvatar(db *gorm.DB, id uint, avatar string) error {
+	err := db.Model(&User{}).Where("id = ?", id).Update("avatar", avatar).Error
+	if err != nil {
+		zap_server.ZAPLOG.Error("更新头像失败", zap.String("UpdateAvatar", err.Error()))
+		return err
+	}
+
 	return nil
 }
