@@ -125,7 +125,7 @@ func Create(req *Request) (uint, error) {
 
 func IsAdminUser(id uint) error {
 	admin := &Response{}
-	err := admin.First(database.Instance(), scope.IdScope(id))
+	err := orm.First(database.Instance(), admin, scope.IdScope(id))
 	if err != nil {
 		return err
 	}
@@ -133,19 +133,6 @@ func IsAdminUser(id uint) error {
 		return errors.New("不能操作超级管理员")
 	}
 	return nil
-}
-
-func FindById(db *gorm.DB, id uint) (Response, error) {
-	admin := Response{}
-	err := db.Model(&Admin{}).Where("id = ?", id).First(&admin).Error
-	if err != nil {
-		zap_server.ZAPLOG.Error("find admin err ", zap.String("错误:", err.Error()))
-		return admin, err
-	}
-
-	transform(&admin)
-
-	return admin, nil
 }
 
 // AddRoleForUser add roles for user

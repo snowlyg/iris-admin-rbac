@@ -41,7 +41,7 @@ func Create(req *Request) (uint, error) {
 // FindByName
 func FindByName(scopes ...func(db *gorm.DB) *gorm.DB) (*Response, error) {
 	role := &Response{}
-	err := role.First(database.Instance(), scopes...)
+	err := orm.First(database.Instance(), role, scopes...)
 	if err != nil {
 		return nil, err
 	}
@@ -50,7 +50,7 @@ func FindByName(scopes ...func(db *gorm.DB) *gorm.DB) (*Response, error) {
 
 func IsAdminRole(id uint) error {
 	role := &Response{}
-	err := role.First(database.Instance(), scope.IdScope(id))
+	err := orm.First(database.Instance(), role, scope.IdScope(id))
 	if err != nil {
 		return err
 	}
@@ -60,19 +60,9 @@ func IsAdminRole(id uint) error {
 	return nil
 }
 
-func FindById(db *gorm.DB, id uint) (Response, error) {
-	role := Response{}
-	err := db.Model(&Role{}).Where("id = ?", id).First(&role).Error
-	if err != nil {
-		zap_server.ZAPLOG.Error("根据id查询角色错误", zap.String("错误:", err.Error()))
-		return role, err
-	}
-	return role, nil
-}
-
 func FindInId(db *gorm.DB, ids []uint) ([]*Response, error) {
-	roles := PageResponse{}
-	err := roles.Find(database.Instance(), scope.InIdsScope(ids))
+	roles := &PageResponse{}
+	err := orm.Find(database.Instance(), roles, scope.InIdsScope(ids))
 	if err != nil {
 		zap_server.ZAPLOG.Error("通过ids查询角色错误", zap.String("错误:", err.Error()))
 		return nil, err

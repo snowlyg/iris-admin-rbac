@@ -24,7 +24,7 @@ func GetAdminRoleName() string {
 // Copy 复制
 func Copy(id uint, req *AuthorityRequest) (uint, error) {
 	oldAuthority := &Response{}
-	err := oldAuthority.First(database.Instance(), scope.IdScope(id))
+	err := orm.First(database.Instance(), oldAuthority, scope.IdScope(id))
 	if err != nil {
 		return 0, err
 	}
@@ -75,7 +75,7 @@ func Create(req *AuthorityRequest) (uint, error) {
 // FindByName
 func FindByName(scopes ...func(db *gorm.DB) *gorm.DB) (*Response, error) {
 	role := &Response{}
-	err := role.First(database.Instance(), scopes...)
+	err := orm.First(database.Instance(), role, scopes...)
 	if err != nil {
 		return nil, err
 	}
@@ -84,7 +84,7 @@ func FindByName(scopes ...func(db *gorm.DB) *gorm.DB) (*Response, error) {
 
 func IsAdminRole(id uint) error {
 	authority := &Response{}
-	err := authority.First(database.Instance(), scope.IdScope(id))
+	err := orm.First(database.Instance(), authority, scope.IdScope(id))
 	if err != nil {
 		return err
 	}
@@ -95,8 +95,8 @@ func IsAdminRole(id uint) error {
 }
 
 func FindInId(db *gorm.DB, ids []uint) ([]*Response, error) {
-	authorities := PageResponse{}
-	err := authorities.Find(database.Instance(), scope.InIdsScope(ids))
+	authorities := &PageResponse{}
+	err := orm.Find(database.Instance(), authorities, scope.InIdsScope(ids))
 	if err != nil {
 		zap_server.ZAPLOG.Error("通过ids查询角色错误", zap.String("错误:", err.Error()))
 		return nil, err

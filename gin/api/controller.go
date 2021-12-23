@@ -76,7 +76,7 @@ func GetApiById(ctx *gin.Context) {
 		return
 	}
 	api := &Response{}
-	err := api.First(database.Instance(), scope.IdScope(req.Id))
+	err := orm.First(database.Instance(), api, scope.IdScope(req.Id))
 	if err != nil {
 		zap_server.ZAPLOG.Error("查询权限失败", zap.Any("api.First", err))
 		response.FailWithMessage(err.Error(), ctx)
@@ -97,7 +97,7 @@ func UpdateApi(ctx *gin.Context) {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
-	err := api.Update(database.Instance(), scope.IdScope(req.Id))
+	err := orm.Update(database.Instance(), req.Id, api)
 	if err != nil {
 		zap_server.ZAPLOG.Error("修改失败", zap.Any("api.Update", err))
 		response.FailWithMessage(err.Error(), ctx)
@@ -114,7 +114,7 @@ func GetAllApis(ctx *gin.Context) {
 		return
 	}
 	apis := &PageResponse{}
-	err := apis.Find(database.Instance(), AuthorityTypeScope(req.AuthorityType))
+	err := orm.Find(database.Instance(), apis, AuthorityTypeScope(req.AuthorityType))
 	if err != nil {
 		zap_server.ZAPLOG.Error("获取所有的Api不分页", zap.Any("orm.Find", err))
 		response.FailWithMessage(err.Error(), ctx)

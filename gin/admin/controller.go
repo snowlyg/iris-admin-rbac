@@ -31,7 +31,7 @@ func GetAdmin(ctx *gin.Context) {
 		return
 	}
 	admin := &Response{}
-	err := admin.First(database.Instance(), scope.IdScope(req.Id))
+	err := orm.First(database.Instance(), admin, scope.IdScope(req.Id))
 	if err != nil {
 		response.FailWithMessage(err.Error(), ctx)
 		return
