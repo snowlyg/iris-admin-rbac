@@ -10,7 +10,7 @@ require (
 	github.com/mojocn/base64Captcha v1.3.5
 	github.com/snowlyg/helper v0.0.3
 	github.com/snowlyg/httptest v0.0.1
-	github.com/snowlyg/iris-admin v1.1.1-alpha5
+	github.com/snowlyg/iris-admin v1.1.1-alpha6
 	github.com/snowlyg/multi v0.0.1-alpha1
 	go.uber.org/zap v1.19.1
 	golang.org/x/crypto v0.0.0-20211215153901-e495a2d5b3d3
@@ -41,8 +41,8 @@ require (
 	github.com/fsnotify/fsnotify v1.5.1 // indirect
 	github.com/fvbock/endless v0.0.0-20170109170031-447134032cb6 // indirect
 	github.com/gavv/httpexpect/v2 v2.3.1 // indirect
+	github.com/gin-contrib/pprof v1.3.0 // indirect
 	github.com/gin-contrib/sse v0.1.0 // indirect
-	github.com/gin-contrib/static v0.0.1 // indirect
 	github.com/go-playground/locales v0.14.0 // indirect
 	github.com/go-playground/universal-translator v0.18.0 // indirect
 	github.com/go-playground/validator/v10 v10.9.0 // indirect
