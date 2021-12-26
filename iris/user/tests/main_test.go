@@ -15,7 +15,7 @@ var TestClient *httptest.Client
 
 func TestMain(m *testing.M) {
 	var uuid string
-	uuid, TestServer = web_tests.BeforeTestMainIris(4, rbac.PartyFunc, rbac.SeedFunc)
+	uuid, TestServer = web_tests.BeforeTestMainIris(rbac.PartyFunc, rbac.SeedFunc)
 	code := m.Run()
 	web_tests.AfterTestMain(uuid, true)
 

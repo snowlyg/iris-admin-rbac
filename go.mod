@@ -10,14 +10,12 @@ require (
 	github.com/mojocn/base64Captcha v1.3.5
 	github.com/snowlyg/helper v0.0.3
 	github.com/snowlyg/httptest v0.0.1
-	github.com/snowlyg/iris-admin v1.1.1-alpha11
+	github.com/snowlyg/iris-admin v1.1.1-alpha12
 	github.com/snowlyg/multi v0.0.1-alpha2
 	go.uber.org/zap v1.19.1
 	golang.org/x/crypto v0.0.0-20211215153901-e495a2d5b3d3
 	gorm.io/gorm v1.22.4
 )
-
-replace github.com/snowlyg/iris-admin v1.1.1-alpha6 => /Users/snowlyg/go/src/github.com/snowlyg/iris-admin
 
 require (
 	github.com/BurntSushi/toml v0.4.1 // indirect
