@@ -4,7 +4,7 @@ import (
 	"regexp"
 
 	"github.com/snowlyg/iris-admin/server/database/orm"
-	"github.com/snowlyg/iris-admin/server/web/web_gin"
+	"github.com/snowlyg/iris-admin/server/web"
 	"github.com/snowlyg/iris-admin/server/zap_server"
 	"go.uber.org/zap"
 	"gorm.io/gorm"
@@ -22,7 +22,7 @@ func (res *Response) ToString() {
 	}
 	re := regexp.MustCompile("^http")
 	if !re.MatchString(res.Avatar.HeaderImg) {
-		res.Avatar.HeaderImg = web_gin.ToStaticUrl(res.Avatar.HeaderImg)
+		res.Avatar.HeaderImg = web.ToStaticUrl(res.Avatar.HeaderImg)
 	}
 }
 

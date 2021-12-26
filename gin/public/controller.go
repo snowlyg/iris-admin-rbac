@@ -3,7 +3,7 @@ package public
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/mojocn/base64Captcha"
-	"github.com/snowlyg/iris-admin/server/web/web_gin"
+	"github.com/snowlyg/iris-admin/server/web"
 	"github.com/snowlyg/iris-admin/server/web/web_gin/response"
 	"github.com/snowlyg/iris-admin/server/zap_server"
 	"github.com/snowlyg/multi"
@@ -80,7 +80,7 @@ func Clear(ctx *gin.Context) {
 func Captcha(ctx *gin.Context) {
 	//字符,公式,验证码配置
 	// 生成默认数字的driver
-	driver := base64Captcha.NewDriverDigit(web_gin.CONFIG.Captcha.ImgHeight, web_gin.CONFIG.Captcha.ImgWidth, web_gin.CONFIG.Captcha.KeyLong, 0.7, 80)
+	driver := base64Captcha.NewDriverDigit(web.CONFIG.Captcha.ImgHeight, web.CONFIG.Captcha.ImgWidth, web.CONFIG.Captcha.KeyLong, 0.7, 80)
 	cp := base64Captcha.NewCaptcha(driver, store)
 	if id, b64s, err := cp.Generate(); err != nil {
 		zap_server.ZAPLOG.Error("验证码获取失败!", zap.Any("err", err))

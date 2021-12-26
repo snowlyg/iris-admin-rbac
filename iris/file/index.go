@@ -2,7 +2,7 @@ package file
 
 import (
 	"github.com/kataras/iris/v12"
-	"github.com/snowlyg/iris-admin/server/web/web_iris"
+	"github.com/snowlyg/iris-admin/server/web"
 	"github.com/snowlyg/iris-admin/server/web/web_iris/middleware"
 )
 
@@ -10,6 +10,6 @@ import (
 func Party() func(index iris.Party) {
 	return func(index iris.Party) {
 		index.Use(middleware.MultiHandler(), middleware.OperationRecord(), middleware.Casbin())
-		index.Post("/", iris.LimitRequestBodySize(web_iris.CONFIG.MaxSize+1<<20), Upload).Name = "上传文件"
+		index.Post("/", iris.LimitRequestBodySize(web.CONFIG.MaxSize+1<<20), Upload).Name = "上传文件"
 	}
 }

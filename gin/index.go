@@ -12,6 +12,7 @@ import (
 	"github.com/snowlyg/iris-admin/migration"
 	"github.com/snowlyg/iris-admin/server/operation"
 	"github.com/snowlyg/iris-admin/server/web/web_gin"
+	"github.com/snowlyg/iris-admin/server/zap_server"
 	"github.com/snowlyg/multi"
 )
 
@@ -41,6 +42,11 @@ var LogoutResponse = httptest.Responses{
 
 // 加载模块
 var PartyFunc = func(wi *web_gin.WebServer) {
+	// 初始化驱动
+	err := multi.InitDriver(&multi.Config{DriverType: "jwt", HmacSecret: nil})
+	if err != nil {
+		zap_server.ZAPLOG.Panic("err")
+	}
 	Party(wi.GetRouterGroup("/api/v1"))
 }
 
