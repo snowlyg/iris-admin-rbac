@@ -3,6 +3,7 @@ package public
 import (
 	"errors"
 	"fmt"
+	"time"
 
 	"github.com/snowlyg/iris-admin-rbac/gin/admin"
 	"github.com/snowlyg/iris-admin/server/database"
@@ -31,7 +32,7 @@ func GetAccessToken(req *LoginRequest) (*LoginResponse, error) {
 		zap_server.ZAPLOG.Error("用户名或密码错误", zap.String("密码:", req.Password), zap.String("hash:", admin.Password), zap.String("bcrypt.CompareHashAndPassword()", err.Error()))
 		return nil, ErrUserNameOrPassword
 	}
-
+	expiresAt := time.Now().Local().Add(multi.RedisSessionTimeoutWeb).Unix()
 	claims := multi.New(&multi.Multi{
 		Id:            admin.Id,
 		Username:      req.Username,
@@ -39,7 +40,7 @@ func GetAccessToken(req *LoginRequest) (*LoginResponse, error) {
 		AuthorityType: multi.AdminAuthority,
 		LoginType:     multi.LoginTypeWeb,
 		AuthType:      multi.AuthPwd,
-		ExpiresIn:     multi.RedisSessionTimeoutWeb.Milliseconds(),
+		ExpiresAt:     expiresAt,
 	})
 	token, _, err := multi.AuthDriver.GenerateToken(claims)
 	if err != nil {
@@ -53,47 +54,6 @@ func GetAccessToken(req *LoginRequest) (*LoginResponse, error) {
 	}
 	return loginResponse, nil
 }
-
-// // GetDeviceAccessToken 登录
-// func GetDeviceAccessToken(req *LoginDeviceRequest) (*LoginResponse, error) {
-
-// 	tenancy, err := GetTenancyByUUID(req.UUID)
-// 	if err != nil {
-// 		return nil, fmt.Errorf("find tenancy %w", err)
-// 	}
-// 	if tenancy.Status == g.StatusFalse {
-// 		return nil, fmt.Errorf("商户已被冻结")
-// 	}
-// 	cuserId, err := CreateCUserFromDevice(req, tenancy.ID)
-// 	if err != nil {
-// 		return nil, err
-// 	}
-
-// 	claims := &multi.CustomClaims{
-// 		ID:            strconv.FormatUint(uint64(cuserId), 10), // 患者 id
-// 		Username:      req.HospitalNo,                          // 用户名使用住院号
-// 		TenancyId:     tenancy.ID,
-// 		TenancyName:   tenancy.Name,
-// 		AuthorityId:   strconv.FormatUint(uint64(g.DeviceAuthorityId), 10),
-// 		AuthorityType: multi.GeneralAuthority,
-// 		LoginType:     multi.LoginTypeDevice,
-// 		AuthType:      multi.AuthPwd,
-// 		CreationDate:  time.Now().Local().Unix(),
-// 		ExpiresIn:     multi.RedisSessionTimeoutWeb.Milliseconds(),
-// 	}
-// 	token, _, err := multi.AuthDriver.GenerateToken(claims)
-// 	if err != nil {
-// 		return nil, err
-// 	}
-// 	loginResponse := &LoginResponse{
-// 		Data: map[string]interface{}{
-// 			"id":         cuserId,
-// 			"hospitalNo": req.HospitalNo,
-// 		},
-// 		Token: token,
-// 	}
-// 	return loginResponse, nil
-// }
 
 // DelToken 删除token
 func DelToken(token string) error {
@@ -114,107 +74,3 @@ func CleanToken(authorityType int, userId string) error {
 	}
 	return nil
 }
-
-// // GetMiniCode
-// func GetMiniCode(miniCode *MiniCode) (*MiniCodeResponse, error) {
-// 	mini, err := getMiniProgram()
-// 	if err != nil {
-// 		return nil, err
-// 	}
-// 	a := mini.GetAuth()
-// 	result, err := a.Code2Session(miniCode.Code)
-// 	if err != nil {
-// 		return nil, fmt.Errorf("find tenancy %w", err)
-// 	}
-// 	rmc := &MiniCodeResponse{
-// 		SessionKey: result.SessionKey,
-// 		OpenId:     result.OpenID,
-// 		UnionId:    result.UnionID,
-// 	}
-// 	return rmc, nil
-// }
-
-// // GetMiniAccessToken
-// func GetMiniAccessToken(miniLogin *MiniLogin) (*LoginResponse, error) {
-// 	tenancy, err := GetTenancyByUUID(miniLogin.UUID)
-// 	if err != nil {
-// 		return nil, fmt.Errorf("find tenancy %w", err)
-// 	}
-// 	if tenancy.Status == g.StatusFalse {
-// 		return nil, fmt.Errorf("商户已被冻结")
-// 	}
-
-// 	mini, err := getMiniProgram()
-// 	if err != nil {
-// 		return nil, err
-// 	}
-// 	enc := mini.GetEncryptor()
-// 	plainData, err := enc.Decrypt(miniLogin.SessionKey, miniLogin.EncryptedData, miniLogin.Iv)
-// 	if err != nil {
-// 		return nil, err
-// 	}
-// 	baseGeneralInfo := model.BaseGeneralInfo{
-// 		OpenId:    miniLogin.OpenId,
-// 		UnionId:   miniLogin.UnionId,
-// 		NickName:  plainData.NickName,
-// 		City:      plainData.City,
-// 		Province:  plainData.Province,
-// 		Country:   plainData.Country,
-// 		AvatarUrl: plainData.AvatarURL,
-// 		Phone:     plainData.PhoneNumber,
-// 		Sex:       plainData.Gender, //1男性,2女性,0未知
-// 	}
-
-// 	cuserId, err := CreateCUserFromMini(baseGeneralInfo, tenancy.ID)
-// 	if err != nil {
-// 		return nil, err
-// 	}
-
-// 	claims := &multi.CustomClaims{
-// 		ID:            strconv.FormatUint(uint64(cuserId), 10), // 患者 id
-// 		Username:      baseGeneralInfo.NickName,                // 用户微信昵称
-// 		TenancyId:     tenancy.ID,
-// 		TenancyName:   tenancy.Name,
-// 		AuthorityId:   strconv.FormatUint(uint64(g.DeviceAuthorityId), 10),
-// 		AuthorityType: multi.GeneralAuthority,
-// 		LoginType:     multi.LoginTypeDevice,
-// 		AuthType:      multi.AuthPwd,
-// 		CreationDate:  time.Now().Local().Unix(),
-// 		ExpiresIn:     multi.RedisSessionTimeoutWeb.Milliseconds(),
-// 	}
-// 	token, _, err := multi.AuthDriver.GenerateToken(claims)
-// 	if err != nil {
-// 		return nil, err
-// 	}
-// 	loginResponse := &LoginResponse{
-// 		Data: map[string]interface{}{
-// 			"nickname": baseGeneralInfo.NickName,
-// 		},
-// 		Token: token,
-// 	}
-// 	return loginResponse, nil
-// }
-
-// // AuthPhoneNumber
-// func AuthPhoneNumber(phoneNumber *PhoneNumber, tenancyId uint) error {
-// 	mini, err := getMiniProgram()
-// 	if err != nil {
-// 		return err
-// 	}
-// 	enc := mini.GetEncryptor()
-// 	plainData, err := enc.Decrypt(phoneNumber.SessionKey, phoneNumber.EncryptedData, phoneNumber.Iv)
-// 	if err != nil {
-// 		return err
-// 	}
-// 	baseGeneralInfo := model.BaseGeneralInfo{
-// 		OpenId:  phoneNumber.OpenId,
-// 		UnionId: phoneNumber.UnionId,
-// 		Phone:   plainData.PhoneNumber,
-// 	}
-
-// 	_, err = CreateCUserFromMini(baseGeneralInfo, tenancyId)
-// 	if err != nil {
-// 		return err
-// 	}
-// 	return nil
-// }

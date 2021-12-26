@@ -2,6 +2,7 @@ package auth
 
 import (
 	"errors"
+	"time"
 
 	"github.com/snowlyg/iris-admin-rbac/iris/user"
 	"github.com/snowlyg/iris-admin/server/database"
@@ -26,6 +27,7 @@ func GetAccessToken(req *LoginRequest) (string, error) {
 		zap_server.ZAPLOG.Error("用户名或密码错误", zap.String("密码:", req.Password), zap.String("hash:", admin.Password), zap.String("bcrypt.CompareHashAndPassword()", err.Error()))
 		return "", ErrUserNameOrPassword
 	}
+	expiresAt := time.Now().Local().Add(multi.RedisSessionTimeoutWeb).Unix()
 	claims := multi.New(&multi.Multi{
 		Id:            admin.Id,
 		Username:      req.Username,
@@ -33,7 +35,7 @@ func GetAccessToken(req *LoginRequest) (string, error) {
 		AuthorityType: multi.AdminAuthority,
 		LoginType:     multi.LoginTypeWeb,
 		AuthType:      multi.AuthPwd,
-		ExpiresIn:     multi.RedisSessionTimeoutWeb.Milliseconds(),
+		ExpiresAt:     expiresAt,
 	})
 	token, _, err := multi.AuthDriver.GenerateToken(claims)
 	if err != nil {

@@ -11,7 +11,7 @@ require (
 	github.com/snowlyg/helper v0.0.3
 	github.com/snowlyg/httptest v0.0.1
 	github.com/snowlyg/iris-admin v1.1.1-alpha6
-	github.com/snowlyg/multi v0.0.1-alpha1
+	github.com/snowlyg/multi v0.0.1-alpha2
 	go.uber.org/zap v1.19.1
 	golang.org/x/crypto v0.0.0-20211215153901-e495a2d5b3d3
 	gorm.io/gorm v1.22.4
@@ -48,6 +48,7 @@ require (
 	github.com/go-playground/validator/v10 v10.9.0 // indirect
 	github.com/go-redis/redis/v8 v8.11.4 // indirect
 	github.com/go-sql-driver/mysql v1.6.0 // indirect
+	github.com/golang-jwt/jwt v3.2.2+incompatible // indirect
 	github.com/golang-sql/civil v0.0.0-20190719163853-cb61b32ac6fe // indirect
 	github.com/golang/freetype v0.0.0-20170609003504-e2365dfdc4a0 // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
