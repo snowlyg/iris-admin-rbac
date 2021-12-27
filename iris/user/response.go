@@ -1,6 +1,7 @@
 package user
 
 import (
+	"path/filepath"
 	"regexp"
 
 	"github.com/snowlyg/iris-admin/server/database/orm"
@@ -22,7 +23,7 @@ func (res *Response) ToString() {
 	}
 	re := regexp.MustCompile("^http")
 	if !re.MatchString(res.Avatar) {
-		res.Avatar = web.ToStaticUrl(res.Avatar)
+		res.Avatar = filepath.ToSlash(web.ToStaticUrl(res.Avatar))
 	}
 }
 

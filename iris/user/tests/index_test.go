@@ -2,6 +2,7 @@ package tests
 
 import (
 	"fmt"
+	"path/filepath"
 	"testing"
 
 	"github.com/snowlyg/httptest"
@@ -159,7 +160,7 @@ func TestChangeAvatar(t *testing.T) {
 			{Key: "name", Value: "超级管理员"},
 			{Key: "username", Value: "admin"},
 			{Key: "intro", Value: "超级管理员"},
-			{Key: "avatar", Value: web.ToStaticUrl("/avatar.png")},
+			{Key: "avatar", Value: filepath.ToSlash(web.ToStaticUrl("/avatar.png"))},
 			{Key: "roles", Value: []string{"超级管理员"}},
 			{Key: "updatedAt", Value: "", Type: "notempty"},
 			{Key: "createdAt", Value: "", Type: "notempty"},
