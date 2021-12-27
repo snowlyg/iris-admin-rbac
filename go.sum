@@ -628,8 +628,12 @@ github.com/snowlyg/iris-admin v1.1.1-alpha17 h1:VgArYL0R8fJ0Kg8e5rwy/oAIHSBdBScx
 github.com/snowlyg/iris-admin v1.1.1-alpha17/go.mod h1:vbMMo7GR6fqcJzaHtZiRvvJzlD6oUhdv6/37iRc+eUo=
 github.com/snowlyg/iris-admin v1.1.1-alpha18 h1:+BCJWwgnUPImlsNvUQtpljscdxmDSZzouIuDNg6tzOc=
 github.com/snowlyg/iris-admin v1.1.1-alpha18/go.mod h1:X5FgABFf+qwl+LlFrgCzYkZJhV51fCTaJC+KVD352I0=
+github.com/snowlyg/iris-admin v1.1.1-alpha19 h1:kJU1XV8YqIhMWWuJi6znIF73IQPxdkpBp6MHfYjVQV4=
+github.com/snowlyg/iris-admin v1.1.1-alpha19/go.mod h1:X5FgABFf+qwl+LlFrgCzYkZJhV51fCTaJC+KVD352I0=
 github.com/snowlyg/multi v0.0.1-alpha2 h1:5Rj4obE1uF2drGc/iYSTNkgqXn8VapolGcnIQo4lIkA=
 github.com/snowlyg/multi v0.0.1-alpha2/go.mod h1:bUUoodXvQpXkT/ffDZKhQxWMV3xEk+Z48sWtHAFJgE4=
+github.com/snowlyg/multi v0.0.1-alpha3 h1:MWjV+bGtNH4M05htUaZ+7suxSx1Djc4/8mf3q5EZru8=
+github.com/snowlyg/multi v0.0.1-alpha3/go.mod h1:bUUoodXvQpXkT/ffDZKhQxWMV3xEk+Z48sWtHAFJgE4=
 github.com/spaolacci/murmur3 v0.0.0-20180118202830-f09979ecbc72/go.mod h1:JwIasOWyU6f++ZhiEuf87xNszmSA2myDM2Kzu9HwQUA=
 github.com/spaolacci/murmur3 v1.1.0/go.mod h1:JwIasOWyU6f++ZhiEuf87xNszmSA2myDM2Kzu9HwQUA=
 github.com/spf13/afero v1.1.2/go.mod h1:j4pytiNVoe2o6bmDsKpLACNPDBIoEAkihy7loJ1B0CQ=
