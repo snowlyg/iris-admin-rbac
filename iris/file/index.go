@@ -2,8 +2,8 @@ package file
 
 import (
 	"github.com/kataras/iris/v12"
+	"github.com/snowlyg/iris-admin-rbac/iris/middleware"
 	"github.com/snowlyg/iris-admin/server/web"
-	"github.com/snowlyg/iris-admin/server/web/web_iris/middleware"
 )
 
 // Party 上传文件模块

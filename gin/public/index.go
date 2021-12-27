@@ -2,7 +2,7 @@ package public
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/snowlyg/iris-admin/server/web/web_gin/middleware"
+	"github.com/snowlyg/iris-admin-rbac/gin/middleware"
 )
 
 // Group 认证模块

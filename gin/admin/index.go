@@ -2,11 +2,11 @@ package admin
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/snowlyg/iris-admin/server/web/web_gin/middleware"
+	"github.com/snowlyg/iris-admin-rbac/gin/middleware"
 )
 
 func Group(group *gin.RouterGroup) {
-	adminRouter := group.Group("/admin", middleware.Auth(), middleware.CasbinHandler(), middleware.Cors())
+	adminRouter := group.Group("/admin", middleware.Auth(), middleware.CasbinHandler())
 	{
 		adminRouter.GET("/getAll", GetAll)
 		adminRouter.GET("/getAdmin/:id", GetAdmin)

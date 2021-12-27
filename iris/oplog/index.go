@@ -2,7 +2,7 @@ package oplog
 
 import (
 	"github.com/kataras/iris/v12"
-	"github.com/snowlyg/iris-admin/server/web/web_iris/middleware"
+	"github.com/snowlyg/iris-admin-rbac/iris/middleware"
 )
 
 // Party 操作日志

@@ -2,12 +2,12 @@ package authority
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/snowlyg/iris-admin/server/web/web_gin/middleware"
+	"github.com/snowlyg/iris-admin-rbac/gin/middleware"
 )
 
 func Group(group *gin.RouterGroup) {
 
-	authRouter := group.Group("/authority", middleware.Auth(), middleware.CasbinHandler(), middleware.Cors())
+	authRouter := group.Group("/authority", middleware.Auth(), middleware.CasbinHandler())
 	{
 		authRouter.GET("/getAuthorityList", GetAuthorityList)               // 获取角色列表
 		authRouter.GET("/getAdminAuthorityList", GetAdminAuthorityList)     // 获取员工角色列表
@@ -15,7 +15,7 @@ func Group(group *gin.RouterGroup) {
 		authRouter.GET("/getGeneralAuthorityList", GetGeneralAuthorityList) // 获取普通用户角色列表
 		authRouter.POST("/createAuthority", CreateAuthority)                // 创建角色
 		authRouter.PUT("/updateAuthority/:id", UpdateAuthority)             // 更新角色
-		authRouter.POST("/copyAuthority/:id", CopyAuthority)                 // 复制
+		authRouter.POST("/copyAuthority/:id", CopyAuthority)                // 复制
 		authRouter.DELETE("/deleteAuthority/:id", DeleteAuthority)          // 删除角色
 	}
 }

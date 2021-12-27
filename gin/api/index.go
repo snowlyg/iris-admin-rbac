@@ -2,11 +2,11 @@ package api
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/snowlyg/iris-admin/server/web/web_gin/middleware"
+	"github.com/snowlyg/iris-admin-rbac/gin/middleware"
 )
 
 func Group(group *gin.RouterGroup) {
-	apiRouter := group.Group("/api", middleware.Auth(), middleware.CasbinHandler(), middleware.Cors())
+	apiRouter := group.Group("/api", middleware.Auth(), middleware.CasbinHandler())
 	{
 		apiRouter.GET("/getList", GetApiList)                 // 获取Api列表
 		apiRouter.GET("/getAll", GetAllApis)                  // 获取所有api
