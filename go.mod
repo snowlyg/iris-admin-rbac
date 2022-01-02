@@ -17,8 +17,6 @@ require (
 	gorm.io/gorm v1.22.4
 )
 
-replace github.com/snowlyg/iris-admin v1.1.1-alpha35 => /Users/snowlyg/go/src/github.com/snowlyg/iris-admin
-
 require (
 	github.com/BurntSushi/toml v0.4.1 // indirect
 	github.com/CloudyKit/fastprinter v0.0.0-20200109182630-33d98a066a53 // indirect
