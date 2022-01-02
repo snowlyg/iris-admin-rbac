@@ -1,3 +1,4 @@
+/**
 <h1 align="center">IrisAdminRbac</h1>
 
 [IrisAdminRbac](https://www.github.com/snowlyg/iris-admin-rbac) 项目为一个权鉴模块插件,可以为 [IrisAdmin](https://www.github.com/snowlyg/iris-admin) 项目快速集成权鉴管理API.
@@ -44,3 +45,6 @@ func main() {
 }
 
 ```
+*/
+
+package doc
