@@ -2,7 +2,6 @@ package authority
 
 import (
 	"github.com/snowlyg/iris-admin/server/zap_server"
-	"go.uber.org/zap"
 	"gorm.io/gorm"
 )
 
@@ -43,7 +42,7 @@ type BaseMenu struct {
 func (item *Authority) Create(db *gorm.DB) (uint, error) {
 	err := db.Model(item).Create(item).Error
 	if err != nil {
-		zap_server.ZAPLOG.Error("添加失败", zap.String("(item *Authority) Create()", err.Error()))
+		zap_server.ZAPLOG.Error(err.Error())
 		return item.ID, err
 	}
 	return item.ID, nil
@@ -53,7 +52,7 @@ func (item *Authority) Create(db *gorm.DB) (uint, error) {
 func (item *Authority) Update(db *gorm.DB, scopes ...func(db *gorm.DB) *gorm.DB) error {
 	err := db.Model(item).Scopes(scopes...).Updates(item).Error
 	if err != nil {
-		zap_server.ZAPLOG.Error("更新失败", zap.String("(item *Authority) Update() ", err.Error()))
+		zap_server.ZAPLOG.Error(err.Error())
 		return err
 	}
 	return nil
@@ -63,7 +62,7 @@ func (item *Authority) Update(db *gorm.DB, scopes ...func(db *gorm.DB) *gorm.DB)
 func (item *Authority) Delete(db *gorm.DB, scopes ...func(db *gorm.DB) *gorm.DB) error {
 	err := db.Model(item).Unscoped().Scopes(scopes...).Delete(item).Error
 	if err != nil {
-		zap_server.ZAPLOG.Error("删除失败", zap.String("(item *Authority) Delete()", err.Error()))
+		zap_server.ZAPLOG.Error(err.Error())
 		return err
 	}
 	return nil

@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/snowlyg/helper/str"
 	"github.com/snowlyg/httptest"
 	"github.com/snowlyg/iris-admin-rbac/gin/admin"
 	"github.com/snowlyg/iris-admin-rbac/gin/api"
@@ -24,8 +25,9 @@ func Party(group *gin.RouterGroup) {
 	public.Group(group)
 }
 
-var LoginUrl = "/api/v1/public/admin/login"
-var LogoutUrl = "/api/v1/public/logout"
+var prefix = "/api/v1"
+var LoginUrl = str.Join(prefix, "/public/admin/login")
+var LogoutUrl = str.Join(prefix, "/public/logout")
 var LoginResponse = httptest.Responses{
 	{Key: "status", Value: http.StatusOK},
 	{Key: "message", Value: "操作成功"},
@@ -35,6 +37,7 @@ var LoginResponse = httptest.Responses{
 		},
 	},
 }
+
 var LogoutResponse = httptest.Responses{
 	{Key: "status", Value: http.StatusOK},
 	{Key: "message", Value: "操作成功"},
@@ -47,7 +50,7 @@ var PartyFunc = func(wi *web_gin.WebServer) {
 	if err != nil {
 		zap_server.ZAPLOG.Panic("err")
 	}
-	Party(wi.GetRouterGroup("/api/v1"))
+	Party(wi.GetRouterGroup(prefix))
 }
 
 //  填充数据

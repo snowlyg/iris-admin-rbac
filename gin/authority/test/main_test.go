@@ -19,6 +19,5 @@ func TestMain(m *testing.M) {
 	uuid, TestServer = web_tests.BeforeTestMainGin(rbac.PartyFunc, rbac.SeedFunc)
 	code := m.Run()
 	web_tests.AfterTestMain(uuid, true)
-
 	os.Exit(code)
 }

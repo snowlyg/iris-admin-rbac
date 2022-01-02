@@ -8,7 +8,6 @@ import (
 	"github.com/snowlyg/iris-admin/server/database/orm"
 	"github.com/snowlyg/iris-admin/server/database/scope"
 	"github.com/snowlyg/iris-admin/server/zap_server"
-	"go.uber.org/zap"
 	"gorm.io/gorm"
 )
 
@@ -16,7 +15,7 @@ import (
 func CreatenInBatches(db *gorm.DB, apis ApiCollection) error {
 	err := db.Model(&Api{}).CreateInBatches(&apis, 500).Error
 	if err != nil {
-		zap_server.ZAPLOG.Error("批量导入权限", zap.String("错误:", err.Error()))
+		zap_server.ZAPLOG.Error(err.Error())
 		return err
 	}
 	return nil

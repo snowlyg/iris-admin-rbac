@@ -9,12 +9,10 @@ import (
 	"github.com/snowlyg/iris-admin/server/operation"
 	"github.com/snowlyg/iris-admin/server/zap_server"
 	multi "github.com/snowlyg/multi/gin"
-	"go.uber.org/zap"
 )
 
 func OperationRecord() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-
 		// 请求操作不记录
 		if ctx.Request.Method == "GET" {
 			ctx.Next()
@@ -25,7 +23,7 @@ func OperationRecord() gin.HandlerFunc {
 		var err error
 		body, err = ioutil.ReadAll(ctx.Request.Body)
 		if err != nil {
-			zap_server.ZAPLOG.Error("read body from request error:", zap.Any("err", err))
+			zap_server.ZAPLOG.Error(err.Error())
 		} else {
 			// ioutil.ReadAll 读取数据后重新回写数据
 			ctx.Request.Body = ioutil.NopCloser(bytes.NewBuffer(body))
@@ -56,7 +54,7 @@ func OperationRecord() gin.HandlerFunc {
 		record.Latency = latency
 		record.Resp = writer.body.String()
 		if err := operation.CreateOplog(record); err != nil {
-			zap_server.ZAPLOG.Error("生成日志错误", zap.String("CreateOplog()", err.Error()))
+			zap_server.ZAPLOG.Error(err.Error())
 		}
 	}
 }

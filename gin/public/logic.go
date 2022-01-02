@@ -29,7 +29,10 @@ func GetAccessToken(req *LoginRequest) (*LoginResponse, error) {
 		return nil, err
 	}
 	if err := bcrypt.CompareHashAndPassword([]byte(admin.Password), []byte(req.Password)); err != nil {
-		zap_server.ZAPLOG.Error("用户名或密码错误", zap.String("密码:", req.Password), zap.String("hash:", admin.Password), zap.String("bcrypt.CompareHashAndPassword()", err.Error()))
+		zap_server.ZAPLOG.Error("用户名或密码错误:",
+			zap.String("密码:", req.Password),
+			zap.String("hash:", admin.Password),
+			zap.String("错误:", err.Error()))
 		return nil, ErrUserNameOrPassword
 	}
 	expiresAt := time.Now().Local().Add(multi.RedisSessionTimeoutWeb).Unix()
@@ -46,6 +49,9 @@ func GetAccessToken(req *LoginRequest) (*LoginResponse, error) {
 	if err != nil {
 		return nil, err
 	}
+	if token == "" {
+		return nil, multi.ErrEmptyToken
+	}
 	loginResponse := &LoginResponse{
 		Data: map[string]interface{}{
 			"id": admin.Id,
@@ -59,8 +65,8 @@ func GetAccessToken(req *LoginRequest) (*LoginResponse, error) {
 func DelToken(token string) error {
 	err := multi.AuthDriver.DelUserTokenCache(token)
 	if err != nil {
-		zap_server.ZAPLOG.Error("del token", zap.Any("err", err))
-		return fmt.Errorf("del token %w", err)
+		zap_server.ZAPLOG.Error(err.Error())
+		return fmt.Errorf("删除TOKEN失败: %w", err)
 	}
 	return nil
 }
@@ -69,8 +75,8 @@ func DelToken(token string) error {
 func CleanToken(authorityType int, userId string) error {
 	err := multi.AuthDriver.CleanUserTokenCache(authorityType, userId)
 	if err != nil {
-		zap_server.ZAPLOG.Error("clean token", zap.Any("err", err))
-		return fmt.Errorf("clean token %w", err)
+		zap_server.ZAPLOG.Error(err.Error())
+		return fmt.Errorf("清除TOKEN失败: %w", err)
 	}
 	return nil
 }

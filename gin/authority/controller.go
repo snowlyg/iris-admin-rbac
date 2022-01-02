@@ -6,9 +6,7 @@ import (
 	"github.com/snowlyg/iris-admin/server/database/orm"
 	"github.com/snowlyg/iris-admin/server/database/scope"
 	"github.com/snowlyg/iris-admin/server/web/web_gin/response"
-	"github.com/snowlyg/iris-admin/server/zap_server"
 	"github.com/snowlyg/multi"
-	"go.uber.org/zap"
 )
 
 // CreateAuthority 创建角色
@@ -20,7 +18,6 @@ func CreateAuthority(ctx *gin.Context) {
 	}
 
 	if id, err := Create(req); err != nil {
-		zap_server.ZAPLOG.Error("添加角色数据失败", zap.Any("Create", err))
 		response.FailWithMessage(err.Error(), ctx)
 	} else {
 		response.OkWithData(gin.H{"id": id}, ctx)
@@ -42,7 +39,6 @@ func CopyAuthority(ctx *gin.Context) {
 	}
 
 	if id, err := Copy(reqId.Id, req); err != nil {
-		zap_server.ZAPLOG.Error("拷贝失败!", zap.Any("err", err))
 		response.FailWithMessage(err.Error(), ctx)
 	} else {
 		response.OkWithData(gin.H{"id": id}, ctx)

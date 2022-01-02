@@ -8,14 +8,16 @@ require (
 	github.com/gookit/color v1.5.0
 	github.com/kataras/iris/v12 v12.2.0-alpha5
 	github.com/mojocn/base64Captcha v1.3.5
-	github.com/snowlyg/helper v0.0.3
+	github.com/snowlyg/helper v0.0.4-alpha6
 	github.com/snowlyg/httptest v0.0.1
-	github.com/snowlyg/iris-admin v1.1.1-alpha31
+	github.com/snowlyg/iris-admin v1.1.1-alpha35
 	github.com/snowlyg/multi v0.0.1-alpha3
 	go.uber.org/zap v1.19.1
 	golang.org/x/crypto v0.0.0-20211215153901-e495a2d5b3d3
 	gorm.io/gorm v1.22.4
 )
+
+replace github.com/snowlyg/iris-admin v1.1.1-alpha35 => /Users/snowlyg/go/src/github.com/snowlyg/iris-admin
 
 require (
 	github.com/BurntSushi/toml v0.4.1 // indirect

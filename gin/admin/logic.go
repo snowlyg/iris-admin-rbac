@@ -40,7 +40,7 @@ func transform(admins ...*Response) {
 
 	roles, err := authority.FindInId(database.Instance(), roleIds)
 	if err != nil {
-		zap_server.ZAPLOG.Error("获取权限数据错误 ", zap.String("authority.FindInId", err.Error()))
+		zap_server.ZAPLOG.Error(err.Error())
 		return
 	}
 	if len(roles) == 0 {
@@ -75,7 +75,7 @@ func FindPasswordByUserName(db *gorm.DB, username string, ids ...uint) (*LoginRe
 	}
 	err := db.First(admin).Error
 	if err != nil {
-		zap_server.ZAPLOG.Error("根据用户名查询用户错误", zap.String("用户名:", username), zap.Uints("ids:", ids), zap.String("错误:", err.Error()))
+		zap_server.ZAPLOG.Error(err.Error())
 		return admin, err
 	}
 	userId := strconv.FormatUint(uint64(admin.Id), 10)
@@ -90,7 +90,7 @@ func FindPasswordByUserName(db *gorm.DB, username string, ids ...uint) (*LoginRe
 func getUserRoleIds(userId string) ([]string, error) {
 	roleIds, err := casbin.Instance().GetRolesForUser(userId)
 	if err != nil {
-		zap_server.ZAPLOG.Error("获取用户角色错误", zap.String("casbin.Instance().GetRolesForUser", err.Error()))
+		zap_server.ZAPLOG.Error(err.Error())
 		return nil, err
 	}
 	return roleIds, nil
@@ -103,7 +103,7 @@ func Create(req *Request) (uint, error) {
 	admin := &Admin{BaseAdmin: req.BaseAdmin, AuthorityIds: req.AuthorityIds}
 	hash, err := bcrypt.GenerateFromPassword([]byte(req.Password), bcrypt.DefaultCost)
 	if err != nil {
-		zap_server.ZAPLOG.Error("密码加密错误", zap.String("错误:", err.Error()))
+		zap_server.ZAPLOG.Error(err.Error())
 		return 0, err
 	}
 
@@ -116,7 +116,7 @@ func Create(req *Request) (uint, error) {
 	}
 
 	if err := AddRoleForUser(admin); err != nil {
-		zap_server.ZAPLOG.Error("添加用户角色错误", zap.String("错误:", err.Error()))
+		zap_server.ZAPLOG.Error(err.Error())
 		return 0, err
 	}
 
@@ -140,13 +140,13 @@ func AddRoleForUser(admin *Admin) error {
 	userId := strconv.FormatUint(uint64(admin.ID), 10)
 	oldRoleIds, err := getUserRoleIds(userId)
 	if err != nil {
-		zap_server.ZAPLOG.Error("获取用户角色错误", zap.String("错误:", err.Error()))
+		zap_server.ZAPLOG.Error(err.Error())
 		return err
 	}
 
 	if len(oldRoleIds) > 0 {
 		if _, err := casbin.Instance().DeleteRolesForUser(userId); err != nil {
-			zap_server.ZAPLOG.Error("添加角色到用户错误", zap.String("错误:", err.Error()))
+			zap_server.ZAPLOG.Error(err.Error())
 			return err
 		}
 	}
@@ -161,7 +161,7 @@ func AddRoleForUser(admin *Admin) error {
 	}
 
 	if _, err := casbin.Instance().AddRolesForUser(userId, roleIds); err != nil {
-		zap_server.ZAPLOG.Error("添加角色到用户错误", zap.String("错误:", err.Error()))
+		zap_server.ZAPLOG.Error(err.Error())
 		return err
 	}
 
@@ -171,7 +171,7 @@ func AddRoleForUser(admin *Admin) error {
 func UpdateAvatar(db *gorm.DB, id uint, avatar string) error {
 	err := db.Model(&Admin{}).Where("id = ?", id).Update("header_img", avatar).Error
 	if err != nil {
-		zap_server.ZAPLOG.Error("更新头像失败", zap.String("UpdateAvatar", err.Error()))
+		zap_server.ZAPLOG.Error(err.Error())
 		return err
 	}
 

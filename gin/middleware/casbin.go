@@ -14,12 +14,10 @@ import (
 func CasbinHandler() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		obj := filepath.ToSlash(filepath.Clean(ctx.Request.URL.Path))
-		// 获取请求方法
 		act := ctx.Request.Method
-		// 获取用户的角色
-		subs := multi.GetAuthorityId(ctx)
+		subs := multi.GetAuthorityId(ctx) // 获取用户的角色
 		if len(subs) == 0 {
-			zap_server.ZAPLOG.Info("用户角色ID为空")
+			zap_server.ZAPLOG.Error("用户角色ID为空")
 			response.UnauthorizedFailWithMessage("TOKEN已经过期", ctx)
 			ctx.Abort()
 			return

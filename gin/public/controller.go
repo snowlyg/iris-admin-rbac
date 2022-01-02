@@ -5,30 +5,11 @@ import (
 	"github.com/mojocn/base64Captcha"
 	"github.com/snowlyg/iris-admin/server/web"
 	"github.com/snowlyg/iris-admin/server/web/web_gin/response"
-	"github.com/snowlyg/iris-admin/server/zap_server"
 	"github.com/snowlyg/multi"
 	multi_gin "github.com/snowlyg/multi/gin"
-	"go.uber.org/zap"
 )
 
 var store = base64Captcha.DefaultMemStore
-
-// //ClientLogin 后台登录
-// func ClientLogin(ctx *gin.Context) {
-// 	req := &LoginRequest{}
-// 	if errs := req.Request(ctx); errs != nil {
-// 		response.FailWithMessage(errs.Error(), ctx)
-// 		return
-// 	}
-// 	req.AuthorityType = multi.TenancyAuthority
-// 	token, err := GetAccessToken(req)
-// 	if err != nil {
-// 		zap_server.ZAPLOG.Error("登陆失败!", zap.Any("err", err))
-// 		response.FailWithMessage(err.Error(), ctx)
-// 	} else {
-// 		response.OkWithData(token, ctx)
-// 	}
-// }
 
 // AdminLogin 后台登录
 func AdminLogin(ctx *gin.Context) {
@@ -40,7 +21,6 @@ func AdminLogin(ctx *gin.Context) {
 	req.AuthorityType = multi.AdminAuthority
 	token, err := GetAccessToken(req)
 	if err != nil {
-		zap_server.ZAPLOG.Error("登陆失败!", zap.Any("err", err))
 		response.FailWithMessage(err.Error(), ctx)
 	} else {
 		response.OkWithData(token, ctx)
@@ -83,7 +63,6 @@ func Captcha(ctx *gin.Context) {
 	driver := base64Captcha.NewDriverDigit(web.CONFIG.Captcha.ImgHeight, web.CONFIG.Captcha.ImgWidth, web.CONFIG.Captcha.KeyLong, 0.7, 80)
 	cp := base64Captcha.NewCaptcha(driver, store)
 	if id, b64s, err := cp.Generate(); err != nil {
-		zap_server.ZAPLOG.Error("验证码获取失败!", zap.Any("err", err))
 		response.FailWithMessage(err.Error(), ctx)
 	} else {
 		response.OkWithData(gin.H{"captchaId": id, "picPath": b64s}, ctx)

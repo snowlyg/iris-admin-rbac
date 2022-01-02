@@ -10,7 +10,6 @@ import (
 	"github.com/snowlyg/iris-admin/server/database/orm"
 	"github.com/snowlyg/iris-admin/server/database/scope"
 	"github.com/snowlyg/iris-admin/server/zap_server"
-	"go.uber.org/zap"
 	"gorm.io/gorm"
 )
 
@@ -98,7 +97,7 @@ func FindInId(db *gorm.DB, ids []uint) ([]*Response, error) {
 	authorities := &PageResponse{}
 	err := orm.Find(database.Instance(), authorities, scope.InIdsScope(ids))
 	if err != nil {
-		zap_server.ZAPLOG.Error("通过ids查询角色错误", zap.String("错误:", err.Error()))
+		zap_server.ZAPLOG.Error(err.Error())
 		return nil, err
 	}
 	return authorities.Item, nil
@@ -110,22 +109,22 @@ func AddPermForRole(id uint, perms [][]string) error {
 	oldPerms := casbin.Instance().GetPermissionsForUser(roleId)
 	_, err := casbin.Instance().RemovePolicies(oldPerms)
 	if err != nil {
-		zap_server.ZAPLOG.Error("add policy err: %+v", zap.String("错误:", err.Error()))
+		zap_server.ZAPLOG.Error(err.Error())
 		return err
 	}
 
 	if len(perms) == 0 {
-		zap_server.ZAPLOG.Debug("没有权限")
+		zap_server.ZAPLOG.Debug("权限数据为空")
 		return nil
 	}
 	var newPerms [][]string
 	for _, perm := range perms {
 		newPerms = append(newPerms, append([]string{roleId}, perm...))
 	}
-	zap_server.ZAPLOG.Info("添加权限到角色", zap_server.Strings("新权限", newPerms))
+	zap_server.ZAPLOG.Info("添加权限到角色:", zap_server.Strings("新权限", newPerms))
 	_, err = casbin.Instance().AddPolicies(newPerms)
 	if err != nil {
-		zap_server.ZAPLOG.Error("add policy err: %+v", zap.String("错误:", err.Error()))
+		zap_server.ZAPLOG.Error(err.Error())
 		return err
 	}
 
