@@ -629,6 +629,8 @@ github.com/snowlyg/iris-admin v1.1.1-alpha35 h1:u7myTqCDjRqaPw8sqXsG/AfUXH8ZwXAy
 github.com/snowlyg/iris-admin v1.1.1-alpha35/go.mod h1:X5FgABFf+qwl+LlFrgCzYkZJhV51fCTaJC+KVD352I0=
 github.com/snowlyg/iris-admin v1.1.1-alpha36 h1:mws9oHWfc+eZ5ze3EHmPrUyePxKzhF270yTsXJo+DGA=
 github.com/snowlyg/iris-admin v1.1.1-alpha36/go.mod h1:X5FgABFf+qwl+LlFrgCzYkZJhV51fCTaJC+KVD352I0=
+github.com/snowlyg/iris-admin v1.1.2 h1:TAnSS0jq9OiQRdbHl6y+RCHguIf6TIQtm5VIj2Pxbj0=
+github.com/snowlyg/iris-admin v1.1.2/go.mod h1:bCS/PjjWfQSIHNrg6CSiF0my8rNbqoM7k1iTXMxfrUE=
 github.com/snowlyg/multi v0.0.1-alpha3 h1:MWjV+bGtNH4M05htUaZ+7suxSx1Djc4/8mf3q5EZru8=
 github.com/snowlyg/multi v0.0.1-alpha3/go.mod h1:bUUoodXvQpXkT/ffDZKhQxWMV3xEk+Z48sWtHAFJgE4=
 github.com/snowlyg/multi v0.0.2 h1:x9KAC+ae25L1nHOyHkcSvz1nGC8a9PEbha1VRpCpiDs=
