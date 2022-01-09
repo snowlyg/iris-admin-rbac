@@ -2,13 +2,17 @@ package tests
 
 import (
 	"fmt"
+	"net/http"
 	"testing"
 
+	"github.com/snowlyg/helper/str"
 	"github.com/snowlyg/httptest"
 	rbac "github.com/snowlyg/iris-admin-rbac/iris"
 	"github.com/snowlyg/iris-admin-rbac/iris/perm"
 	"github.com/snowlyg/iris-admin/server/database"
 	"github.com/snowlyg/iris-admin/server/database/orm"
+	"github.com/snowlyg/iris-admin/server/web"
+	"github.com/snowlyg/iris-admin/server/web/web_gin/response"
 )
 
 var (
@@ -24,10 +28,9 @@ type PageParam struct {
 }
 
 func TestList(t *testing.T) {
-	if TestServer == nil {
-		t.Errorf("测试服务初始化失败")
-	}
-	TestClient = TestServer.GetTestLogin(t, rbac.LoginUrl, nil)
+
+	TestClient = httptest.Instance(t, str.Join("http://", web.CONFIG.System.Addr), TestServer.GetEngine())
+	TestClient.Login(rbac.LoginUrl, nil)
 	if TestClient == nil {
 		return
 	}
@@ -41,7 +44,7 @@ func TestList(t *testing.T) {
 				t.Fatalf("获取路由权限错误")
 			}
 			pageKeys := httptest.Responses{
-				{Key: "code", Value: pageParam.Code},
+				{Key: "status", Value: pageParam.Code},
 				{Key: "message", Value: pageParam.Message},
 				{Key: "data", Value: httptest.Responses{
 					{Key: "pageSize", Value: pageParam.PageSize},
@@ -58,7 +61,8 @@ func TestList(t *testing.T) {
 }
 
 func TestCreate(t *testing.T) {
-	TestClient = TestServer.GetTestLogin(t, rbac.LoginUrl, nil)
+	TestClient = httptest.Instance(t, str.Join("http://", web.CONFIG.System.Addr), TestServer.GetEngine())
+	TestClient.Login(rbac.LoginUrl, nil)
 	if TestClient == nil {
 		return
 	}
@@ -77,7 +81,8 @@ func TestCreate(t *testing.T) {
 }
 
 func TestUpdate(t *testing.T) {
-	TestClient = TestServer.GetTestLogin(t, rbac.LoginUrl, nil)
+	TestClient = httptest.Instance(t, str.Join("http://", web.CONFIG.System.Addr), TestServer.GetEngine())
+	TestClient.Login(rbac.LoginUrl, nil)
 	if TestClient == nil {
 		return
 	}
@@ -102,14 +107,15 @@ func TestUpdate(t *testing.T) {
 	}
 
 	pageKeys := httptest.Responses{
-		{Key: "code", Value: 2000},
-		{Key: "message", Value: "请求成功"},
+		{Key: "status", Value: http.StatusOK},
+		{Key: "message", Value: response.ResponseOkMessage},
 	}
 	TestClient.POST(fmt.Sprintf("%s/%d", url, id), pageKeys, update)
 }
 
 func TestGetById(t *testing.T) {
-	TestClient = TestServer.GetTestLogin(t, rbac.LoginUrl, nil)
+	TestClient = httptest.Instance(t, str.Join("http://", web.CONFIG.System.Addr), TestServer.GetEngine())
+	TestClient.Login(rbac.LoginUrl, nil)
 	if TestClient == nil {
 		return
 	}
@@ -127,8 +133,8 @@ func TestGetById(t *testing.T) {
 	defer Delete(TestClient, id)
 
 	pageKeys := httptest.Responses{
-		{Key: "code", Value: 2000},
-		{Key: "message", Value: "请求成功"},
+		{Key: "status", Value: http.StatusOK},
+		{Key: "message", Value: response.ResponseOkMessage},
 		{Key: "data", Value: httptest.Responses{
 			{Key: "id", Value: 1, Type: "ge"},
 			{Key: "name", Value: data["name"].(string)},
@@ -145,8 +151,8 @@ func TestGetById(t *testing.T) {
 
 func Create(TestClient *httptest.Client, data map[string]interface{}) uint {
 	pageKeys := httptest.Responses{
-		{Key: "code", Value: 2000},
-		{Key: "message", Value: "请求成功"},
+		{Key: "status", Value: http.StatusOK},
+		{Key: "message", Value: response.ResponseOkMessage},
 		{Key: "data", Value: httptest.Responses{
 			{Key: "id", Value: 1, Type: "ge"},
 		},
@@ -157,8 +163,8 @@ func Create(TestClient *httptest.Client, data map[string]interface{}) uint {
 
 func Delete(TestClient *httptest.Client, id uint) {
 	pageKeys := httptest.Responses{
-		{Key: "code", Value: 2000},
-		{Key: "message", Value: "请求成功"},
+		{Key: "status", Value: http.StatusOK},
+		{Key: "message", Value: response.ResponseOkMessage},
 	}
 	TestClient.DELETE(fmt.Sprintf("%s/%d", url, id), pageKeys)
 }
@@ -210,8 +216,8 @@ func getPageParams() []PageParam {
 			pageLen = other
 		}
 		pageParam := PageParam{
-			Message:  "请求成功",
-			Code:     2000,
+			Message:  response.ResponseOkMessage,
+			Code:     http.StatusOK,
 			PageSize: pageSize,
 			PageLen:  pageLen,
 			Page:     i,

@@ -6,6 +6,7 @@ import (
 	"path/filepath"
 	"testing"
 
+	"github.com/snowlyg/helper/str"
 	"github.com/snowlyg/httptest"
 	rbac "github.com/snowlyg/iris-admin-rbac/gin"
 	"github.com/snowlyg/iris-admin/g"
@@ -18,12 +19,8 @@ var (
 )
 
 func TestList(t *testing.T) {
-	if TestServer == nil {
-		t.Error("测试服务初始化失败")
-		return
-	}
-
-	TestClient = TestServer.GetTestLogin(t, rbac.LoginUrl, rbac.LoginResponse)
+	TestClient = httptest.Instance(t, str.Join("http://", web.CONFIG.System.Addr), TestServer.GetEngine())
+	TestClient.Login(rbac.LoginUrl, nil)
 	if TestClient == nil {
 		return
 	}
@@ -55,12 +52,8 @@ func TestList(t *testing.T) {
 }
 
 func TestCreate(t *testing.T) {
-	if TestServer == nil {
-		t.Error("测试服务初始化失败")
-		return
-	}
-
-	TestClient = TestServer.GetTestLogin(t, rbac.LoginUrl, rbac.LoginResponse)
+	TestClient = httptest.Instance(t, str.Join("http://", web.CONFIG.System.Addr), TestServer.GetEngine())
+	TestClient.Login(rbac.LoginUrl, nil)
 	if TestClient == nil {
 		return
 	}
@@ -81,12 +74,9 @@ func TestCreate(t *testing.T) {
 }
 
 func TestUpdate(t *testing.T) {
-	if TestServer == nil {
-		t.Error("测试服务初始化失败")
-		return
-	}
 
-	TestClient = TestServer.GetTestLogin(t, rbac.LoginUrl, rbac.LoginResponse)
+	TestClient = httptest.Instance(t, str.Join("http://", web.CONFIG.System.Addr), TestServer.GetEngine())
+	TestClient.Login(rbac.LoginUrl, nil)
 	if TestClient == nil {
 		return
 	}
@@ -119,12 +109,9 @@ func TestUpdate(t *testing.T) {
 }
 
 func TestGetById(t *testing.T) {
-	if TestServer == nil {
-		t.Error("测试服务初始化失败")
-		return
-	}
 
-	TestClient = TestServer.GetTestLogin(t, rbac.LoginUrl, rbac.LoginResponse)
+	TestClient = httptest.Instance(t, str.Join("http://", web.CONFIG.System.Addr), TestServer.GetEngine())
+	TestClient.Login(rbac.LoginUrl, nil)
 	if TestClient == nil {
 		return
 	}
@@ -164,12 +151,9 @@ func TestGetById(t *testing.T) {
 }
 
 func TestChangeAvatar(t *testing.T) {
-	if TestServer == nil {
-		t.Error("测试服务初始化失败")
-		return
-	}
 
-	TestClient = TestServer.GetTestLogin(t, rbac.LoginUrl, rbac.LoginResponse)
+	TestClient = httptest.Instance(t, str.Join("http://", web.CONFIG.System.Addr), TestServer.GetEngine())
+	TestClient.Login(rbac.LoginUrl, nil)
 	if TestClient == nil {
 		return
 	}
@@ -189,7 +173,7 @@ func TestChangeAvatar(t *testing.T) {
 			{Key: "id", Value: 1, Type: "ge"},
 			{Key: "nickName", Value: "超级管理员"},
 			{Key: "username", Value: "admin"},
-			{Key: "headerImg", Value: filepath.ToSlash(web.ToStaticUrl("/avatar.png")) },
+			{Key: "headerImg", Value: filepath.ToSlash(web.ToStaticUrl("/avatar.png"))},
 			{Key: "status", Value: g.StatusTrue},
 			{Key: "isShow", Value: g.StatusFalse},
 			{Key: "phone", Value: "13800138000"},

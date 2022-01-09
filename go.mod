@@ -9,8 +9,8 @@ require (
 	github.com/kataras/iris/v12 v12.2.0-alpha5
 	github.com/mojocn/base64Captcha v1.3.5
 	github.com/snowlyg/helper v0.0.4
-	github.com/snowlyg/httptest v0.0.1
-	github.com/snowlyg/iris-admin v1.1.2
+	github.com/snowlyg/httptest v0.0.2-alpha
+	github.com/snowlyg/iris-admin v1.1.2-alpha3
 	github.com/snowlyg/multi v0.0.2
 	go.uber.org/zap v1.19.1
 	golang.org/x/crypto v0.0.0-20211215153901-e495a2d5b3d3
@@ -86,6 +86,7 @@ require (
 	github.com/lestrrat-go/strftime v1.0.5 // indirect
 	github.com/magiconair/properties v1.8.5 // indirect
 	github.com/mailru/easyjson v0.7.7 // indirect
+	github.com/mattn/go-colorable v0.1.12 // indirect
 	github.com/mattn/go-isatty v0.0.14 // indirect
 	github.com/microcosm-cc/bluemonday v1.0.16 // indirect
 	github.com/mitchellh/mapstructure v1.4.1 // indirect

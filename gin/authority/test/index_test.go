@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"testing"
 
+	"github.com/snowlyg/helper/str"
 	"github.com/snowlyg/httptest"
 	rbac "github.com/snowlyg/iris-admin-rbac/gin"
 	"github.com/snowlyg/iris-admin/server/web"
@@ -17,12 +18,9 @@ var (
 )
 
 func TestList(t *testing.T) {
-	if TestServer == nil {
-		t.Error("测试服务初始化失败")
-		return
-	}
 
-	TestClient = TestServer.GetTestLogin(t, rbac.LoginUrl, rbac.LoginResponse)
+	TestClient = httptest.Instance(t, str.Join("http://", web.CONFIG.System.Addr), TestServer.GetEngine())
+	TestClient.Login(rbac.LoginUrl, nil)
 	if TestClient == nil {
 		return
 	}
@@ -78,12 +76,9 @@ func TestList(t *testing.T) {
 }
 
 func TestGetAdminAuthorityList(t *testing.T) {
-	if TestServer == nil {
-		t.Error("测试服务初始化失败")
-		return
-	}
 
-	TestClient = TestServer.GetTestLogin(t, rbac.LoginUrl, rbac.LoginResponse)
+	TestClient = httptest.Instance(t, str.Join("http://", web.CONFIG.System.Addr), TestServer.GetEngine())
+	TestClient.Login(rbac.LoginUrl, nil)
 	if TestClient == nil {
 		return
 	}
@@ -112,12 +107,9 @@ func TestGetAdminAuthorityList(t *testing.T) {
 }
 
 func TestGetTenancyAuthorityList(t *testing.T) {
-	if TestServer == nil {
-		t.Error("测试服务初始化失败")
-		return
-	}
 
-	TestClient = TestServer.GetTestLogin(t, rbac.LoginUrl, rbac.LoginResponse)
+	TestClient = httptest.Instance(t, str.Join("http://", web.CONFIG.System.Addr), TestServer.GetEngine())
+	TestClient.Login(rbac.LoginUrl, nil)
 	if TestClient == nil {
 		return
 	}
@@ -146,12 +138,9 @@ func TestGetTenancyAuthorityList(t *testing.T) {
 }
 
 func TestGetGeneralAuthorityList(t *testing.T) {
-	if TestServer == nil {
-		t.Error("测试服务初始化失败")
-		return
-	}
 
-	TestClient = TestServer.GetTestLogin(t, rbac.LoginUrl, rbac.LoginResponse)
+	TestClient = httptest.Instance(t, str.Join("http://", web.CONFIG.System.Addr), TestServer.GetEngine())
+	TestClient.Login(rbac.LoginUrl, nil)
 	if TestClient == nil {
 		return
 	}
@@ -189,12 +178,9 @@ func TestGetGeneralAuthorityList(t *testing.T) {
 }
 
 func TestCreate(t *testing.T) {
-	if TestServer == nil {
-		t.Error("测试服务初始化失败")
-		return
-	}
 
-	TestClient = TestServer.GetTestLogin(t, rbac.LoginUrl, rbac.LoginResponse)
+	TestClient = httptest.Instance(t, str.Join("http://", web.CONFIG.System.Addr), TestServer.GetEngine())
+	TestClient.Login(rbac.LoginUrl, nil)
 	if TestClient == nil {
 		return
 	}
@@ -211,12 +197,9 @@ func TestCreate(t *testing.T) {
 }
 
 func TestUpdate(t *testing.T) {
-	if TestServer == nil {
-		t.Error("测试服务初始化失败")
-		return
-	}
 
-	TestClient = TestServer.GetTestLogin(t, rbac.LoginUrl, rbac.LoginResponse)
+	TestClient = httptest.Instance(t, str.Join("http://", web.CONFIG.System.Addr), TestServer.GetEngine())
+	TestClient.Login(rbac.LoginUrl, nil)
 	if TestClient == nil {
 		return
 	}
@@ -245,12 +228,9 @@ func TestUpdate(t *testing.T) {
 }
 
 func TestCopyAuthority(t *testing.T) {
-	if TestServer == nil {
-		t.Error("测试服务初始化失败")
-		return
-	}
 
-	TestClient = TestServer.GetTestLogin(t, rbac.LoginUrl, rbac.LoginResponse)
+	TestClient = httptest.Instance(t, str.Join("http://", web.CONFIG.System.Addr), TestServer.GetEngine())
+	TestClient.Login(rbac.LoginUrl, nil)
 	if TestClient == nil {
 		return
 	}

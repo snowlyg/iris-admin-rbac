@@ -1,13 +1,17 @@
 package tests
 
 import (
+	"net/http"
 	"os"
 	"path/filepath"
 	"testing"
 
+	"github.com/snowlyg/helper/str"
 	"github.com/snowlyg/httptest"
 	rbac "github.com/snowlyg/iris-admin-rbac/iris"
 	"github.com/snowlyg/iris-admin-rbac/iris/file"
+	"github.com/snowlyg/iris-admin/server/web"
+	"github.com/snowlyg/iris-admin/server/web/web_gin/response"
 )
 
 var (
@@ -15,10 +19,8 @@ var (
 )
 
 func TestUpload(t *testing.T) {
-	if TestServer == nil {
-		t.Errorf("测试服务初始化失败")
-	}
-	TestClient = TestServer.GetTestLogin(t, rbac.LoginUrl, nil)
+	TestClient = httptest.Instance(t, str.Join("http://", web.CONFIG.System.Addr), TestServer.GetEngine())
+	TestClient.Login(rbac.LoginUrl, nil)
 	if TestClient == nil {
 		return
 	}
@@ -50,8 +52,8 @@ func TestUpload(t *testing.T) {
 	}
 	local := file.GetPath(md5Name)
 	pageKeys := httptest.Responses{
-		{Key: "code", Value: 2000},
-		{Key: "message", Value: "请求成功"},
+		{Key: "status", Value: http.StatusOK},
+		{Key: "message", Value: response.ResponseOkMessage},
 		{Key: "data", Value: httptest.Responses{
 			{Key: "local", Value: local},
 			{Key: "qiniu", Value: ""},

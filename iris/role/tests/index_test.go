@@ -2,10 +2,14 @@ package tests
 
 import (
 	"fmt"
+	"net/http"
 	"testing"
 
+	"github.com/snowlyg/helper/str"
 	"github.com/snowlyg/httptest"
 	rbac "github.com/snowlyg/iris-admin-rbac/iris"
+	"github.com/snowlyg/iris-admin/server/web"
+	"github.com/snowlyg/iris-admin/server/web/web_gin/response"
 )
 
 var (
@@ -13,17 +17,16 @@ var (
 )
 
 func TestList(t *testing.T) {
-	if TestServer == nil {
-		t.Errorf("测试服务初始化失败")
-	}
-	TestClient = TestServer.GetTestLogin(t, rbac.LoginUrl, nil)
+
+	TestClient = httptest.Instance(t, str.Join("http://", web.CONFIG.System.Addr), TestServer.GetEngine())
+	TestClient.Login(rbac.LoginUrl, nil)
 	if TestClient == nil {
 		return
 	}
 
 	pageKeys := httptest.Responses{
-		{Key: "code", Value: 2000},
-		{Key: "message", Value: "请求成功"},
+		{Key: "status", Value: http.StatusOK},
+		{Key: "message", Value: response.ResponseOkMessage},
 		{Key: "data", Value: httptest.Responses{
 			{Key: "pageSize", Value: 10},
 			{Key: "page", Value: 1},
@@ -44,7 +47,8 @@ func TestList(t *testing.T) {
 }
 
 func TestCreate(t *testing.T) {
-	TestClient = TestServer.GetTestLogin(t, rbac.LoginUrl, nil)
+	TestClient = httptest.Instance(t, str.Join("http://", web.CONFIG.System.Addr), TestServer.GetEngine())
+	TestClient.Login(rbac.LoginUrl, nil)
 	if TestClient == nil {
 		return
 	}
@@ -62,7 +66,8 @@ func TestCreate(t *testing.T) {
 }
 
 func TestUpdate(t *testing.T) {
-	TestClient = TestServer.GetTestLogin(t, rbac.LoginUrl, nil)
+	TestClient = httptest.Instance(t, str.Join("http://", web.CONFIG.System.Addr), TestServer.GetEngine())
+	TestClient.Login(rbac.LoginUrl, nil)
 	if TestClient == nil {
 		return
 	}
@@ -85,14 +90,15 @@ func TestUpdate(t *testing.T) {
 	}
 
 	pageKeys := httptest.Responses{
-		{Key: "code", Value: 2000},
-		{Key: "message", Value: "请求成功"},
+		{Key: "status", Value: http.StatusOK},
+		{Key: "message", Value: response.ResponseOkMessage},
 	}
 	TestClient.POST(fmt.Sprintf("%s/%d", url, id), pageKeys, update)
 }
 
 func TestGetById(t *testing.T) {
-	TestClient = TestServer.GetTestLogin(t, rbac.LoginUrl, nil)
+	TestClient = httptest.Instance(t, str.Join("http://", web.CONFIG.System.Addr), TestServer.GetEngine())
+	TestClient.Login(rbac.LoginUrl, nil)
 	if TestClient == nil {
 		return
 	}
@@ -109,8 +115,8 @@ func TestGetById(t *testing.T) {
 	defer Delete(TestClient, id)
 
 	pageKeys := httptest.Responses{
-		{Key: "code", Value: 2000},
-		{Key: "message", Value: "请求成功"},
+		{Key: "status", Value: http.StatusOK},
+		{Key: "message", Value: response.ResponseOkMessage},
 		{Key: "data", Value: httptest.Responses{
 			{Key: "id", Value: 1, Type: "ge"},
 			{Key: "name", Value: data["name"].(string)},
@@ -127,8 +133,8 @@ func TestGetById(t *testing.T) {
 
 func Create(TestClient *httptest.Client, data map[string]interface{}) uint {
 	pageKeys := httptest.Responses{
-		{Key: "code", Value: 2000},
-		{Key: "message", Value: "请求成功"},
+		{Key: "status", Value: http.StatusOK},
+		{Key: "message", Value: response.ResponseOkMessage},
 		{Key: "data", Value: httptest.Responses{
 			{Key: "id", Value: 1, Type: "ge"},
 		},
@@ -139,8 +145,8 @@ func Create(TestClient *httptest.Client, data map[string]interface{}) uint {
 
 func Delete(TestClient *httptest.Client, id uint) {
 	pageKeys := httptest.Responses{
-		{Key: "code", Value: 2000},
-		{Key: "message", Value: "请求成功"},
+		{Key: "status", Value: http.StatusOK},
+		{Key: "message", Value: response.ResponseOkMessage},
 	}
 	TestClient.DELETE(fmt.Sprintf("%s/%d", url, id), pageKeys)
 }

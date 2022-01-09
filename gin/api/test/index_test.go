@@ -5,11 +5,13 @@ import (
 	"net/http"
 	"testing"
 
+	"github.com/snowlyg/helper/str"
 	"github.com/snowlyg/httptest"
 	rbac "github.com/snowlyg/iris-admin-rbac/gin"
 	"github.com/snowlyg/iris-admin-rbac/gin/api"
 	"github.com/snowlyg/iris-admin/server/database"
 	"github.com/snowlyg/iris-admin/server/database/orm"
+	"github.com/snowlyg/iris-admin/server/web"
 	"github.com/snowlyg/iris-admin/server/web/web_gin/response"
 	"github.com/snowlyg/multi"
 )
@@ -27,12 +29,9 @@ type PageParam struct {
 }
 
 func TestList(t *testing.T) {
-	if TestServer == nil {
-		t.Error("测试服务初始化失败")
-		return
-	}
 
-	TestClient = TestServer.GetTestLogin(t, rbac.LoginUrl, rbac.LoginResponse)
+	TestClient = httptest.Instance(t, str.Join("http://", web.CONFIG.System.Addr), TestServer.GetEngine())
+	TestClient.Login(rbac.LoginUrl, nil)
 	if TestClient == nil {
 		return
 	}
@@ -62,12 +61,9 @@ func TestList(t *testing.T) {
 }
 
 func TestGetAll(t *testing.T) {
-	if TestServer == nil {
-		t.Error("测试服务初始化失败")
-		return
-	}
 
-	TestClient = TestServer.GetTestLogin(t, rbac.LoginUrl, rbac.LoginResponse)
+	TestClient = httptest.Instance(t, str.Join("http://", web.CONFIG.System.Addr), TestServer.GetEngine())
+	TestClient.Login(rbac.LoginUrl, nil)
 	if TestClient == nil {
 		return
 	}
@@ -92,12 +88,9 @@ func TestGetAll(t *testing.T) {
 }
 
 func TestCreate(t *testing.T) {
-	if TestServer == nil {
-		t.Error("测试服务初始化失败")
-		return
-	}
 
-	TestClient = TestServer.GetTestLogin(t, rbac.LoginUrl, rbac.LoginResponse)
+	TestClient = httptest.Instance(t, str.Join("http://", web.CONFIG.System.Addr), TestServer.GetEngine())
+	TestClient.Login(rbac.LoginUrl, nil)
 	if TestClient == nil {
 		return
 	}
@@ -116,12 +109,9 @@ func TestCreate(t *testing.T) {
 }
 
 func TestUpdate(t *testing.T) {
-	if TestServer == nil {
-		t.Error("测试服务初始化失败")
-		return
-	}
 
-	TestClient = TestServer.GetTestLogin(t, rbac.LoginUrl, rbac.LoginResponse)
+	TestClient = httptest.Instance(t, str.Join("http://", web.CONFIG.System.Addr), TestServer.GetEngine())
+	TestClient.Login(rbac.LoginUrl, nil)
 	if TestClient == nil {
 		return
 	}
@@ -154,12 +144,9 @@ func TestUpdate(t *testing.T) {
 }
 
 func TestGetById(t *testing.T) {
-	if TestServer == nil {
-		t.Error("测试服务初始化失败")
-		return
-	}
 
-	TestClient = TestServer.GetTestLogin(t, rbac.LoginUrl, rbac.LoginResponse)
+	TestClient = httptest.Instance(t, str.Join("http://", web.CONFIG.System.Addr), TestServer.GetEngine())
+	TestClient.Login(rbac.LoginUrl, nil)
 	if TestClient == nil {
 		return
 	}
