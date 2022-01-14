@@ -37,7 +37,7 @@ func TestList(t *testing.T) {
 					{Key: "name", Value: "超级管理员"},
 					{Key: "username", Value: "admin"},
 					{Key: "intro", Value: "超级管理员"},
-					{Key: "avatar", Value: web.ToStaticUrl("/images/avatar.jpg")},
+					{Key: "avatar", Value: filepath.ToSlash(web.ToStaticUrl("/images/avatar.jpg"))},
 					{Key: "roles", Value: []string{"超级管理员"}},
 					{Key: "updatedAt", Value: "", Type: "notempty"},
 					{Key: "createdAt", Value: "", Type: "notempty"},

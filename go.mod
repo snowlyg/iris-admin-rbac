@@ -8,10 +8,10 @@ require (
 	github.com/gookit/color v1.5.0
 	github.com/kataras/iris/v12 v12.2.0-alpha5
 	github.com/mojocn/base64Captcha v1.3.5
-	github.com/snowlyg/helper v0.0.4
-	github.com/snowlyg/httptest v0.0.2-alpha
-	github.com/snowlyg/iris-admin v1.1.2-alpha3
-	github.com/snowlyg/multi v0.0.2
+	github.com/snowlyg/helper v0.0.5-alpha
+	github.com/snowlyg/httptest v0.0.3
+	github.com/snowlyg/iris-admin v1.1.3
+	github.com/snowlyg/multi v0.0.3
 	go.uber.org/zap v1.19.1
 	golang.org/x/crypto v0.0.0-20211215153901-e495a2d5b3d3
 	gorm.io/gorm v1.22.4
@@ -80,7 +80,7 @@ require (
 	github.com/kataras/pio v0.0.10 // indirect
 	github.com/kataras/sitemap v0.0.5 // indirect
 	github.com/kataras/tunnel v0.0.3 // indirect
-	github.com/klauspost/compress v1.13.6 // indirect
+	github.com/klauspost/compress v1.14.1 // indirect
 	github.com/leodido/go-urn v1.2.1 // indirect
 	github.com/lestrrat-go/file-rotatelogs v2.4.0+incompatible // indirect
 	github.com/lestrrat-go/strftime v1.0.5 // indirect
@@ -112,7 +112,7 @@ require (
 	github.com/ugorji/go/codec v1.1.7 // indirect
 	github.com/unrolled/secure v1.0.9 // indirect
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
-	github.com/valyala/fasthttp v1.31.0 // indirect
+	github.com/valyala/fasthttp v1.32.0 // indirect
 	github.com/vmihailenco/msgpack/v5 v5.3.5 // indirect
 	github.com/vmihailenco/tagparser/v2 v2.0.0 // indirect
 	github.com/xeipuuv/gojsonpointer v0.0.0-20190905194746-02993c407bfb // indirect
@@ -126,7 +126,7 @@ require (
 	go.uber.org/atomic v1.7.0 // indirect
 	go.uber.org/multierr v1.6.0 // indirect
 	golang.org/x/image v0.0.0-20190802002840-cff245a6509b // indirect
-	golang.org/x/net v0.0.0-20211216030914-fe4d6282115f // indirect
+	golang.org/x/net v0.0.0-20220114011407-0dd24b26b47d // indirect
 	golang.org/x/sys v0.0.0-20211216021012-1d35b9e2eb4e // indirect
 	golang.org/x/text v0.3.7 // indirect
 	golang.org/x/time v0.0.0-20211116232009-f0f3c7e86c11 // indirect
