@@ -5,6 +5,7 @@ import (
 	"github.com/snowlyg/iris-admin-rbac/gin/admin"
 	"github.com/snowlyg/iris-admin-rbac/gin/api"
 	"github.com/snowlyg/iris-admin-rbac/gin/authority"
+	"github.com/snowlyg/iris-admin-rbac/gin/oplog"
 	"github.com/snowlyg/iris-admin-rbac/gin/public"
 )
 
@@ -14,4 +15,5 @@ func Party(group *gin.RouterGroup) {
 	admin.Group(group)
 	authority.Group(group)
 	public.Group(group)
+	oplog.Group(group)
 }

@@ -8,7 +8,7 @@ import (
 // Party 角色模块
 func Party() func(index iris.Party) {
 	return func(index iris.Party) {
-		index.Use(middleware.MultiHandler(), middleware.OperationRecord(), middleware.Casbin())
+		index.Use(middleware.MultiHandler(), middleware.Casbin())
 		index.Get("/", GetAll).Name = "角色列表"
 		index.Get("/{id:uint}", First).Name = "角色详情"
 		index.Post("/", CreateRole).Name = "创建角色"

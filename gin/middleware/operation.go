@@ -3,32 +3,42 @@ package middleware
 import (
 	"bytes"
 	"io/ioutil"
+	"strings"
 	"time"
 
 	"github.com/gin-gonic/gin"
+	"github.com/snowlyg/helper/str"
 	"github.com/snowlyg/iris-admin/server/operation"
-	"github.com/snowlyg/iris-admin/server/zap_server"
 	multi "github.com/snowlyg/multi/gin"
 )
 
 func OperationRecord() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		// 请求操作不记录
-		if ctx.Request.Method == "GET" {
-			ctx.Next()
-		}
-
 		var body []byte
-
 		var err error
-		body, err = ioutil.ReadAll(ctx.Request.Body)
-		if err != nil {
-			zap_server.ZAPLOG.Error(err.Error())
-		} else {
-			// ioutil.ReadAll 读取数据后重新回写数据
-			ctx.Request.Body = ioutil.NopCloser(bytes.NewBuffer(body))
+		var disbale string
+		var rules []string
+
+		ctx.Request.ParseForm()
+		disbale = ctx.Request.Form.Get("operation_record_disbale")
+		rule := ctx.Request.Form.Get("operation_record_rules")
+		rules = strings.Split(rule, ",")
+
+		// 禁用中间件
+		if disbale == "1" {
+			ctx.Next()
+			return
 		}
 
+		contentTyp := ctx.Request.Header.Get("Content-Type")
+		// 文件上传过滤body,规则设置了 request 过滤body
+		if !strings.Contains(contentTyp, "multipart/form-data") || !str.InStrArray("request", rules) {
+			body, err = ioutil.ReadAll(ctx.Request.Body)
+			if err == nil {
+				// ioutil.ReadAll 读取数据后重新回写数据
+				ctx.Request.Body = ioutil.NopCloser(bytes.NewBuffer(body))
+			}
+		}
 		record := &operation.Oplog{
 			Ip:        ctx.ClientIP(),
 			Method:    ctx.Request.Method,
@@ -52,10 +62,12 @@ func OperationRecord() gin.HandlerFunc {
 		record.ErrorMessage = ctx.Errors.ByType(gin.ErrorTypePrivate).String()
 		record.Status = ctx.Writer.Status()
 		record.Latency = latency
-		record.Resp = writer.body.String()
-		if err := operation.CreateOplog(record); err != nil {
-			zap_server.ZAPLOG.Error(err.Error())
+		//规则设置了 response 过滤响应数据
+		if !str.InStrArray("response", rules) {
+			record.Resp = writer.body.String()
 		}
+
+		operation.CreateOplog(record)
 	}
 }
 

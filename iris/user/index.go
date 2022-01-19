@@ -8,7 +8,7 @@ import (
 // Party 用户
 func Party() func(index iris.Party) {
 	return func(index iris.Party) {
-		index.Use(middleware.MultiHandler(), middleware.OperationRecord(), middleware.Casbin())
+		index.Use(middleware.MultiHandler(), middleware.Casbin())
 		index.Get("/", GetAll).Name = "用户列表"
 		index.Get("/{id:uint}", GetUser).Name = "用户详情"
 		index.Post("/", CreateUser).Name = "创建用户"
@@ -18,6 +18,5 @@ func Party() func(index iris.Party) {
 		index.Get("/clear", Clear).Name = "清空 token"
 		index.Get("/profile", Profile).Name = "个人信息"
 		index.Post("/changeAvatar", ChangeAvatar).Name = "修改头像"
-		// index.Get("/expire", controllers.Expire).Name = "刷新 token"
 	}
 }

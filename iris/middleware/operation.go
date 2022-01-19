@@ -3,32 +3,42 @@ package middleware
 import (
 	"bytes"
 	"io/ioutil"
+	"strings"
 	"time"
 
 	"github.com/kataras/iris/v12"
 	"github.com/kataras/iris/v12/context"
+	"github.com/snowlyg/helper/str"
 	"github.com/snowlyg/iris-admin/server/operation"
-	"github.com/snowlyg/iris-admin/server/zap_server"
 	multi "github.com/snowlyg/multi/iris"
-	"go.uber.org/zap"
 )
 
 // OperationRecord 操作日志中间件
 func OperationRecord() iris.Handler {
 	return func(ctx iris.Context) {
-		if operation.CONFIG.IsExcept(ctx.Path(), ctx.Method()) && !operation.CONFIG.IsInclude(ctx.Path(), ctx.Method()) {
+		var body []byte
+		var err error
+		var disbale string
+		var rules []string
+
+		ctx.Request().ParseForm()
+		disbale = ctx.Request().Form.Get("operation_record_disbale")
+		rule := ctx.Request().Form.Get("operation_record_rules")
+		rules = strings.Split(rule, ",")
+
+		// 禁用中间件
+		if disbale == "1" {
 			ctx.Next()
 			return
 		}
-		var body []byte
-		var err error
 
-		body, err = ctx.GetBody()
-		if err != nil {
-			ctx.Request().Body = ioutil.NopCloser(bytes.NewBufferString(err.Error()))
-			zap_server.ZAPLOG.Error("获取请求内容错误", zap.String("错误:", err.Error()))
-		} else {
-			ctx.Request().Body = ioutil.NopCloser(bytes.NewBuffer(body))
+		contentTyp := ctx.Request().Header.Get("Content-Type")
+		// 文件上传过滤body,规则设置了 request 过滤body
+		if !strings.Contains(contentTyp, "multipart/form-data") || !str.InStrArray("request", rules) {
+			body, err = ctx.GetBody()
+			if err == nil {
+				ctx.Request().Body = ioutil.NopCloser(bytes.NewBuffer(body))
+			}
 		}
 
 		writer := responseBodyWriter{
@@ -58,11 +68,12 @@ func OperationRecord() iris.Handler {
 			Latency:      latency,
 		}
 
-		record.Resp = writer.body.String()
-
-		if err := operation.CreateOplog(record); err != nil {
-			zap_server.ZAPLOG.Error("生成日志错误", zap.String("CreateOplog()", err.Error()))
+		//规则设置了 response 过滤响应数据
+		if !str.InStrArray("response", rules) {
+			record.Resp = writer.body.String()
 		}
+
+		operation.CreateOplog(record)
 	}
 }
 

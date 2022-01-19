@@ -9,6 +9,6 @@ import (
 func Party() func(public iris.Party) {
 	return func(public iris.Party) {
 		public.Post("/login", Login)
-		public.Use(middleware.MultiHandler(), middleware.Casbin(), middleware.OperationRecord())
+		public.Use(middleware.MultiHandler(), middleware.Casbin())
 	}
 }
