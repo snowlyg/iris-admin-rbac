@@ -15,5 +15,4 @@ func Group(group *gin.RouterGroup) {
 		publicRouter.GET("/logout", Logout) // 退出
 		publicRouter.GET("/clean", Clear)   //清空授权
 	}
-
 }
