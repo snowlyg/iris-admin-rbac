@@ -14,11 +14,9 @@ var TestServer *web_gin.WebServer
 var TestClient *httptest.Client
 
 func TestMain(m *testing.M) {
-
 	var uuid string
 	uuid, TestServer = common.BeforeTestMainGin(rbac.PartyFunc, rbac.SeedFunc)
 	code := m.Run()
 	common.AfterTestMain(uuid, true)
-
 	os.Exit(code)
 }

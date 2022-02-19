@@ -72,7 +72,7 @@ func FindPasswordByUserName(db *gorm.DB, username string, ids ...uint) (*LoginRe
 	if len(ids) == 1 {
 		db.Where("id != ?", ids[0])
 	}
-	err := db.First(&user).Error
+	err := db.First(user).Error
 	if err != nil {
 		zap_server.ZAPLOG.Error("根据用户名查询用户错误", zap.String("用户名:", username), zap.Uints("ids:", ids), zap.String("错误:", err.Error()))
 		return nil, err
