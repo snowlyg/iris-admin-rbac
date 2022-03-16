@@ -90,8 +90,8 @@ github.com/bwmarrin/snowflake v0.3.0/go.mod h1:NdZxfVWX+oR6y2K0o6qAYv6gIOP9rjG0/
 github.com/bwmarrin/snowflake v0.3.1-0.20210825212239-3cf6d89d1fe9 h1:G/ZudIaZbEROCTOFP4avncRwuOGcSdyS3l3gVo1ffWc=
 github.com/bwmarrin/snowflake v0.3.1-0.20210825212239-3cf6d89d1fe9/go.mod h1:NdZxfVWX+oR6y2K0o6qAYv6gIOP9rjG0/E9WsDpxqwE=
 github.com/casbin/casbin/v2 v2.37.0/go.mod h1:vByNa/Fchek0KZUgG5wEsl7iFsiviAYKRtgrQfcJqHg=
-github.com/casbin/casbin/v2 v2.37.2 h1:0EFqGW52zId3jKCWv8qp2uXOjVFDPdtmzZTVTA4klus=
-github.com/casbin/casbin/v2 v2.37.2/go.mod h1:vByNa/Fchek0KZUgG5wEsl7iFsiviAYKRtgrQfcJqHg=
+github.com/casbin/casbin/v2 v2.42.0 h1:EA0aE5PZnFSYY6WulzTScOo4YO6xrGAAZkXRLs8p2ME=
+github.com/casbin/casbin/v2 v2.42.0/go.mod h1:sEL80qBYTbd+BPeL4iyvwYzFT3qwLaESq5aFKVLbLfA=
 github.com/casbin/gorm-adapter/v3 v3.4.2 h1:drqbnT73LzKFSVd5tv206qwgNeukrcNYD5fac3QuYlw=
 github.com/casbin/gorm-adapter/v3 v3.4.2/go.mod h1:pcnUBPanxppRSQQGyvFreY0GAHC5HhY1u0um5F+P4IM=
 github.com/census-instrumentation/opencensus-proto v0.2.1/go.mod h1:f6KPmirojxKA12rnyqOA5BBL4O983OfeGPqjHWSTneU=
@@ -621,10 +621,10 @@ github.com/snowlyg/helper v0.0.1/go.mod h1:rTYQ60yQZVDLOyrCB6VwZAWD9Coxwg/Cb4bGF
 github.com/snowlyg/helper v0.0.5-alpha/go.mod h1:+89V/CNTzLyS3LCyv7inR9PsTeOog+XTb813quVjXx4=
 github.com/snowlyg/helper v0.0.5 h1:gppTaEKXwQ3J1W4zT1J6gm+2n0LyHR3CxBSGaBbavG4=
 github.com/snowlyg/helper v0.0.5/go.mod h1:+89V/CNTzLyS3LCyv7inR9PsTeOog+XTb813quVjXx4=
-github.com/snowlyg/httptest v0.0.3 h1:oA+5d32nIF54T9wL0vTZcBL8Crg0+noZHe1PEs6f544=
-github.com/snowlyg/httptest v0.0.3/go.mod h1:FDd8dyKXGMlX82RbyLWTWsEzVieG+ZtcpIRz2fH80Ug=
-github.com/snowlyg/iris-admin v1.1.5 h1:BDa2Z7jdlyW37YJ3RZAIPfMhLmOGaRvC+GVNaSHUsco=
-github.com/snowlyg/iris-admin v1.1.5/go.mod h1:y7VbXcNQUB8a46N63h8ALk06KtJilzWYUVJKQi6GyTE=
+github.com/snowlyg/httptest v0.0.5-alpha h1:5e/OdxutB6nc5ueueJzewPPxTYYg5ccYNNh7FYApBtU=
+github.com/snowlyg/httptest v0.0.5-alpha/go.mod h1:FDd8dyKXGMlX82RbyLWTWsEzVieG+ZtcpIRz2fH80Ug=
+github.com/snowlyg/iris-admin v1.1.6-alpha1 h1:KoGmfJQVVrnKBl5itmWGOdMFON92AxjhVt37803/9pE=
+github.com/snowlyg/iris-admin v1.1.6-alpha1/go.mod h1:xzAewmuG3zUSjhqnw/E4yofX9EzS7jFylxCe0Qt4CLA=
 github.com/snowlyg/multi v0.0.3 h1:GALmqj/Q48/yaTj8/JYR6dxKvkFe6j0lCyUutS1gveU=
 github.com/snowlyg/multi v0.0.3/go.mod h1:bUUoodXvQpXkT/ffDZKhQxWMV3xEk+Z48sWtHAFJgE4=
 github.com/spaolacci/murmur3 v0.0.0-20180118202830-f09979ecbc72/go.mod h1:JwIasOWyU6f++ZhiEuf87xNszmSA2myDM2Kzu9HwQUA=

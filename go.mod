@@ -9,8 +9,8 @@ require (
 	github.com/kataras/iris/v12 v12.2.0-alpha5
 	github.com/mojocn/base64Captcha v1.3.5
 	github.com/snowlyg/helper v0.0.5
-	github.com/snowlyg/httptest v0.0.3
-	github.com/snowlyg/iris-admin v1.1.5
+	github.com/snowlyg/httptest v0.0.5-alpha
+	github.com/snowlyg/iris-admin v1.1.6-alpha1
 	github.com/snowlyg/multi v0.0.3
 	go.uber.org/zap v1.19.1
 	golang.org/x/crypto v0.0.0-20211215153901-e495a2d5b3d3
@@ -29,7 +29,7 @@ require (
 	github.com/aymerick/douceur v0.2.0 // indirect
 	github.com/aymerick/raymond v2.0.3-0.20180322193309-b565731e1464+incompatible // indirect
 	github.com/bwmarrin/snowflake v0.3.1-0.20210825212239-3cf6d89d1fe9 // indirect
-	github.com/casbin/casbin/v2 v2.37.2 // indirect
+	github.com/casbin/casbin/v2 v2.42.0 // indirect
 	github.com/casbin/gorm-adapter/v3 v3.4.2 // indirect
 	github.com/cespare/xxhash/v2 v2.1.2 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect

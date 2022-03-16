@@ -71,7 +71,7 @@ func FindInId(db *gorm.DB, ids []uint) ([]*Response, error) {
 
 func FindInName(db *gorm.DB, names []string) ([]*Response, error) {
 	roles := &PageResponse{}
-	err := orm.Find(database.Instance(), roles, scope.InIdsInNamesScopeScope(names))
+	err := orm.Find(database.Instance(), roles, scope.InNamesScope(names))
 	if err != nil {
 		zap_server.ZAPLOG.Error("通过name查询角色错误", zap.String("错误:", err.Error()))
 		return nil, err
