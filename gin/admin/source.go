@@ -4,7 +4,6 @@ import (
 	"github.com/gookit/color"
 	"github.com/snowlyg/iris-admin/g"
 	"github.com/snowlyg/iris-admin/server/database"
-	"github.com/snowlyg/iris-admin/server/web"
 	"gorm.io/gorm"
 )
 
@@ -23,8 +22,8 @@ func GetSources() ([]*Request, error) {
 			Phone:    "13800138000",
 			NickName: "超级管理员",
 		},
-		Password:     "123456",
-		AuthorityIds: []uint{web.AdminAuthorityId},
+		Password:       "123456",
+		AuthorityUuids: []string{"super_admin"},
 	})
 	return admins, nil
 }

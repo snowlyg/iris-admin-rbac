@@ -8,8 +8,8 @@ import (
 
 type Request struct {
 	BaseAdmin
-	Password     string `json:"password"`
-	AuthorityIds []uint `json:"authorityIds"`
+	Password     string   `json:"password"`
+	AuthorityUuids []string `json:"authorityIds"`
 }
 
 func (req *Request) Request(ctx *gin.Context) error {

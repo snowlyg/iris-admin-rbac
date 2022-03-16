@@ -5,7 +5,6 @@ import (
 	"github.com/snowlyg/iris-admin-rbac/gin/api"
 	"github.com/snowlyg/iris-admin/server/database"
 	"github.com/snowlyg/iris-admin/server/database/orm"
-	"github.com/snowlyg/iris-admin/server/web"
 	"github.com/snowlyg/multi"
 	"gorm.io/gorm"
 )
@@ -19,6 +18,7 @@ func GetSources() ([]*Authority, error) {
 	if err != nil {
 		return nil, err
 	}
+
 	sources := []*Authority{
 		{
 			BaseAuthority: BaseAuthority{
@@ -27,40 +27,41 @@ func GetSources() ([]*Authority, error) {
 				ParentId:      0,
 				DefaultRouter: "",
 			},
-			Model: gorm.Model{ID: web.AdminAuthorityId},
+			Uuid:  "super_admin",
 			Perms: apis[multi.AdminAuthority],
 		},
 		{
+			Uuid: "tenancy_admin",
 			BaseAuthority: BaseAuthority{
 				AuthorityName: "商户管理员",
 				AuthorityType: multi.TenancyAuthority,
 				ParentId:      0,
 				DefaultRouter: "",
 			},
-			Model: gorm.Model{ID: web.TenancyAuthorityId},
 			Perms: apis[multi.TenancyAuthority],
 		},
 		{
+			Uuid: "mini_admin",
 			BaseAuthority: BaseAuthority{
 				AuthorityName: "小程序用户",
 				AuthorityType: multi.GeneralAuthority,
 				ParentId:      0,
 				DefaultRouter: "",
 			},
-			Model: gorm.Model{ID: web.LiteAuthorityId},
 			Perms: apis[multi.GeneralAuthority],
 		},
 		{
+			Uuid: "device_admin",
 			BaseAuthority: BaseAuthority{
 				AuthorityName: "设备用户",
 				AuthorityType: multi.GeneralAuthority,
 				ParentId:      0,
 				DefaultRouter: "",
 			},
-			Model: gorm.Model{ID: web.DeviceAuthorityId},
 			Perms: apis[multi.GeneralAuthority],
 		},
 	}
+
 	return sources, nil
 }
 
@@ -75,11 +76,11 @@ func (s *source) Init() error {
 			return err
 		}
 		for _, source := range sources {
-			id, err := orm.Create(database.Instance(), source)
+			_, err := orm.Create(database.Instance(), source)
 			if err != nil {
 				return err
 			}
-			err = AddPermForRole(id, source.Perms)
+			err = AddPermForRole(source.Uuid, source.Perms)
 			if err != nil {
 				return err
 			}

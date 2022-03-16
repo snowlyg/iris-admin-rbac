@@ -18,8 +18,8 @@ var (
 )
 
 func TestList(t *testing.T) {
-
-	TestClient = httptest.Instance(t, str.Join("http://", web.CONFIG.System.Addr), TestServer.GetEngine())
+	engine := TestServer.GetEngine()
+	TestClient = httptest.Instance(t, str.Join("http://", web.CONFIG.System.Addr), engine)
 	TestClient.Login(rbac.LoginUrl, nil)
 	if TestClient == nil {
 		return
@@ -32,7 +32,8 @@ func TestList(t *testing.T) {
 			{Key: "page", Value: 1},
 			{Key: "list", Value: []httptest.Responses{
 				{
-					{Key: "id", Value: web.DeviceAuthorityId, Type: "ge"},
+					{Key: "id", Value: 0, Type: "ge"},
+					{Key: "uuid", Value: "device_admin"},
 					{Key: "authorityName", Value: "设备用户"},
 					{Key: "authorityType", Value: multi.GeneralAuthority},
 					{Key: "parentId", Value: 0},
@@ -41,7 +42,8 @@ func TestList(t *testing.T) {
 					{Key: "createdAt", Value: "", Type: "notempty"},
 				},
 				{
-					{Key: "id", Value: web.LiteAuthorityId, Type: "ge"},
+					{Key: "id", Value: 0, Type: "ge"},
+					{Key: "uuid", Value: "mini_admin"},
 					{Key: "authorityName", Value: "小程序用户"},
 					{Key: "authorityType", Value: multi.GeneralAuthority},
 					{Key: "parentId", Value: 0},
@@ -50,7 +52,8 @@ func TestList(t *testing.T) {
 					{Key: "createdAt", Value: "", Type: "notempty"},
 				},
 				{
-					{Key: "id", Value: web.TenancyAuthorityId, Type: "ge"},
+					{Key: "id", Value: 0, Type: "ge"},
+					{Key: "uuid", Value: "tenancy_admin"},
 					{Key: "authorityName", Value: "商户管理员"},
 					{Key: "authorityType", Value: multi.TenancyAuthority},
 					{Key: "parentId", Value: 0},
@@ -59,7 +62,8 @@ func TestList(t *testing.T) {
 					{Key: "createdAt", Value: "", Type: "notempty"},
 				},
 				{
-					{Key: "id", Value: web.AdminAuthorityId, Type: "ge"},
+					{Key: "id", Value: 0, Type: "ge"},
+					{Key: "uuid", Value: "super_admin"},
 					{Key: "authorityName", Value: "超级管理员"},
 					{Key: "authorityType", Value: multi.AdminAuthority},
 					{Key: "parentId", Value: 0},
@@ -90,7 +94,8 @@ func TestGetAdminAuthorityList(t *testing.T) {
 			{Key: "page", Value: 1},
 			{Key: "list", Value: []httptest.Responses{
 				{
-					{Key: "id", Value: web.AdminAuthorityId, Type: "ge"},
+					{Key: "id", Value: 0, Type: "ge"},
+					{Key: "uuid", Value: "super_admin"},
 					{Key: "authorityName", Value: "超级管理员"},
 					{Key: "authorityType", Value: multi.AdminAuthority},
 					{Key: "parentId", Value: 0},
@@ -121,7 +126,8 @@ func TestGetTenancyAuthorityList(t *testing.T) {
 			{Key: "page", Value: 1},
 			{Key: "list", Value: []httptest.Responses{
 				{
-					{Key: "id", Value: web.TenancyAuthorityId, Type: "ge"},
+					{Key: "id", Value: 0, Type: "ge"},
+					{Key: "uuid", Value: "tenancy_admin"},
 					{Key: "authorityName", Value: "商户管理员"},
 					{Key: "authorityType", Value: multi.TenancyAuthority},
 					{Key: "parentId", Value: 0},
@@ -152,7 +158,8 @@ func TestGetGeneralAuthorityList(t *testing.T) {
 			{Key: "page", Value: 1},
 			{Key: "list", Value: []httptest.Responses{
 				{
-					{Key: "id", Value: web.DeviceAuthorityId, Type: "ge"},
+					{Key: "id", Value: 0, Type: "ge"},
+					{Key: "uuid", Value: "device_admin"},
 					{Key: "authorityName", Value: "设备用户"},
 					{Key: "authorityType", Value: multi.GeneralAuthority},
 					{Key: "parentId", Value: 0},
@@ -161,7 +168,8 @@ func TestGetGeneralAuthorityList(t *testing.T) {
 					{Key: "createdAt", Value: "", Type: "notempty"},
 				},
 				{
-					{Key: "id", Value: web.LiteAuthorityId, Type: "ge"},
+					{Key: "id", Value: 0, Type: "ge"},
+					{Key: "uuid", Value: "mini_admin"},
 					{Key: "authorityName", Value: "小程序用户"},
 					{Key: "authorityType", Value: multi.GeneralAuthority},
 					{Key: "parentId", Value: 0},
@@ -185,6 +193,7 @@ func TestCreate(t *testing.T) {
 		return
 	}
 	data := map[string]interface{}{
+		"uuid":          "test_authorityName_for_create",
 		"authorityName": "test_authorityName_for_create",
 		"parentId":      0,
 		"authorityType": multi.AdminAuthority,
@@ -197,13 +206,13 @@ func TestCreate(t *testing.T) {
 }
 
 func TestUpdate(t *testing.T) {
-
 	TestClient = httptest.Instance(t, str.Join("http://", web.CONFIG.System.Addr), TestServer.GetEngine())
 	TestClient.Login(rbac.LoginUrl, nil)
 	if TestClient == nil {
 		return
 	}
 	data := map[string]interface{}{
+		"uuid":          "test_authorityName_for_update",
 		"authorityName": "test_authorityName_for_update",
 		"parentId":      0,
 		"authorityType": multi.AdminAuthority,
@@ -235,6 +244,7 @@ func TestCopyAuthority(t *testing.T) {
 		return
 	}
 	data := map[string]interface{}{
+		"uuid":          "test_authorityName_for_copy",
 		"authorityName": "test_authorityName_for_copy",
 		"parentId":      0,
 		"authorityType": multi.AdminAuthority,
@@ -250,6 +260,7 @@ func TestCopyAuthority(t *testing.T) {
 		{Key: "message", Value: response.ResponseOkMessage},
 	}
 	copy := map[string]interface{}{
+		"uuid":          "test_authorityName_after_copy",
 		"authorityName": "test_authorityName_after_copy",
 	}
 

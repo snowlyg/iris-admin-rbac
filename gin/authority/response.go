@@ -9,6 +9,7 @@ import (
 type Response struct {
 	orm.Model
 	BaseAuthority
+	Uuid string `json:"uuid"`
 }
 
 func (res *Response) First(db *gorm.DB, scopes ...func(db *gorm.DB) *gorm.DB) error {

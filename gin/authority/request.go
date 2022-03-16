@@ -11,11 +11,24 @@ type ReqPaginate struct {
 	Name string `json:"name"`
 }
 
-type AuthorityRequest struct {
+type CreateAuthorityRequest struct {
+	Uuid string `json:"uuid"`
 	BaseAuthority
 }
 
-func (req *AuthorityRequest) Request(ctx *gin.Context) error {
+func (req *CreateAuthorityRequest) Request(ctx *gin.Context) error {
+	if err := ctx.ShouldBindJSON(req); err != nil {
+		zap_server.ZAPLOG.Error(err.Error())
+		return orm.ErrParamValidate
+	}
+	return nil
+}
+
+type UpdateAuthorityRequest struct {
+	BaseAuthority
+}
+
+func (req *UpdateAuthorityRequest) Request(ctx *gin.Context) error {
 	if err := ctx.ShouldBindJSON(req); err != nil {
 		zap_server.ZAPLOG.Error(err.Error())
 		return orm.ErrParamValidate

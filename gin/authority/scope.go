@@ -2,11 +2,11 @@ package authority
 
 import "gorm.io/gorm"
 
-// AuthorityNameScope 根据 name 查询
-// - name 名称
-func AuthorityNameScope(name string) func(db *gorm.DB) *gorm.DB {
+// AuthorityUuidScope 根据 uuid 查询
+// - uuid 名称
+func AuthorityUuidScope(uuid string) func(db *gorm.DB) *gorm.DB {
 	return func(db *gorm.DB) *gorm.DB {
-		return db.Where("authority_name = ?", name)
+		return db.Where("uuid = ?", uuid)
 	}
 }
 

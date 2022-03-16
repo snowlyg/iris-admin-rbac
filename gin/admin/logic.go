@@ -20,25 +20,19 @@ var ErrUserNameInvalide = errors.New("用户名名称已经被使用")
 
 // transform
 func transform(admins ...*Response) {
-	var roleIds []uint
-	userRoleIds := map[uint][]string{}
+	var roleUuids []string
+	userRoleUuids := map[uint][]string{}
 	if len(admins) == 0 {
 		return
 	}
 	for _, admin := range admins {
 		admin.ToString()
-		userRoleId := casbin.GetRolesForUser(admin.Id)
-		userRoleIds[admin.Id] = userRoleId
-		for _, roleId := range userRoleId {
-			id, err := strconv.ParseUint(roleId, 10, 64)
-			if err != nil {
-				continue
-			}
-			roleIds = append(roleIds, uint(id))
-		}
+		userRUuids := casbin.GetRolesForUser(admin.Id)
+		userRoleUuids[admin.Id] = userRUuids
+		roleUuids = append(roleUuids, userRUuids...)
 	}
 
-	roles, err := authority.FindInId(database.Instance(), roleIds)
+	roles, err := authority.FindInUuid(database.Instance(), roleUuids)
 	if err != nil {
 		zap_server.ZAPLOG.Error(err.Error())
 		return
@@ -48,8 +42,7 @@ func transform(admins ...*Response) {
 	}
 	for _, admin := range admins {
 		for _, role := range roles {
-			sRoleId := strconv.FormatInt(int64(role.Id), 10)
-			if arr.InArrayS(userRoleIds[admin.Id], sRoleId) {
+			if arr.InArrayS(userRoleUuids[admin.Id], role.Uuid) {
 				admin.Authorities = append(admin.Authorities, role.AuthorityName)
 			}
 		}
@@ -79,28 +72,28 @@ func FindPasswordByUserName(db *gorm.DB, username string, ids ...uint) (*LoginRe
 		return admin, err
 	}
 	userId := strconv.FormatUint(uint64(admin.Id), 10)
-	admin.AuthorityIds, err = getUserRoleIds(userId)
+	admin.AuthorityIds, err = getUserRoleUuids(userId)
 	if err != nil {
 		return nil, err
 	}
 	return admin, nil
 }
 
-// getUserRoleIds
-func getUserRoleIds(userId string) ([]string, error) {
-	roleIds, err := casbin.Instance().GetRolesForUser(userId)
+// getUserRoleUuids
+func getUserRoleUuids(userId string) ([]string, error) {
+	roleUuids, err := casbin.Instance().GetRolesForUser(userId)
 	if err != nil {
 		zap_server.ZAPLOG.Error(err.Error())
 		return nil, err
 	}
-	return roleIds, nil
+	return roleUuids, nil
 }
 
 func Create(req *Request) (uint, error) {
 	if _, err := FindByUserName(UserNameScope(req.Username)); !errors.Is(err, gorm.ErrRecordNotFound) {
 		return 0, ErrUserNameInvalide
 	}
-	admin := &Admin{BaseAdmin: req.BaseAdmin, AuthorityIds: req.AuthorityIds}
+	admin := &Admin{BaseAdmin: req.BaseAdmin, AuthorityIds: req.AuthorityUuids}
 	hash, err := bcrypt.GenerateFromPassword([]byte(req.Password), bcrypt.DefaultCost)
 	if err != nil {
 		zap_server.ZAPLOG.Error(err.Error())
@@ -138,13 +131,13 @@ func IsAdminUser(id uint) error {
 // AddRoleForUser add roles for user
 func AddRoleForUser(admin *Admin) error {
 	userId := strconv.FormatUint(uint64(admin.ID), 10)
-	oldRoleIds, err := getUserRoleIds(userId)
+	oldRoleUuids, err := getUserRoleUuids(userId)
 	if err != nil {
 		zap_server.ZAPLOG.Error(err.Error())
 		return err
 	}
 
-	if len(oldRoleIds) > 0 {
+	if len(oldRoleUuids) > 0 {
 		if _, err := casbin.Instance().DeleteRolesForUser(userId); err != nil {
 			zap_server.ZAPLOG.Error(err.Error())
 			return err
@@ -154,13 +147,10 @@ func AddRoleForUser(admin *Admin) error {
 		return nil
 	}
 
-	var roleIds []string
-	for _, userRoleId := range admin.AuthorityIds {
-		authId := strconv.FormatUint(uint64(userRoleId), 10)
-		roleIds = append(roleIds, authId)
-	}
+	var roleUuids []string
+	roleUuids = append(roleUuids, admin.AuthorityIds...)
 
-	if _, err := casbin.Instance().AddRolesForUser(userId, roleIds); err != nil {
+	if _, err := casbin.Instance().AddRolesForUser(userId, roleUuids); err != nil {
 		zap_server.ZAPLOG.Error(err.Error())
 		return err
 	}

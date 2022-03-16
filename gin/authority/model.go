@@ -10,13 +10,15 @@ type AuthorityCollection []Authority
 type Authority struct {
 	gorm.Model
 	BaseAuthority
+	Uuid string `json:"uuid" gorm:"uniqueIndex;not null;type:varchar(64);comment:角色标识" binding:"required"`
+
 	Menus    []BaseMenu  `json:"menus" gorm:"many2many:authority_menus;"`
 	Children []Authority `json:"children" gorm:"-"`
 	Perms    [][]string  `json:"perms" gorm:"-"`
 }
 
 type BaseAuthority struct {
-	AuthorityName string `json:"authorityName" gorm:"comment:角色名" binding:"required"`
+	AuthorityName string `json:"authorityName" gorm:"comment:角色名"`
 	AuthorityType int    `json:"authorityType" gorm:"comment:角色类型"`
 	ParentId      uint   `json:"parentId" gorm:"default:0;comment:父角色ID"`
 	DefaultRouter string `json:"defaultRouter" gorm:"comment:默认菜单;default:dashboard"`

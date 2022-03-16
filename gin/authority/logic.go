@@ -3,7 +3,6 @@ package authority
 import (
 	"errors"
 	"fmt"
-	"strconv"
 
 	"github.com/snowlyg/iris-admin/server/casbin"
 	"github.com/snowlyg/iris-admin/server/database"
@@ -13,7 +12,7 @@ import (
 	"gorm.io/gorm"
 )
 
-var ErrRoleNameInvalide = errors.New("角色名称已经被使用")
+var ErrRoleNameInvalide = errors.New("角色标识已经被使用")
 
 // GetAdminRoleName 获管理员角色名称
 func GetAdminRoleName() string {
@@ -21,29 +20,30 @@ func GetAdminRoleName() string {
 }
 
 // Copy 复制
-func Copy(id uint, req *AuthorityRequest) (uint, error) {
+func Copy(id uint, req *CreateAuthorityRequest) (uint, error) {
 	oldAuthority := &Response{}
 	err := orm.First(database.Instance(), oldAuthority, scope.IdScope(id))
 	if err != nil {
 		return 0, err
 	}
 
-	if _, err := FindByName(AuthorityNameScope(req.AuthorityName)); !errors.Is(err, gorm.ErrRecordNotFound) {
+	if _, err := FindByUuid(AuthorityUuidScope(req.Uuid)); !errors.Is(err, gorm.ErrRecordNotFound) {
 		return 0, ErrRoleNameInvalide
 	}
 	authority := &Authority{BaseAuthority: req.BaseAuthority}
 	authority.ParentId = oldAuthority.ParentId
 	authority.AuthorityType = oldAuthority.AuthorityType
 	authority.DefaultRouter = oldAuthority.DefaultRouter
-	id, err = orm.Create(database.Instance(), authority)
+	authority.Uuid = req.Uuid
+	newId, err := orm.Create(database.Instance(), authority)
 	if err != nil {
 		return 0, err
 	}
-	err = AddPermForRole(id, authority.Perms)
+	err = AddPermForRole(authority.Uuid, authority.Perms)
 	if err != nil {
 		return 0, err
 	}
-	return id, nil
+	return newId, nil
 }
 
 func Update(id uint, req *Authority) error {
@@ -55,24 +55,24 @@ func Update(id uint, req *Authority) error {
 }
 
 // Create 添加
-func Create(req *AuthorityRequest) (uint, error) {
-	if _, err := FindByName(AuthorityNameScope(req.AuthorityName)); !errors.Is(err, gorm.ErrRecordNotFound) {
+func Create(req *CreateAuthorityRequest) (uint, error) {
+	if _, err := FindByUuid(AuthorityUuidScope(req.Uuid)); !errors.Is(err, gorm.ErrRecordNotFound) {
 		return 0, ErrRoleNameInvalide
 	}
-	authority := &Authority{BaseAuthority: req.BaseAuthority}
+	authority := &Authority{BaseAuthority: req.BaseAuthority, Uuid: req.Uuid}
 	id, err := orm.Create(database.Instance(), authority)
 	if err != nil {
 		return 0, err
 	}
-	err = AddPermForRole(id, authority.Perms)
+	err = AddPermForRole(authority.Uuid, authority.Perms)
 	if err != nil {
 		return 0, err
 	}
 	return id, nil
 }
 
-// FindByName
-func FindByName(scopes ...func(db *gorm.DB) *gorm.DB) (*Response, error) {
+// FindByUuid
+func FindByUuid(scopes ...func(db *gorm.DB) *gorm.DB) (*Response, error) {
 	role := &Response{}
 	err := orm.First(database.Instance(), role, scopes...)
 	if err != nil {
@@ -103,10 +103,19 @@ func FindInId(db *gorm.DB, ids []uint) ([]*Response, error) {
 	return authorities.Item, nil
 }
 
+func FindInUuid(db *gorm.DB, uuids []string) ([]*Response, error) {
+	authorities := &PageResponse{}
+	err := orm.Find(database.Instance(), authorities, scope.InUuidsScope(uuids))
+	if err != nil {
+		zap_server.ZAPLOG.Error(err.Error())
+		return nil, err
+	}
+	return authorities.Item, nil
+}
+
 // AddPermForRole
-func AddPermForRole(id uint, perms [][]string) error {
-	roleId := strconv.FormatUint(uint64(id), 10)
-	oldPerms := casbin.Instance().GetPermissionsForUser(roleId)
+func AddPermForRole(uuid string, perms [][]string) error {
+	oldPerms := casbin.Instance().GetPermissionsForUser(uuid)
 	_, err := casbin.Instance().RemovePolicies(oldPerms)
 	if err != nil {
 		zap_server.ZAPLOG.Error(err.Error())
@@ -117,15 +126,19 @@ func AddPermForRole(id uint, perms [][]string) error {
 		zap_server.ZAPLOG.Debug("权限数据为空")
 		return nil
 	}
+
 	var newPerms [][]string
 	for _, perm := range perms {
-		newPerms = append(newPerms, append([]string{roleId}, perm...))
+		newPerms = append(newPerms, append([]string{uuid}, perm...))
 	}
 	zap_server.ZAPLOG.Info("添加权限到角色:", zap_server.Strings("新权限", newPerms))
-	_, err = casbin.Instance().AddPolicies(newPerms)
+	b, err := casbin.Instance().AddPolicies(newPerms)
 	if err != nil {
 		zap_server.ZAPLOG.Error(err.Error())
 		return err
+	}
+	if !b {
+		return errors.New("权限添加失败！！")
 	}
 
 	return nil

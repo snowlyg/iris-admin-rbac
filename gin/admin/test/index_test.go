@@ -61,7 +61,7 @@ func TestCreate(t *testing.T) {
 	data := map[string]interface{}{
 		"nickName":     "测试名称",
 		"username":     "create_test_username",
-		"authorityIds": []uint{web.AdminAuthorityId},
+		"authorityIds": []string{"super_admin"},
 		"email":        "get@admin.com",
 		"phone":        "13800138001",
 		"password":     "123456",
@@ -83,7 +83,7 @@ func TestUpdate(t *testing.T) {
 	data := map[string]interface{}{
 		"nickName":     "测试名称",
 		"username":     "create_test_username_for_update",
-		"authorityIds": []uint{web.AdminAuthorityId},
+		"authorityIds": []string{"super_admin"},
 		"email":        "get@admin.com",
 		"phone":        "13800138001",
 		"password":     "123456",
@@ -120,7 +120,7 @@ func TestGetById(t *testing.T) {
 		"username":     "create_test_username_for_get",
 		"email":        "get@admin.com",
 		"phone":        "13800138001",
-		"authorityIds": []uint{web.AdminAuthorityId},
+		"authorityIds": []string{"super_admin"},
 		"password":     "123456",
 	}
 	id := Create(TestClient, data)

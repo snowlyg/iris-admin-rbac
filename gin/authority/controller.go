@@ -11,7 +11,7 @@ import (
 
 // CreateAuthority 创建角色
 func CreateAuthority(ctx *gin.Context) {
-	req := &AuthorityRequest{}
+	req := &CreateAuthorityRequest{}
 	if errs := req.Request(ctx); errs != nil {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
@@ -32,7 +32,7 @@ func CopyAuthority(ctx *gin.Context) {
 		return
 	}
 
-	req := &AuthorityRequest{}
+	req := &CreateAuthorityRequest{}
 	if errs := req.Request(ctx); errs != nil {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
@@ -53,7 +53,7 @@ func UpdateAuthority(ctx *gin.Context) {
 		return
 	}
 
-	req := &AuthorityRequest{}
+	req := &UpdateAuthorityRequest{}
 	if errs := req.Request(ctx); errs != nil {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
