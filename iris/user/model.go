@@ -9,8 +9,8 @@ import (
 type User struct {
 	gorm.Model
 	BaseUser
-	Password string `gorm:"type:varchar(250)" json:"password" validate:"required"`
-	RoleIds  []uint `gorm:"-" json:"role_ids"`
+	Password  string   `gorm:"type:varchar(250)" json:"password" validate:"required"`
+	RoleNames []string `gorm:"-" json:"role_names"`
 }
 
 type BaseUser struct {

@@ -75,7 +75,7 @@ func UpdateRole(ctx iris.Context) {
 		return
 	}
 
-	err = AddPermForRole(reqId.Id, req.Perms)
+	err = AddPermForRole(req.Name, req.Perms)
 	if err != nil {
 		ctx.JSON(orm.Response{Status: http.StatusBadRequest, Data: nil, Msg: err.Error()})
 	}

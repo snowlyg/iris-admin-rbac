@@ -3,7 +3,6 @@ package role
 import (
 	"errors"
 	"fmt"
-	"strconv"
 
 	"github.com/snowlyg/iris-admin/server/casbin"
 	"github.com/snowlyg/iris-admin/server/database"
@@ -31,7 +30,7 @@ func Create(req *Request) (uint, error) {
 	if err != nil {
 		return 0, err
 	}
-	err = AddPermForRole(id, req.Perms)
+	err = AddPermForRole(req.Name, req.Perms)
 	if err != nil {
 		return 0, err
 	}
@@ -70,10 +69,19 @@ func FindInId(db *gorm.DB, ids []uint) ([]*Response, error) {
 	return roles.Item, nil
 }
 
+func FindInName(db *gorm.DB, names []string) ([]*Response, error) {
+	roles := &PageResponse{}
+	err := orm.Find(database.Instance(), roles, scope.InIdsInNamesScopeScope(names))
+	if err != nil {
+		zap_server.ZAPLOG.Error("通过name查询角色错误", zap.String("错误:", err.Error()))
+		return nil, err
+	}
+	return roles.Item, nil
+}
+
 // AddPermForRole
-func AddPermForRole(id uint, perms [][]string) error {
-	roleId := strconv.FormatUint(uint64(id), 10)
-	oldPerms := casbin.Instance().GetPermissionsForUser(roleId)
+func AddPermForRole(name string, perms [][]string) error {
+	oldPerms := casbin.Instance().GetPermissionsForUser(name)
 	_, err := casbin.Instance().RemovePolicies(oldPerms)
 	if err != nil {
 		zap_server.ZAPLOG.Error("add policy err: %+v", zap.String("错误:", err.Error()))
@@ -86,7 +94,7 @@ func AddPermForRole(id uint, perms [][]string) error {
 	}
 	var newPerms [][]string
 	for _, perm := range perms {
-		newPerms = append(newPerms, append([]string{roleId}, perm...))
+		newPerms = append(newPerms, append([]string{name}, perm...))
 	}
 	zap_server.ZAPLOG.Info("添加权限到角色", zap_server.Strings("新权限", newPerms))
 	_, err = casbin.Instance().AddPolicies(newPerms)
@@ -98,11 +106,11 @@ func AddPermForRole(id uint, perms [][]string) error {
 	return nil
 }
 
-func GetRoleIds() ([]uint, error) {
-	var roleIds []uint
-	err := database.Instance().Model(&Role{}).Select("id").Find(&roleIds).Error
+func GetRoleNames() ([]string, error) {
+	var roleNames []string
+	err := database.Instance().Model(&Role{}).Select("name").Find(&roleNames).Error
 	if err != nil {
-		return roleIds, fmt.Errorf("获取角色ids错误 %w", err)
+		return roleNames, fmt.Errorf("获取角色名称错误 %w", err)
 	}
-	return roleIds, nil
+	return roleNames, nil
 }

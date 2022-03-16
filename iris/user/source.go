@@ -12,7 +12,7 @@ var Source = new(source)
 type source struct{}
 
 func GetSources() ([]*Request, error) {
-	roleIds, err := role.GetRoleIds()
+	roleNames, err := role.GetRoleNames()
 	if err != nil {
 		return []*Request{}, err
 	}
@@ -24,8 +24,8 @@ func GetSources() ([]*Request, error) {
 			Intro:    "超级管理员",
 			Avatar:   "/images/avatar.jpg",
 		},
-		Password: "123456",
-		RoleIds:  roleIds,
+		Password:  "123456",
+		RoleNames: roleNames,
 	})
 	return users, nil
 }

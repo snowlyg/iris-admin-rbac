@@ -8,8 +8,8 @@ import (
 
 type Request struct {
 	BaseUser
-	Password string `json:"password"`
-	RoleIds  []uint `json:"role_ids"`
+	Password  string   `json:"password"`
+	RoleNames []string `json:"role_ids"`
 }
 
 func (req *Request) Request(ctx iris.Context) error {
