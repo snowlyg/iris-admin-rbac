@@ -18,7 +18,7 @@ var (
 
 func TestList(t *testing.T) {
 
-	TestClient = httptest.Instance(t, str.Join("http://", web.CONFIG.System.Addr), TestServer.GetEngine())
+	TestClient := httptest.Instance(t, str.Join("http://", web.CONFIG.System.Addr), TestServer.GetEngine())
 	TestClient.Login(rbac.LoginUrl, nil)
 	if TestClient == nil {
 		return
@@ -43,11 +43,11 @@ func TestList(t *testing.T) {
 			{Key: "total", Value: 0, Type: "ge"},
 		}},
 	}
-	TestClient.GET(url, pageKeys, httptest.RequestParams)
+	TestClient.GET(url, pageKeys, httptest.RequestFunc)
 }
 
 func TestCreate(t *testing.T) {
-	TestClient = httptest.Instance(t, str.Join("http://", web.CONFIG.System.Addr), TestServer.GetEngine())
+	TestClient := httptest.Instance(t, str.Join("http://", web.CONFIG.System.Addr), TestServer.GetEngine())
 	TestClient.Login(rbac.LoginUrl, nil)
 	if TestClient == nil {
 		return
@@ -66,7 +66,7 @@ func TestCreate(t *testing.T) {
 }
 
 func TestUpdate(t *testing.T) {
-	TestClient = httptest.Instance(t, str.Join("http://", web.CONFIG.System.Addr), TestServer.GetEngine())
+	TestClient := httptest.Instance(t, str.Join("http://", web.CONFIG.System.Addr), TestServer.GetEngine())
 	TestClient.Login(rbac.LoginUrl, nil)
 	if TestClient == nil {
 		return
@@ -93,11 +93,11 @@ func TestUpdate(t *testing.T) {
 		{Key: "status", Value: http.StatusOK},
 		{Key: "message", Value: response.ResponseOkMessage},
 	}
-	TestClient.POST(fmt.Sprintf("%s/%d", url, id), pageKeys, update)
+	TestClient.POST(fmt.Sprintf("%s/%d", url, id), pageKeys, httptest.NewWithJsonParamFunc(update))
 }
 
 func TestGetById(t *testing.T) {
-	TestClient = httptest.Instance(t, str.Join("http://", web.CONFIG.System.Addr), TestServer.GetEngine())
+	TestClient := httptest.Instance(t, str.Join("http://", web.CONFIG.System.Addr), TestServer.GetEngine())
 	TestClient.Login(rbac.LoginUrl, nil)
 	if TestClient == nil {
 		return
@@ -140,7 +140,7 @@ func Create(TestClient *httptest.Client, data map[string]interface{}) uint {
 		},
 		},
 	}
-	return TestClient.POST(url, pageKeys, data).GetId()
+	return TestClient.POST(url, pageKeys, httptest.NewWithJsonParamFunc(data)).GetId()
 }
 
 func Delete(TestClient *httptest.Client, id uint) {

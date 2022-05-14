@@ -19,7 +19,7 @@ var (
 )
 
 func TestUpload(t *testing.T) {
-	TestClient = httptest.Instance(t, str.Join("http://", web.CONFIG.System.Addr), TestServer.GetEngine())
+	TestClient := httptest.Instance(t, str.Join("http://", web.CONFIG.System.Addr), TestServer.GetEngine())
 	TestClient.Login(rbac.LoginUrl, nil)
 	if TestClient == nil {
 		return
@@ -60,7 +60,7 @@ func TestUpload(t *testing.T) {
 		}},
 	}
 
-	TestClient.UPLOAD(url, pageKeys, files)
+	TestClient.UPLOAD(url, pageKeys, httptest.NewWithFileParamFunc(files))
 
 	local = filepath.Join(pwd, "static/upload")
 	err = os.RemoveAll(local)

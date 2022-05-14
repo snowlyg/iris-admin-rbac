@@ -29,17 +29,16 @@ type PageParam struct {
 }
 
 func TestList(t *testing.T) {
-
-	TestClient = httptest.Instance(t, str.Join("http://", web.CONFIG.System.Addr), TestServer.GetEngine())
-	TestClient.Login(rbac.LoginUrl, nil)
-	if TestClient == nil {
-		return
-	}
-
 	pageParams := getPageParams()
 	routes, _ := TestServer.GetSources()
 	for _, pageParam := range pageParams {
 		t.Run(fmt.Sprintf("路由权限测试，第%d页", pageParam.Page), func(t *testing.T) {
+
+			TestClient := httptest.Instance(t, str.Join("http://", web.CONFIG.System.Addr), TestServer.GetEngine())
+			TestClient.Login(rbac.LoginUrl, nil)
+			if TestClient == nil {
+				return
+			}
 			items, err := getPageApis(pageParam)
 			if err != nil {
 				t.Fatalf("获取路由权限错误")
@@ -54,15 +53,15 @@ func TestList(t *testing.T) {
 					{Key: "total", Value: len(routes)},
 				}},
 			}
-			requestParams := map[string]interface{}{"page": pageParam.Page, "pageSize": pageParam.PageSize}
-			TestClient.GET(fmt.Sprintf("%s/getList", url), pageKeys, requestParams)
+			data := map[string]interface{}{"page": pageParam.Page, "pageSize": pageParam.PageSize}
+			TestClient.GET(fmt.Sprintf("%s/getList", url), pageKeys, httptest.NewWithQueryObjectParamFunc(data))
 		})
 	}
 }
 
 func TestGetAll(t *testing.T) {
 
-	TestClient = httptest.Instance(t, str.Join("http://", web.CONFIG.System.Addr), TestServer.GetEngine())
+	TestClient := httptest.Instance(t, str.Join("http://", web.CONFIG.System.Addr), TestServer.GetEngine())
 	TestClient.Login(rbac.LoginUrl, nil)
 	if TestClient == nil {
 		return
@@ -82,14 +81,14 @@ func TestGetAll(t *testing.T) {
 			{Key: "message", Value: response.ResponseOkMessage},
 			{Key: "data", Value: items},
 		}
-		requestParams := map[string]interface{}{"authorityType": multi.AdminAuthority}
-		TestClient.GET(fmt.Sprintf("%s/getAll", url), pageKeys, requestParams)
+		data := map[string]interface{}{"authorityType": multi.AdminAuthority}
+		TestClient.GET(fmt.Sprintf("%s/getAll", url), pageKeys, httptest.NewWithQueryObjectParamFunc(data))
 	})
 }
 
 func TestCreate(t *testing.T) {
 
-	TestClient = httptest.Instance(t, str.Join("http://", web.CONFIG.System.Addr), TestServer.GetEngine())
+	TestClient := httptest.Instance(t, str.Join("http://", web.CONFIG.System.Addr), TestServer.GetEngine())
 	TestClient.Login(rbac.LoginUrl, nil)
 	if TestClient == nil {
 		return
@@ -110,7 +109,7 @@ func TestCreate(t *testing.T) {
 
 func TestUpdate(t *testing.T) {
 
-	TestClient = httptest.Instance(t, str.Join("http://", web.CONFIG.System.Addr), TestServer.GetEngine())
+	TestClient := httptest.Instance(t, str.Join("http://", web.CONFIG.System.Addr), TestServer.GetEngine())
 	TestClient.Login(rbac.LoginUrl, nil)
 	if TestClient == nil {
 		return
@@ -140,12 +139,12 @@ func TestUpdate(t *testing.T) {
 		{Key: "status", Value: http.StatusOK},
 		{Key: "message", Value: response.ResponseOkMessage},
 	}
-	TestClient.PUT(fmt.Sprintf("%s/updateApi/%d", url, id), pageKeys, update)
+	TestClient.PUT(fmt.Sprintf("%s/updateApi/%d", url, id), pageKeys, httptest.NewWithJsonParamFunc(update))
 }
 
 func TestGetById(t *testing.T) {
 
-	TestClient = httptest.Instance(t, str.Join("http://", web.CONFIG.System.Addr), TestServer.GetEngine())
+	TestClient := httptest.Instance(t, str.Join("http://", web.CONFIG.System.Addr), TestServer.GetEngine())
 	TestClient.Login(rbac.LoginUrl, nil)
 	if TestClient == nil {
 		return
@@ -190,7 +189,7 @@ func Create(TestClient *httptest.Client, data map[string]interface{}) uint {
 		},
 		},
 	}
-	return TestClient.POST(fmt.Sprintf("%s/createApi", url), pageKeys, data).GetId()
+	return TestClient.POST(fmt.Sprintf("%s/createApi", url), pageKeys, httptest.NewWithJsonParamFunc(data)).GetId()
 }
 
 func Delete(TestClient *httptest.Client, id uint, data map[string]interface{}) {
@@ -198,7 +197,7 @@ func Delete(TestClient *httptest.Client, id uint, data map[string]interface{}) {
 		{Key: "status", Value: http.StatusOK},
 		{Key: "message", Value: response.ResponseOkMessage},
 	}
-	TestClient.DELETE(fmt.Sprintf("%s/deleteApi/%d", url, id), pageKeys, data)
+	TestClient.DELETE(fmt.Sprintf("%s/deleteApi/%d", url, id), pageKeys, httptest.NewWithJsonParamFunc(data))
 }
 
 func getAllApis(authorityType int) ([]httptest.Responses, error) {

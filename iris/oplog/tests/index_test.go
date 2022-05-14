@@ -25,7 +25,7 @@ type PageParam struct {
 
 func TestList(t *testing.T) {
 
-	TestClient = httptest.Instance(t, str.Join("http://", web.CONFIG.System.Addr), TestServer.GetEngine())
+	TestClient := httptest.Instance(t, str.Join("http://", web.CONFIG.System.Addr), TestServer.GetEngine())
 	TestClient.Login(rbac.LoginUrl, nil)
 	if TestClient == nil {
 		return
@@ -40,5 +40,5 @@ func TestList(t *testing.T) {
 			{Key: "total", Value: 0, Type: "ge"},
 		}},
 	}
-	TestClient.GET(url, pageKeys, httptest.RequestParams)
+	TestClient.GET(url, pageKeys, httptest.RequestFunc)
 }

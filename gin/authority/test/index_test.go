@@ -19,7 +19,7 @@ var (
 
 func TestList(t *testing.T) {
 	engine := TestServer.GetEngine()
-	TestClient = httptest.Instance(t, str.Join("http://", web.CONFIG.System.Addr), engine)
+	TestClient := httptest.Instance(t, str.Join("http://", web.CONFIG.System.Addr), engine)
 	TestClient.Login(rbac.LoginUrl, nil)
 	if TestClient == nil {
 		return
@@ -75,13 +75,13 @@ func TestList(t *testing.T) {
 			{Key: "total", Value: 0, Type: "ge"},
 		}},
 	}
-	requestParams := map[string]interface{}{"page": 1, "pageSize": 10, "orderBy": "id"}
-	TestClient.GET(fmt.Sprintf("%s/getAuthorityList", url), pageKeys, requestParams)
+	data := map[string]interface{}{"page": 1, "pageSize": 10, "orderBy": "id"}
+	TestClient.GET(fmt.Sprintf("%s/getAuthorityList", url), pageKeys, httptest.NewWithQueryObjectParamFunc(data))
 }
 
 func TestGetAdminAuthorityList(t *testing.T) {
 
-	TestClient = httptest.Instance(t, str.Join("http://", web.CONFIG.System.Addr), TestServer.GetEngine())
+	TestClient := httptest.Instance(t, str.Join("http://", web.CONFIG.System.Addr), TestServer.GetEngine())
 	TestClient.Login(rbac.LoginUrl, nil)
 	if TestClient == nil {
 		return
@@ -107,13 +107,13 @@ func TestGetAdminAuthorityList(t *testing.T) {
 			{Key: "total", Value: 0, Type: "ge"},
 		}},
 	}
-	requestParams := map[string]interface{}{"page": 1, "pageSize": 10, "orderBy": "id"}
-	TestClient.GET(fmt.Sprintf("%s/getAdminAuthorityList", url), pageKeys, requestParams)
+	data := map[string]interface{}{"page": 1, "pageSize": 10, "orderBy": "id"}
+	TestClient.GET(fmt.Sprintf("%s/getAdminAuthorityList", url), pageKeys, httptest.NewWithQueryObjectParamFunc(data))
 }
 
 func TestGetTenancyAuthorityList(t *testing.T) {
 
-	TestClient = httptest.Instance(t, str.Join("http://", web.CONFIG.System.Addr), TestServer.GetEngine())
+	TestClient := httptest.Instance(t, str.Join("http://", web.CONFIG.System.Addr), TestServer.GetEngine())
 	TestClient.Login(rbac.LoginUrl, nil)
 	if TestClient == nil {
 		return
@@ -139,13 +139,13 @@ func TestGetTenancyAuthorityList(t *testing.T) {
 			{Key: "total", Value: 0, Type: "ge"},
 		}},
 	}
-	requestParams := map[string]interface{}{"page": 1, "pageSize": 10, "orderBy": "id"}
-	TestClient.GET(fmt.Sprintf("%s/getTenancyAuthorityList", url), pageKeys, requestParams)
+	data := map[string]interface{}{"page": 1, "pageSize": 10, "orderBy": "id"}
+	TestClient.GET(fmt.Sprintf("%s/getTenancyAuthorityList", url), pageKeys, httptest.NewWithQueryObjectParamFunc(data))
 }
 
 func TestGetGeneralAuthorityList(t *testing.T) {
 
-	TestClient = httptest.Instance(t, str.Join("http://", web.CONFIG.System.Addr), TestServer.GetEngine())
+	TestClient := httptest.Instance(t, str.Join("http://", web.CONFIG.System.Addr), TestServer.GetEngine())
 	TestClient.Login(rbac.LoginUrl, nil)
 	if TestClient == nil {
 		return
@@ -181,13 +181,13 @@ func TestGetGeneralAuthorityList(t *testing.T) {
 			{Key: "total", Value: 0, Type: "ge"},
 		}},
 	}
-	requestParams := map[string]interface{}{"page": 1, "pageSize": 10, "orderBy": "id"}
-	TestClient.GET(fmt.Sprintf("%s/getGeneralAuthorityList", url), pageKeys, requestParams)
+	data := map[string]interface{}{"page": 1, "pageSize": 10, "orderBy": "id"}
+	TestClient.GET(fmt.Sprintf("%s/getGeneralAuthorityList", url), pageKeys, httptest.NewWithQueryObjectParamFunc(data))
 }
 
 func TestCreate(t *testing.T) {
 
-	TestClient = httptest.Instance(t, str.Join("http://", web.CONFIG.System.Addr), TestServer.GetEngine())
+	TestClient := httptest.Instance(t, str.Join("http://", web.CONFIG.System.Addr), TestServer.GetEngine())
 	TestClient.Login(rbac.LoginUrl, nil)
 	if TestClient == nil {
 		return
@@ -206,7 +206,7 @@ func TestCreate(t *testing.T) {
 }
 
 func TestUpdate(t *testing.T) {
-	TestClient = httptest.Instance(t, str.Join("http://", web.CONFIG.System.Addr), TestServer.GetEngine())
+	TestClient := httptest.Instance(t, str.Join("http://", web.CONFIG.System.Addr), TestServer.GetEngine())
 	TestClient.Login(rbac.LoginUrl, nil)
 	if TestClient == nil {
 		return
@@ -223,22 +223,21 @@ func TestUpdate(t *testing.T) {
 	}
 	defer Delete(TestClient, id)
 
-	update := map[string]interface{}{
+	requestParams := map[string]interface{}{
 		"authorityName": "test_authorityName_for_update1",
 		"parentId":      0,
 		"authorityType": multi.AdminAuthority,
 	}
-
 	pageKeys := httptest.Responses{
 		{Key: "status", Value: http.StatusOK},
 		{Key: "message", Value: response.ResponseOkMessage},
 	}
-	TestClient.PUT(fmt.Sprintf("%s/updateAuthority/%d", url, id), pageKeys, update)
+	TestClient.PUT(fmt.Sprintf("%s/updateAuthority/%d", url, id), pageKeys, httptest.NewWithJsonParamFunc(requestParams))
 }
 
 func TestCopyAuthority(t *testing.T) {
 
-	TestClient = httptest.Instance(t, str.Join("http://", web.CONFIG.System.Addr), TestServer.GetEngine())
+	TestClient := httptest.Instance(t, str.Join("http://", web.CONFIG.System.Addr), TestServer.GetEngine())
 	TestClient.Login(rbac.LoginUrl, nil)
 	if TestClient == nil {
 		return
@@ -259,12 +258,13 @@ func TestCopyAuthority(t *testing.T) {
 		{Key: "status", Value: http.StatusOK},
 		{Key: "message", Value: response.ResponseOkMessage},
 	}
-	copy := map[string]interface{}{
+
+	update := map[string]interface{}{
 		"uuid":          "test_authorityName_after_copy",
 		"authorityName": "test_authorityName_after_copy",
 	}
 
-	TestClient.POST(fmt.Sprintf("%s/copyAuthority/%d", url, id), pageKeys, copy)
+	TestClient.POST(fmt.Sprintf("%s/copyAuthority/%d", url, id), pageKeys, httptest.NewWithJsonParamFunc(update))
 }
 
 func Create(TestClient *httptest.Client, data map[string]interface{}) uint {
@@ -276,7 +276,7 @@ func Create(TestClient *httptest.Client, data map[string]interface{}) uint {
 		},
 		},
 	}
-	return TestClient.POST(fmt.Sprintf("%s/createAuthority", url), pageKeys, data).GetId()
+	return TestClient.POST(fmt.Sprintf("%s/createAuthority", url), pageKeys, httptest.NewWithJsonParamFunc(data)).GetId()
 }
 
 func Delete(TestClient *httptest.Client, id uint) {

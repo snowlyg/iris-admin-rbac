@@ -19,7 +19,7 @@ var (
 )
 
 func TestList(t *testing.T) {
-	TestClient = httptest.Instance(t, str.Join("http://", web.CONFIG.System.Addr), TestServer.GetEngine())
+	TestClient := httptest.Instance(t, str.Join("http://", web.CONFIG.System.Addr), TestServer.GetEngine())
 	TestClient.Login(rbac.LoginUrl, nil)
 	if TestClient == nil {
 		return
@@ -48,11 +48,11 @@ func TestList(t *testing.T) {
 			{Key: "total", Value: 0, Type: "ge"},
 		}},
 	}
-	TestClient.GET(fmt.Sprintf("%s/getAll", url), pageKeys, httptest.RequestParams)
+	TestClient.GET(fmt.Sprintf("%s/getAll", url), pageKeys, httptest.RequestFunc)
 }
 
 func TestCreate(t *testing.T) {
-	TestClient = httptest.Instance(t, str.Join("http://", web.CONFIG.System.Addr), TestServer.GetEngine())
+	TestClient := httptest.Instance(t, str.Join("http://", web.CONFIG.System.Addr), TestServer.GetEngine())
 	TestClient.Login(rbac.LoginUrl, nil)
 	if TestClient == nil {
 		return
@@ -75,7 +75,7 @@ func TestCreate(t *testing.T) {
 
 func TestUpdate(t *testing.T) {
 
-	TestClient = httptest.Instance(t, str.Join("http://", web.CONFIG.System.Addr), TestServer.GetEngine())
+	TestClient := httptest.Instance(t, str.Join("http://", web.CONFIG.System.Addr), TestServer.GetEngine())
 	TestClient.Login(rbac.LoginUrl, nil)
 	if TestClient == nil {
 		return
@@ -105,12 +105,12 @@ func TestUpdate(t *testing.T) {
 		{Key: "status", Value: http.StatusOK},
 		{Key: "message", Value: response.ResponseOkMessage},
 	}
-	TestClient.PUT(fmt.Sprintf("%s/updateAdmin/%d", url, id), pageKeys, update)
+	TestClient.PUT(fmt.Sprintf("%s/updateAdmin/%d", url, id), pageKeys, httptest.NewWithJsonParamFunc(update))
 }
 
 func TestGetById(t *testing.T) {
 
-	TestClient = httptest.Instance(t, str.Join("http://", web.CONFIG.System.Addr), TestServer.GetEngine())
+	TestClient := httptest.Instance(t, str.Join("http://", web.CONFIG.System.Addr), TestServer.GetEngine())
 	TestClient.Login(rbac.LoginUrl, nil)
 	if TestClient == nil {
 		return
@@ -152,7 +152,7 @@ func TestGetById(t *testing.T) {
 
 func TestChangeAvatar(t *testing.T) {
 
-	TestClient = httptest.Instance(t, str.Join("http://", web.CONFIG.System.Addr), TestServer.GetEngine())
+	TestClient := httptest.Instance(t, str.Join("http://", web.CONFIG.System.Addr), TestServer.GetEngine())
 	TestClient.Login(rbac.LoginUrl, nil)
 	if TestClient == nil {
 		return
@@ -164,7 +164,7 @@ func TestChangeAvatar(t *testing.T) {
 		{Key: "status", Value: http.StatusOK},
 		{Key: "message", Value: response.ResponseOkMessage},
 	}
-	TestClient.POST(fmt.Sprintf("%s/changeAvatar", url), pageKeys, data)
+	TestClient.POST(fmt.Sprintf("%s/changeAvatar", url), pageKeys, httptest.NewWithJsonParamFunc(data))
 
 	profile := httptest.Responses{
 		{Key: "status", Value: http.StatusOK},
@@ -196,7 +196,7 @@ func Create(TestClient *httptest.Client, data map[string]interface{}) uint {
 		},
 		},
 	}
-	return TestClient.POST(fmt.Sprintf("%s/createAdmin", url), pageKeys, data).GetId()
+	return TestClient.POST(fmt.Sprintf("%s/createAdmin", url), pageKeys, httptest.NewWithJsonParamFunc(data)).GetId()
 }
 
 func Delete(TestClient *httptest.Client, id uint) {

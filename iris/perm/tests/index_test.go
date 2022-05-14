@@ -29,16 +29,16 @@ type PageParam struct {
 
 func TestList(t *testing.T) {
 
-	TestClient = httptest.Instance(t, str.Join("http://", web.CONFIG.System.Addr), TestServer.GetEngine())
-	TestClient.Login(rbac.LoginUrl, nil)
-	if TestClient == nil {
-		return
-	}
-
 	pageParams := getPageParams()
 	routes, _ := TestServer.GetSources()
 	for _, pageParam := range pageParams {
 		t.Run(fmt.Sprintf("路由权限测试，第%d页", pageParam.Page), func(t *testing.T) {
+
+			TestClient := httptest.Instance(t, str.Join("http://", web.CONFIG.System.Addr), TestServer.GetEngine())
+			TestClient.Login(rbac.LoginUrl, nil)
+			if TestClient == nil {
+				return
+			}
 			items, err := getPerms(pageParam)
 			if err != nil {
 				t.Fatalf("获取路由权限错误")
@@ -53,15 +53,16 @@ func TestList(t *testing.T) {
 					{Key: "total", Value: len(routes)},
 				}},
 			}
+
 			requestParams := map[string]interface{}{"page": pageParam.Page, "pageSize": pageParam.PageSize}
-			TestClient.GET(url, pageKeys, requestParams)
+			TestClient.GET(url, pageKeys, httptest.NewWithQueryObjectParamFunc(requestParams))
 		})
 	}
 
 }
 
 func TestCreate(t *testing.T) {
-	TestClient = httptest.Instance(t, str.Join("http://", web.CONFIG.System.Addr), TestServer.GetEngine())
+	TestClient := httptest.Instance(t, str.Join("http://", web.CONFIG.System.Addr), TestServer.GetEngine())
 	TestClient.Login(rbac.LoginUrl, nil)
 	if TestClient == nil {
 		return
@@ -81,7 +82,7 @@ func TestCreate(t *testing.T) {
 }
 
 func TestUpdate(t *testing.T) {
-	TestClient = httptest.Instance(t, str.Join("http://", web.CONFIG.System.Addr), TestServer.GetEngine())
+	TestClient := httptest.Instance(t, str.Join("http://", web.CONFIG.System.Addr), TestServer.GetEngine())
 	TestClient.Login(rbac.LoginUrl, nil)
 	if TestClient == nil {
 		return
@@ -110,11 +111,11 @@ func TestUpdate(t *testing.T) {
 		{Key: "status", Value: http.StatusOK},
 		{Key: "message", Value: response.ResponseOkMessage},
 	}
-	TestClient.POST(fmt.Sprintf("%s/%d", url, id), pageKeys, update)
+	TestClient.POST(fmt.Sprintf("%s/%d", url, id), pageKeys, httptest.NewWithJsonParamFunc(update))
 }
 
 func TestGetById(t *testing.T) {
-	TestClient = httptest.Instance(t, str.Join("http://", web.CONFIG.System.Addr), TestServer.GetEngine())
+	TestClient := httptest.Instance(t, str.Join("http://", web.CONFIG.System.Addr), TestServer.GetEngine())
 	TestClient.Login(rbac.LoginUrl, nil)
 	if TestClient == nil {
 		return
@@ -158,7 +159,7 @@ func Create(TestClient *httptest.Client, data map[string]interface{}) uint {
 		},
 		},
 	}
-	return TestClient.POST(url, pageKeys, data).GetId()
+	return TestClient.POST(url, pageKeys, httptest.NewWithJsonParamFunc(data)).GetId()
 }
 
 func Delete(TestClient *httptest.Client, id uint) {

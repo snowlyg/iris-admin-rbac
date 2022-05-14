@@ -18,7 +18,7 @@ var (
 
 func TestList(t *testing.T) {
 
-	TestClient = httptest.Instance(t, str.Join("http://", web.CONFIG.System.Addr), TestServer.GetEngine())
+	TestClient := httptest.Instance(t, str.Join("http://", web.CONFIG.System.Addr), TestServer.GetEngine())
 	TestClient.Login(rbac.LoginUrl, nil)
 	if TestClient == nil {
 		return
@@ -34,5 +34,5 @@ func TestList(t *testing.T) {
 		}},
 	}
 	requestParams := map[string]interface{}{"page": 1, "pageSize": 10, "orderBy": "id"}
-	TestClient.GET(fmt.Sprintf("%s/getOplogList", url), pageKeys, requestParams)
+	TestClient.GET(fmt.Sprintf("%s/getOplogList", url), pageKeys, httptest.NewWithQueryObjectParamFunc(requestParams))
 }
