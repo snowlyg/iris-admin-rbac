@@ -41,7 +41,7 @@ func getRoles(db *gorm.DB, users ...*Response) {
 
 	for _, user := range users {
 		for _, role := range roles {
-			if arr.InArrayS(userRoleNames[user.Id], role.Name) {
+			if arr.InArray(userRoleNames[user.Id], role.Name) {
 				user.Roles = append(user.Roles, role.DisplayName)
 			}
 		}
@@ -121,7 +121,7 @@ func IsAdminUser(id uint) error {
 	if err != nil {
 		return err
 	}
-	if arr.InArrayS(user.Roles, role.GetAdminRoleName()) {
+	if arr.InArray(user.Roles, role.GetAdminRoleName()) {
 		return errors.New("不能操作超级管理员")
 	}
 	return nil

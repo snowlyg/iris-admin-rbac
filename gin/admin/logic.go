@@ -42,7 +42,7 @@ func transform(admins ...*Response) {
 	}
 	for _, admin := range admins {
 		for _, role := range roles {
-			if arr.InArrayS(userRoleUuids[admin.Id], role.Uuid) {
+			if arr.InArray(userRoleUuids[admin.Id], role.Uuid) {
 				admin.Authorities = append(admin.Authorities, role.AuthorityName)
 			}
 		}
@@ -122,7 +122,7 @@ func IsAdminUser(id uint) error {
 	if err != nil {
 		return err
 	}
-	if arr.InArrayS(admin.Authorities, authority.GetAdminRoleName()) {
+	if arr.InArray(admin.Authorities, authority.GetAdminRoleName()) {
 		return errors.New("不能操作超级管理员")
 	}
 	return nil
