@@ -2,6 +2,13 @@
 
 [IrisAdminRbac](https://www.github.com/snowlyg/iris-admin-rbac) 项目为一个权鉴模块插件,可以为 [IrisAdmin](https://www.github.com/snowlyg/iris-admin) 项目快速集成权鉴管理API.
 
+
+[![Build Status](https://app.travis-ci.com/snowlyg/iris-admin-rbac.svg?branch=main)](https://app.travis-ci.com/snowlyg/iris-admin-rbac)
+[![LICENSE](https://img.shields.io/github/license/snowlyg/iris-admin-rbac)](https://github.com/snowlyg/iris-admin-rbac/blob/main/LICENSE)
+[![go doc](https://godoc.org/github.com/snowlyg/iris-admin-rbac?status.svg)](https://godoc.org/github.com/snowlyg/iris-admin-rbac)
+[![go report](https://goreportcard.com/badge/github.com/snowlyg/iris-admin-rbac)](https://goreportcard.com/badge/github.com/snowlyg/iris-admin-rbac)
+[![Build Status](https://codecov.io/gh/snowlyg/iris-admin-rbac/branch/main/graph/badge.svg)](https://codecov.io/gh/snowlyg/iris-admin-rbac)
+
 ##### 下载
 
 ```sh
