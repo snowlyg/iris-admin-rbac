@@ -4,7 +4,6 @@ import (
 	"github.com/gookit/color"
 	"github.com/snowlyg/iris-admin-rbac/gin/api"
 	"github.com/snowlyg/iris-admin/server/database"
-	"github.com/snowlyg/iris-admin/server/database/orm"
 	"github.com/snowlyg/multi"
 	"gorm.io/gorm"
 )
@@ -76,7 +75,7 @@ func (s *source) Init() error {
 			return err
 		}
 		for _, source := range sources {
-			_, err := orm.Create(database.Instance(), source)
+			_, err := source.Create(database.Instance())
 			if err != nil {
 				return err
 			}

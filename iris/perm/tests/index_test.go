@@ -34,8 +34,8 @@ func TestList(t *testing.T) {
 	for _, pageParam := range pageParams {
 		t.Run(fmt.Sprintf("路由权限测试，第%d页", pageParam.Page), func(t *testing.T) {
 
-			TestClient := httptest.Instance(t, str.Join("http://", web.CONFIG.System.Addr), TestServer.GetEngine())
-			TestClient.Login(rbac.LoginUrl, nil)
+			TestClient := httptest.Instance(t, TestServer.GetEngine(), str.Join("http://", web.CONFIG.System.Addr))
+			TestClient.Login(rbac.LoginUrl, "", httptest.NewResponses(http.StatusOK, response.ResponseOkMessage, rbac.LoginResponse))
 			if TestClient == nil {
 				return
 			}
@@ -44,26 +44,22 @@ func TestList(t *testing.T) {
 				t.Fatalf("获取路由权限错误")
 			}
 			pageKeys := httptest.Responses{
-				{Key: "status", Value: pageParam.Code},
-				{Key: "message", Value: pageParam.Message},
-				{Key: "data", Value: httptest.Responses{
-					{Key: "pageSize", Value: pageParam.PageSize},
-					{Key: "page", Value: pageParam.Page},
-					{Key: "items", Value: items},
-					{Key: "total", Value: len(routes)},
-				}},
+				{Key: "pageSize", Value: pageParam.PageSize},
+				{Key: "page", Value: pageParam.Page},
+				{Key: "items", Value: items},
+				{Key: "total", Value: len(routes)},
 			}
 
 			requestParams := map[string]interface{}{"page": pageParam.Page, "pageSize": pageParam.PageSize}
-			TestClient.GET(url, pageKeys, httptest.NewWithQueryObjectParamFunc(requestParams))
+			TestClient.GET(url, httptest.NewResponses(http.StatusOK, response.ResponseOkMessage, pageKeys), httptest.NewWithQueryObjectParamFunc(requestParams))
 		})
 	}
 
 }
 
 func TestCreate(t *testing.T) {
-	TestClient := httptest.Instance(t, str.Join("http://", web.CONFIG.System.Addr), TestServer.GetEngine())
-	TestClient.Login(rbac.LoginUrl, nil)
+	TestClient := httptest.Instance(t, TestServer.GetEngine(), str.Join("http://", web.CONFIG.System.Addr))
+	TestClient.Login(rbac.LoginUrl, "", httptest.NewResponses(http.StatusOK, response.ResponseOkMessage, rbac.LoginResponse))
 	if TestClient == nil {
 		return
 	}
@@ -82,8 +78,8 @@ func TestCreate(t *testing.T) {
 }
 
 func TestUpdate(t *testing.T) {
-	TestClient := httptest.Instance(t, str.Join("http://", web.CONFIG.System.Addr), TestServer.GetEngine())
-	TestClient.Login(rbac.LoginUrl, nil)
+	TestClient := httptest.Instance(t, TestServer.GetEngine(), str.Join("http://", web.CONFIG.System.Addr))
+	TestClient.Login(rbac.LoginUrl, "", httptest.NewResponses(http.StatusOK, response.ResponseOkMessage, rbac.LoginResponse))
 	if TestClient == nil {
 		return
 	}
@@ -107,16 +103,12 @@ func TestUpdate(t *testing.T) {
 		"act":         "POST",
 	}
 
-	pageKeys := httptest.Responses{
-		{Key: "status", Value: http.StatusOK},
-		{Key: "message", Value: response.ResponseOkMessage},
-	}
-	TestClient.POST(fmt.Sprintf("%s/%d", url, id), pageKeys, httptest.NewWithJsonParamFunc(update))
+	TestClient.POST(fmt.Sprintf("%s/%d", url, id), httptest.SuccessResponse, httptest.NewWithJsonParamFunc(update))
 }
 
 func TestGetById(t *testing.T) {
-	TestClient := httptest.Instance(t, str.Join("http://", web.CONFIG.System.Addr), TestServer.GetEngine())
-	TestClient.Login(rbac.LoginUrl, nil)
+	TestClient := httptest.Instance(t, TestServer.GetEngine(), str.Join("http://", web.CONFIG.System.Addr))
+	TestClient.Login(rbac.LoginUrl, "", httptest.NewResponses(http.StatusOK, response.ResponseOkMessage, rbac.LoginResponse))
 	if TestClient == nil {
 		return
 	}
@@ -151,23 +143,13 @@ func TestGetById(t *testing.T) {
 }
 
 func Create(TestClient *httptest.Client, data map[string]interface{}) uint {
-	pageKeys := httptest.Responses{
-		{Key: "status", Value: http.StatusOK},
-		{Key: "message", Value: response.ResponseOkMessage},
-		{Key: "data", Value: httptest.Responses{
-			{Key: "id", Value: 1, Type: "ge"},
-		},
-		},
-	}
-	return TestClient.POST(url, pageKeys, httptest.NewWithJsonParamFunc(data)).GetId()
+	pageKeys := httptest.IdKeys()
+	TestClient.POST(url, httptest.NewResponses(http.StatusOK, response.ResponseOkMessage, pageKeys), httptest.NewWithJsonParamFunc(data))
+	return pageKeys.GetId()
 }
 
 func Delete(TestClient *httptest.Client, id uint) {
-	pageKeys := httptest.Responses{
-		{Key: "status", Value: http.StatusOK},
-		{Key: "message", Value: response.ResponseOkMessage},
-	}
-	TestClient.DELETE(fmt.Sprintf("%s/%d", url, id), pageKeys)
+	TestClient.DELETE(fmt.Sprintf("%s/%d", url, id), httptest.SuccessResponse)
 }
 
 func getPerms(pageParam PageParam) ([]httptest.Responses, error) {

@@ -18,10 +18,10 @@ func Login(ctx iris.Context) {
 		ctx.JSON(orm.Response{Status: http.StatusBadRequest, Data: nil, Msg: err.Error()})
 		return
 	}
-	token, err := GetAccessToken(req)
+	token, id, err := GetAccessToken(req)
 	if err != nil {
 		ctx.JSON(orm.Response{Status: http.StatusBadRequest, Data: nil, Msg: err.Error()})
 		return
 	}
-	ctx.JSON(orm.Response{Status: http.StatusOK, Data: iris.Map{"accessToken": token}, Msg: response.ResponseOkMessage})
+	ctx.JSON(orm.Response{Status: http.StatusOK, Data: iris.Map{"accessToken": token, "user": iris.Map{"id": id}}, Msg: response.ResponseOkMessage})
 }

@@ -8,7 +8,6 @@ import (
 	"github.com/snowlyg/iris-admin-rbac/gin/authority"
 	"github.com/snowlyg/iris-admin/server/casbin"
 	"github.com/snowlyg/iris-admin/server/database"
-	"github.com/snowlyg/iris-admin/server/database/orm"
 	"github.com/snowlyg/iris-admin/server/database/scope"
 	"github.com/snowlyg/iris-admin/server/zap_server"
 	"go.uber.org/zap"
@@ -32,14 +31,11 @@ func transform(admins ...*Response) {
 		roleUuids = append(roleUuids, userRUuids...)
 	}
 
-	roles, err := authority.FindInUuid(database.Instance(), roleUuids)
-	if err != nil {
-		zap_server.ZAPLOG.Error(err.Error())
-		return
-	}
+	roles, _ := authority.FindInUuid(database.Instance(), roleUuids)
 	if len(roles) == 0 {
 		return
 	}
+
 	for _, admin := range admins {
 		for _, role := range roles {
 			if arr.InArray(userRoleUuids[admin.Id], role.Uuid) {
@@ -59,16 +55,15 @@ func FindByUserName(scopes ...func(db *gorm.DB) *gorm.DB) (*Response, error) {
 	return admin, nil
 }
 
-func FindPasswordByUserName(db *gorm.DB, username string, ids ...uint) (*LoginResponse, error) {
+func FindPasswordByUserName(db *gorm.DB, username string, scopes ...func(db *gorm.DB) *gorm.DB) (*LoginResponse, error) {
 	admin := &LoginResponse{}
-	db = db.Model(&Admin{}).Select("id,password").
-		Where("username = ?", username)
-	if len(ids) == 1 {
-		db.Where("id != ?", ids[0])
+	db = db.Model(&Admin{}).Select("id,password").Where("username = ?", username)
+
+	if len(scopes) > 0 {
+		db.Scopes(scopes...)
 	}
 	err := db.First(admin).Error
 	if err != nil {
-		zap_server.ZAPLOG.Error(err.Error())
 		return admin, err
 	}
 	userId := strconv.FormatUint(uint64(admin.Id), 10)
@@ -103,13 +98,12 @@ func Create(req *Request) (uint, error) {
 	zap_server.ZAPLOG.Info("添加用户", zap.String("hash:", req.Password), zap.ByteString("hash:", hash))
 
 	admin.Password = string(hash)
-	id, err := orm.Create(database.Instance(), admin)
+	id, err := admin.Create(database.Instance())
 	if err != nil {
 		return 0, err
 	}
 
 	if err := AddRoleForUser(admin); err != nil {
-		zap_server.ZAPLOG.Error(err.Error())
 		return 0, err
 	}
 
@@ -118,11 +112,12 @@ func Create(req *Request) (uint, error) {
 
 func IsAdminUser(id uint) error {
 	admin := &Response{}
-	err := orm.First(database.Instance(), admin, scope.IdScope(id))
+	err := admin.First(database.Instance(), scope.IdScope(id))
 	if err != nil {
 		return err
 	}
 	if arr.InArray(admin.Authorities, authority.GetAdminRoleName()) {
+		zap_server.ZAPLOG.Error("不能操作超级管理员")
 		return errors.New("不能操作超级管理员")
 	}
 	return nil
@@ -133,7 +128,6 @@ func AddRoleForUser(admin *Admin) error {
 	userId := strconv.FormatUint(uint64(admin.ID), 10)
 	oldRoleUuids, err := getUserRoleUuids(userId)
 	if err != nil {
-		zap_server.ZAPLOG.Error(err.Error())
 		return err
 	}
 

@@ -1,8 +1,6 @@
 package v1
 
 import (
-	"net/http"
-
 	"github.com/snowlyg/helper/str"
 	"github.com/snowlyg/httptest"
 	"github.com/snowlyg/iris-admin-rbac/gin/admin"
@@ -19,18 +17,9 @@ var prefix = "/api/v1"
 var LoginUrl = str.Join(prefix, "/public/admin/login")
 var LogoutUrl = str.Join(prefix, "/public/logout")
 var LoginResponse = httptest.Responses{
-	{Key: "status", Value: http.StatusOK},
-	{Key: "message", Value: "操作成功"},
-	{Key: "data",
-		Value: httptest.Responses{
-			{Key: "accessToken", Value: "", Type: "notempty"},
-		},
-	},
-}
-
-var LogoutResponse = httptest.Responses{
-	{Key: "status", Value: http.StatusOK},
-	{Key: "message", Value: "操作成功"},
+	{Key: "accessToken", Value: "", Type: "notempty"},
+	{Key: "user", Value: httptest.Responses{
+		{Key: "id", Value: 0, Type: "ge"}}},
 }
 
 // 加载模块

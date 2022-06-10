@@ -26,6 +26,7 @@ func CasbinHandler() gin.HandlerFunc {
 		for _, sub := range subs {
 			success, err := casbin.Instance().Enforce(sub, obj, act)
 			if err != nil {
+				zap_server.ZAPLOG.Error("权限服务验证失败")
 				response.ForbiddenFailWithMessage("权限服务验证失败", ctx)
 				continue
 			}

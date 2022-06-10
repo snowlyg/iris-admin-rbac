@@ -18,177 +18,160 @@ var (
 )
 
 func TestList(t *testing.T) {
-	engine := TestServer.GetEngine()
-	TestClient := httptest.Instance(t, str.Join("http://", web.CONFIG.System.Addr), engine)
-	TestClient.Login(rbac.LoginUrl, nil)
+	TestClient := httptest.Instance(t, TestServer.GetEngine(), str.Join("http://", web.CONFIG.System.Addr))
+	TestClient.Login(rbac.LoginUrl, "", httptest.NewResponses(http.StatusOK, response.ResponseOkMessage, rbac.LoginResponse))
 	if TestClient == nil {
 		return
 	}
 	pageKeys := httptest.Responses{
-		{Key: "status", Value: http.StatusOK},
-		{Key: "message", Value: response.ResponseOkMessage},
-		{Key: "data", Value: httptest.Responses{
-			{Key: "pageSize", Value: 10},
-			{Key: "page", Value: 1},
-			{Key: "list", Value: []httptest.Responses{
-				{
-					{Key: "id", Value: 0, Type: "ge"},
-					{Key: "uuid", Value: "device_admin"},
-					{Key: "authorityName", Value: "设备用户"},
-					{Key: "authorityType", Value: multi.GeneralAuthority},
-					{Key: "parentId", Value: 0},
-					{Key: "defaultRouter", Value: "dashboard"},
-					{Key: "updatedAt", Value: "", Type: "notempty"},
-					{Key: "createdAt", Value: "", Type: "notempty"},
-				},
-				{
-					{Key: "id", Value: 0, Type: "ge"},
-					{Key: "uuid", Value: "mini_admin"},
-					{Key: "authorityName", Value: "小程序用户"},
-					{Key: "authorityType", Value: multi.GeneralAuthority},
-					{Key: "parentId", Value: 0},
-					{Key: "defaultRouter", Value: "dashboard"},
-					{Key: "updatedAt", Value: "", Type: "notempty"},
-					{Key: "createdAt", Value: "", Type: "notempty"},
-				},
-				{
-					{Key: "id", Value: 0, Type: "ge"},
-					{Key: "uuid", Value: "tenancy_admin"},
-					{Key: "authorityName", Value: "商户管理员"},
-					{Key: "authorityType", Value: multi.TenancyAuthority},
-					{Key: "parentId", Value: 0},
-					{Key: "defaultRouter", Value: "dashboard"},
-					{Key: "updatedAt", Value: "", Type: "notempty"},
-					{Key: "createdAt", Value: "", Type: "notempty"},
-				},
-				{
-					{Key: "id", Value: 0, Type: "ge"},
-					{Key: "uuid", Value: "super_admin"},
-					{Key: "authorityName", Value: "超级管理员"},
-					{Key: "authorityType", Value: multi.AdminAuthority},
-					{Key: "parentId", Value: 0},
-					{Key: "defaultRouter", Value: "dashboard"},
-					{Key: "updatedAt", Value: "", Type: "notempty"},
-					{Key: "createdAt", Value: "", Type: "notempty"},
-				},
-			}},
-			{Key: "total", Value: 0, Type: "ge"},
+		{Key: "pageSize", Value: 10},
+		{Key: "page", Value: 1},
+		{Key: "list", Value: []httptest.Responses{
+			{
+				{Key: "id", Value: 0, Type: "ge"},
+				{Key: "uuid", Value: "device_admin"},
+				{Key: "authorityName", Value: "设备用户"},
+				{Key: "authorityType", Value: multi.GeneralAuthority},
+				{Key: "parentId", Value: 0},
+				{Key: "defaultRouter", Value: "dashboard"},
+				{Key: "updatedAt", Value: "", Type: "notempty"},
+				{Key: "createdAt", Value: "", Type: "notempty"},
+			},
+			{
+				{Key: "id", Value: 0, Type: "ge"},
+				{Key: "uuid", Value: "mini_admin"},
+				{Key: "authorityName", Value: "小程序用户"},
+				{Key: "authorityType", Value: multi.GeneralAuthority},
+				{Key: "parentId", Value: 0},
+				{Key: "defaultRouter", Value: "dashboard"},
+				{Key: "updatedAt", Value: "", Type: "notempty"},
+				{Key: "createdAt", Value: "", Type: "notempty"},
+			},
+			{
+				{Key: "id", Value: 0, Type: "ge"},
+				{Key: "uuid", Value: "tenancy_admin"},
+				{Key: "authorityName", Value: "商户管理员"},
+				{Key: "authorityType", Value: multi.TenancyAuthority},
+				{Key: "parentId", Value: 0},
+				{Key: "defaultRouter", Value: "dashboard"},
+				{Key: "updatedAt", Value: "", Type: "notempty"},
+				{Key: "createdAt", Value: "", Type: "notempty"},
+			},
+			{
+				{Key: "id", Value: 0, Type: "ge"},
+				{Key: "uuid", Value: "super_admin"},
+				{Key: "authorityName", Value: "超级管理员"},
+				{Key: "authorityType", Value: multi.AdminAuthority},
+				{Key: "parentId", Value: 0},
+				{Key: "defaultRouter", Value: "dashboard"},
+				{Key: "updatedAt", Value: "", Type: "notempty"},
+				{Key: "createdAt", Value: "", Type: "notempty"},
+			},
 		}},
+		{Key: "total", Value: 0, Type: "ge"},
 	}
 	data := map[string]interface{}{"page": 1, "pageSize": 10, "orderBy": "id"}
-	TestClient.GET(fmt.Sprintf("%s/getAuthorityList", url), pageKeys, httptest.NewWithQueryObjectParamFunc(data))
+	TestClient.GET(fmt.Sprintf("%s/getAuthorityList", url), httptest.NewResponses(http.StatusOK, response.ResponseOkMessage, pageKeys), httptest.NewWithQueryObjectParamFunc(data))
 }
 
 func TestGetAdminAuthorityList(t *testing.T) {
 
-	TestClient := httptest.Instance(t, str.Join("http://", web.CONFIG.System.Addr), TestServer.GetEngine())
-	TestClient.Login(rbac.LoginUrl, nil)
+	TestClient := httptest.Instance(t, TestServer.GetEngine(), str.Join("http://", web.CONFIG.System.Addr))
+	TestClient.Login(rbac.LoginUrl, "", httptest.NewResponses(http.StatusOK, response.ResponseOkMessage, rbac.LoginResponse))
 	if TestClient == nil {
 		return
 	}
 	pageKeys := httptest.Responses{
-		{Key: "status", Value: http.StatusOK},
-		{Key: "message", Value: response.ResponseOkMessage},
-		{Key: "data", Value: httptest.Responses{
-			{Key: "pageSize", Value: 10},
-			{Key: "page", Value: 1},
-			{Key: "list", Value: []httptest.Responses{
-				{
-					{Key: "id", Value: 0, Type: "ge"},
-					{Key: "uuid", Value: "super_admin"},
-					{Key: "authorityName", Value: "超级管理员"},
-					{Key: "authorityType", Value: multi.AdminAuthority},
-					{Key: "parentId", Value: 0},
-					{Key: "defaultRouter", Value: "dashboard"},
-					{Key: "updatedAt", Value: "", Type: "notempty"},
-					{Key: "createdAt", Value: "", Type: "notempty"},
-				},
-			}},
-			{Key: "total", Value: 0, Type: "ge"},
+		{Key: "pageSize", Value: 10},
+		{Key: "page", Value: 1},
+		{Key: "list", Value: []httptest.Responses{
+			{
+				{Key: "id", Value: 0, Type: "ge"},
+				{Key: "uuid", Value: "super_admin"},
+				{Key: "authorityName", Value: "超级管理员"},
+				{Key: "authorityType", Value: multi.AdminAuthority},
+				{Key: "parentId", Value: 0},
+				{Key: "defaultRouter", Value: "dashboard"},
+				{Key: "updatedAt", Value: "", Type: "notempty"},
+				{Key: "createdAt", Value: "", Type: "notempty"},
+			},
 		}},
+		{Key: "total", Value: 0, Type: "ge"},
 	}
 	data := map[string]interface{}{"page": 1, "pageSize": 10, "orderBy": "id"}
-	TestClient.GET(fmt.Sprintf("%s/getAdminAuthorityList", url), pageKeys, httptest.NewWithQueryObjectParamFunc(data))
+	TestClient.GET(fmt.Sprintf("%s/getAdminAuthorityList", url), httptest.NewResponses(http.StatusOK, response.ResponseOkMessage, pageKeys), httptest.NewWithQueryObjectParamFunc(data))
 }
 
 func TestGetTenancyAuthorityList(t *testing.T) {
 
-	TestClient := httptest.Instance(t, str.Join("http://", web.CONFIG.System.Addr), TestServer.GetEngine())
-	TestClient.Login(rbac.LoginUrl, nil)
+	TestClient := httptest.Instance(t, TestServer.GetEngine(), str.Join("http://", web.CONFIG.System.Addr))
+	TestClient.Login(rbac.LoginUrl, "", httptest.NewResponses(http.StatusOK, response.ResponseOkMessage, rbac.LoginResponse))
 	if TestClient == nil {
 		return
 	}
 	pageKeys := httptest.Responses{
-		{Key: "status", Value: http.StatusOK},
-		{Key: "message", Value: response.ResponseOkMessage},
-		{Key: "data", Value: httptest.Responses{
-			{Key: "pageSize", Value: 10},
-			{Key: "page", Value: 1},
-			{Key: "list", Value: []httptest.Responses{
-				{
-					{Key: "id", Value: 0, Type: "ge"},
-					{Key: "uuid", Value: "tenancy_admin"},
-					{Key: "authorityName", Value: "商户管理员"},
-					{Key: "authorityType", Value: multi.TenancyAuthority},
-					{Key: "parentId", Value: 0},
-					{Key: "defaultRouter", Value: "dashboard"},
-					{Key: "updatedAt", Value: "", Type: "notempty"},
-					{Key: "createdAt", Value: "", Type: "notempty"},
-				},
-			}},
-			{Key: "total", Value: 0, Type: "ge"},
+		{Key: "pageSize", Value: 10},
+		{Key: "page", Value: 1},
+		{Key: "list", Value: []httptest.Responses{
+			{
+				{Key: "id", Value: 0, Type: "ge"},
+				{Key: "uuid", Value: "tenancy_admin"},
+				{Key: "authorityName", Value: "商户管理员"},
+				{Key: "authorityType", Value: multi.TenancyAuthority},
+				{Key: "parentId", Value: 0},
+				{Key: "defaultRouter", Value: "dashboard"},
+				{Key: "updatedAt", Value: "", Type: "notempty"},
+				{Key: "createdAt", Value: "", Type: "notempty"},
+			},
 		}},
+		{Key: "total", Value: 0, Type: "ge"},
 	}
 	data := map[string]interface{}{"page": 1, "pageSize": 10, "orderBy": "id"}
-	TestClient.GET(fmt.Sprintf("%s/getTenancyAuthorityList", url), pageKeys, httptest.NewWithQueryObjectParamFunc(data))
+	TestClient.GET(fmt.Sprintf("%s/getTenancyAuthorityList", url), httptest.NewResponses(http.StatusOK, response.ResponseOkMessage, pageKeys), httptest.NewWithQueryObjectParamFunc(data))
 }
 
 func TestGetGeneralAuthorityList(t *testing.T) {
 
-	TestClient := httptest.Instance(t, str.Join("http://", web.CONFIG.System.Addr), TestServer.GetEngine())
-	TestClient.Login(rbac.LoginUrl, nil)
+	TestClient := httptest.Instance(t, TestServer.GetEngine(), str.Join("http://", web.CONFIG.System.Addr))
+	TestClient.Login(rbac.LoginUrl, "", httptest.NewResponses(http.StatusOK, response.ResponseOkMessage, rbac.LoginResponse))
 	if TestClient == nil {
 		return
 	}
 	pageKeys := httptest.Responses{
-		{Key: "status", Value: http.StatusOK},
-		{Key: "message", Value: response.ResponseOkMessage},
-		{Key: "data", Value: httptest.Responses{
-			{Key: "pageSize", Value: 10},
-			{Key: "page", Value: 1},
-			{Key: "list", Value: []httptest.Responses{
-				{
-					{Key: "id", Value: 0, Type: "ge"},
-					{Key: "uuid", Value: "device_admin"},
-					{Key: "authorityName", Value: "设备用户"},
-					{Key: "authorityType", Value: multi.GeneralAuthority},
-					{Key: "parentId", Value: 0},
-					{Key: "defaultRouter", Value: "dashboard"},
-					{Key: "updatedAt", Value: "", Type: "notempty"},
-					{Key: "createdAt", Value: "", Type: "notempty"},
-				},
-				{
-					{Key: "id", Value: 0, Type: "ge"},
-					{Key: "uuid", Value: "mini_admin"},
-					{Key: "authorityName", Value: "小程序用户"},
-					{Key: "authorityType", Value: multi.GeneralAuthority},
-					{Key: "parentId", Value: 0},
-					{Key: "defaultRouter", Value: "dashboard"},
-					{Key: "updatedAt", Value: "", Type: "notempty"},
-					{Key: "createdAt", Value: "", Type: "notempty"},
-				},
-			}},
-			{Key: "total", Value: 0, Type: "ge"},
+		{Key: "pageSize", Value: 10},
+		{Key: "page", Value: 1},
+		{Key: "list", Value: []httptest.Responses{
+			{
+				{Key: "id", Value: 0, Type: "ge"},
+				{Key: "uuid", Value: "device_admin"},
+				{Key: "authorityName", Value: "设备用户"},
+				{Key: "authorityType", Value: multi.GeneralAuthority},
+				{Key: "parentId", Value: 0},
+				{Key: "defaultRouter", Value: "dashboard"},
+				{Key: "updatedAt", Value: "", Type: "notempty"},
+				{Key: "createdAt", Value: "", Type: "notempty"},
+			},
+			{
+				{Key: "id", Value: 0, Type: "ge"},
+				{Key: "uuid", Value: "mini_admin"},
+				{Key: "authorityName", Value: "小程序用户"},
+				{Key: "authorityType", Value: multi.GeneralAuthority},
+				{Key: "parentId", Value: 0},
+				{Key: "defaultRouter", Value: "dashboard"},
+				{Key: "updatedAt", Value: "", Type: "notempty"},
+				{Key: "createdAt", Value: "", Type: "notempty"},
+			},
 		}},
+		{Key: "total", Value: 0, Type: "ge"},
 	}
 	data := map[string]interface{}{"page": 1, "pageSize": 10, "orderBy": "id"}
-	TestClient.GET(fmt.Sprintf("%s/getGeneralAuthorityList", url), pageKeys, httptest.NewWithQueryObjectParamFunc(data))
+	TestClient.GET(fmt.Sprintf("%s/getGeneralAuthorityList", url), httptest.NewResponses(http.StatusOK, response.ResponseOkMessage, pageKeys), httptest.NewWithQueryObjectParamFunc(data))
 }
 
 func TestCreate(t *testing.T) {
 
-	TestClient := httptest.Instance(t, str.Join("http://", web.CONFIG.System.Addr), TestServer.GetEngine())
-	TestClient.Login(rbac.LoginUrl, nil)
+	TestClient := httptest.Instance(t, TestServer.GetEngine(), str.Join("http://", web.CONFIG.System.Addr))
+	TestClient.Login(rbac.LoginUrl, "", httptest.NewResponses(http.StatusOK, response.ResponseOkMessage, rbac.LoginResponse))
 	if TestClient == nil {
 		return
 	}
@@ -206,8 +189,8 @@ func TestCreate(t *testing.T) {
 }
 
 func TestUpdate(t *testing.T) {
-	TestClient := httptest.Instance(t, str.Join("http://", web.CONFIG.System.Addr), TestServer.GetEngine())
-	TestClient.Login(rbac.LoginUrl, nil)
+	TestClient := httptest.Instance(t, TestServer.GetEngine(), str.Join("http://", web.CONFIG.System.Addr))
+	TestClient.Login(rbac.LoginUrl, "", httptest.NewResponses(http.StatusOK, response.ResponseOkMessage, rbac.LoginResponse))
 	if TestClient == nil {
 		return
 	}
@@ -228,17 +211,14 @@ func TestUpdate(t *testing.T) {
 		"parentId":      0,
 		"authorityType": multi.AdminAuthority,
 	}
-	pageKeys := httptest.Responses{
-		{Key: "status", Value: http.StatusOK},
-		{Key: "message", Value: response.ResponseOkMessage},
-	}
-	TestClient.PUT(fmt.Sprintf("%s/updateAuthority/%d", url, id), pageKeys, httptest.NewWithJsonParamFunc(requestParams))
+
+	TestClient.PUT(fmt.Sprintf("%s/updateAuthority/%d", url, id), httptest.SuccessResponse, httptest.NewWithJsonParamFunc(requestParams))
 }
 
 func TestCopyAuthority(t *testing.T) {
 
-	TestClient := httptest.Instance(t, str.Join("http://", web.CONFIG.System.Addr), TestServer.GetEngine())
-	TestClient.Login(rbac.LoginUrl, nil)
+	TestClient := httptest.Instance(t, TestServer.GetEngine(), str.Join("http://", web.CONFIG.System.Addr))
+	TestClient.Login(rbac.LoginUrl, "", httptest.NewResponses(http.StatusOK, response.ResponseOkMessage, rbac.LoginResponse))
 	if TestClient == nil {
 		return
 	}
@@ -254,35 +234,21 @@ func TestCopyAuthority(t *testing.T) {
 	}
 	defer Delete(TestClient, id)
 
-	pageKeys := httptest.Responses{
-		{Key: "status", Value: http.StatusOK},
-		{Key: "message", Value: response.ResponseOkMessage},
-	}
-
 	update := map[string]interface{}{
 		"uuid":          "test_authorityName_after_copy",
 		"authorityName": "test_authorityName_after_copy",
 	}
 
-	TestClient.POST(fmt.Sprintf("%s/copyAuthority/%d", url, id), pageKeys, httptest.NewWithJsonParamFunc(update))
+	TestClient.POST(fmt.Sprintf("%s/copyAuthority/%d", url, id), httptest.SuccessResponse, httptest.NewWithJsonParamFunc(update))
 }
 
 func Create(TestClient *httptest.Client, data map[string]interface{}) uint {
-	pageKeys := httptest.Responses{
-		{Key: "status", Value: http.StatusOK},
-		{Key: "message", Value: response.ResponseOkMessage},
-		{Key: "data", Value: httptest.Responses{
-			{Key: "id", Value: 1, Type: "ge"},
-		},
-		},
-	}
-	return TestClient.POST(fmt.Sprintf("%s/createAuthority", url), pageKeys, httptest.NewWithJsonParamFunc(data)).GetId()
+	pageKeys := httptest.IdKeys()
+	TestClient.POST(fmt.Sprintf("%s/createAuthority", url), httptest.NewResponses(http.StatusOK, response.ResponseOkMessage, pageKeys), httptest.NewWithJsonParamFunc(data))
+	return pageKeys.GetId()
 }
 
 func Delete(TestClient *httptest.Client, id uint) {
-	pageKeys := httptest.Responses{
-		{Key: "status", Value: http.StatusOK},
-		{Key: "message", Value: response.ResponseOkMessage},
-	}
-	TestClient.DELETE(fmt.Sprintf("%s/deleteAuthority/%d", url, id), pageKeys)
+
+	TestClient.DELETE(fmt.Sprintf("%s/deleteAuthority/%d", url, id), httptest.SuccessResponse)
 }

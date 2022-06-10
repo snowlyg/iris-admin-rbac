@@ -2,7 +2,6 @@ package public
 
 import (
 	"errors"
-	"fmt"
 	"time"
 
 	"github.com/snowlyg/iris-admin-rbac/gin/admin"
@@ -47,13 +46,15 @@ func GetAccessToken(req *LoginRequest) (*LoginResponse, error) {
 	})
 	token, _, err := multi.AuthDriver.GenerateToken(claims)
 	if err != nil {
+		zap_server.ZAPLOG.Error(err.Error())
 		return nil, err
 	}
 	if token == "" {
+		zap_server.ZAPLOG.Error(multi.ErrEmptyToken.Error())
 		return nil, multi.ErrEmptyToken
 	}
 	loginResponse := &LoginResponse{
-		Data: map[string]interface{}{
+		User: map[string]interface{}{
 			"id": admin.Id,
 		},
 		Token: token,
@@ -66,7 +67,7 @@ func DelToken(token string) error {
 	err := multi.AuthDriver.DelUserTokenCache(token)
 	if err != nil {
 		zap_server.ZAPLOG.Error(err.Error())
-		return fmt.Errorf("删除TOKEN失败: %w", err)
+		return err
 	}
 	return nil
 }
@@ -76,7 +77,7 @@ func CleanToken(authorityType int, userId string) error {
 	err := multi.AuthDriver.CleanUserTokenCache(authorityType, userId)
 	if err != nil {
 		zap_server.ZAPLOG.Error(err.Error())
-		return fmt.Errorf("清除TOKEN失败: %w", err)
+		return err
 	}
 	return nil
 }

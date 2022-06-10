@@ -1,11 +1,8 @@
 package api
 
 import (
-	"fmt"
-
 	"github.com/snowlyg/iris-admin/server/casbin"
 	"github.com/snowlyg/iris-admin/server/database"
-	"github.com/snowlyg/iris-admin/server/database/orm"
 	"github.com/snowlyg/iris-admin/server/database/scope"
 	"github.com/snowlyg/iris-admin/server/zap_server"
 	"gorm.io/gorm"
@@ -22,7 +19,8 @@ func CreatenInBatches(db *gorm.DB, apis ApiCollection) error {
 }
 
 func Delete(id uint, req DeleteApiReq) error {
-	if err := orm.Delete(database.Instance(), &Api{}, scope.IdScope(id)); err != nil {
+	api := &Api{}
+	if err := api.Delete(database.Instance(), scope.IdScope(id)); err != nil {
 		return err
 	}
 	if err := casbin.ClearCasbin(1, req.Path, req.Method); err != nil {
@@ -33,13 +31,14 @@ func Delete(id uint, req DeleteApiReq) error {
 
 func BatcheDelete(ids []uint) error {
 	apis := &PageResponse{}
-	err := orm.Find(database.Instance(), apis, scope.InIdsScope(ids))
+	err := apis.Find(database.Instance(), scope.InIdsScope(ids))
 	if err != nil {
 		return err
 	}
 
 	err = database.Instance().Transaction(func(tx *gorm.DB) error {
-		if err := orm.Delete(tx, &Api{}, scope.InIdsScope(ids)); err != nil {
+		api := &Api{}
+		if err := api.Delete(tx, scope.InIdsScope(ids)); err != nil {
 			return err
 		}
 		for _, api := range apis.Item {
@@ -60,7 +59,8 @@ func GetApisForRole() (map[int][][]string, error) {
 	apis := ApiCollection{}
 	err := database.Instance().Model(&Api{}).Find(&apis).Error
 	if err != nil {
-		return nil, fmt.Errorf("获取权限错误 %w", err)
+		zap_server.ZAPLOG.Error(err.Error())
+		return nil, err
 	}
 	apisForRoles := map[int][][]string{}
 	for _, api := range apis {

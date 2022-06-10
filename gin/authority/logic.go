@@ -2,11 +2,9 @@ package authority
 
 import (
 	"errors"
-	"fmt"
 
 	"github.com/snowlyg/iris-admin/server/casbin"
 	"github.com/snowlyg/iris-admin/server/database"
-	"github.com/snowlyg/iris-admin/server/database/orm"
 	"github.com/snowlyg/iris-admin/server/database/scope"
 	"github.com/snowlyg/iris-admin/server/zap_server"
 	"gorm.io/gorm"
@@ -22,7 +20,7 @@ func GetAdminRoleName() string {
 // Copy 复制
 func Copy(id uint, req *CreateAuthorityRequest) (uint, error) {
 	oldAuthority := &Response{}
-	err := orm.First(database.Instance(), oldAuthority, scope.IdScope(id))
+	err := oldAuthority.First(database.Instance(), scope.IdScope(id))
 	if err != nil {
 		return 0, err
 	}
@@ -35,7 +33,7 @@ func Copy(id uint, req *CreateAuthorityRequest) (uint, error) {
 	authority.AuthorityType = oldAuthority.AuthorityType
 	authority.DefaultRouter = oldAuthority.DefaultRouter
 	authority.Uuid = req.Uuid
-	newId, err := orm.Create(database.Instance(), authority)
+	newId, err := authority.Create(database.Instance())
 	if err != nil {
 		return 0, err
 	}
@@ -49,6 +47,7 @@ func Copy(id uint, req *CreateAuthorityRequest) (uint, error) {
 func Update(id uint, req *Authority) error {
 	err := database.Instance().Model(&Authority{}).Scopes(scope.IdScope(id)).Updates(req).Error
 	if err != nil {
+		zap_server.ZAPLOG.Error(err.Error())
 		return err
 	}
 	return nil
@@ -60,7 +59,7 @@ func Create(req *CreateAuthorityRequest) (uint, error) {
 		return 0, ErrRoleNameInvalide
 	}
 	authority := &Authority{BaseAuthority: req.BaseAuthority, Uuid: req.Uuid}
-	id, err := orm.Create(database.Instance(), authority)
+	id, err := authority.Create(database.Instance())
 	if err != nil {
 		return 0, err
 	}
@@ -74,7 +73,7 @@ func Create(req *CreateAuthorityRequest) (uint, error) {
 // FindByUuid
 func FindByUuid(scopes ...func(db *gorm.DB) *gorm.DB) (*Response, error) {
 	role := &Response{}
-	err := orm.First(database.Instance(), role, scopes...)
+	err := role.First(database.Instance(), scopes...)
 	if err != nil {
 		return nil, err
 	}
@@ -83,7 +82,7 @@ func FindByUuid(scopes ...func(db *gorm.DB) *gorm.DB) (*Response, error) {
 
 func IsAdminRole(id uint) error {
 	authority := &Response{}
-	err := orm.First(database.Instance(), authority, scope.IdScope(id))
+	err := authority.First(database.Instance(), scope.IdScope(id))
 	if err != nil {
 		return err
 	}
@@ -95,9 +94,8 @@ func IsAdminRole(id uint) error {
 
 func FindInId(db *gorm.DB, ids []uint) ([]*Response, error) {
 	authorities := &PageResponse{}
-	err := orm.Find(database.Instance(), authorities, scope.InIdsScope(ids))
+	err := authorities.Find(database.Instance(), scope.InIdsScope(ids))
 	if err != nil {
-		zap_server.ZAPLOG.Error(err.Error())
 		return nil, err
 	}
 	return authorities.Item, nil
@@ -105,9 +103,8 @@ func FindInId(db *gorm.DB, ids []uint) ([]*Response, error) {
 
 func FindInUuid(db *gorm.DB, uuids []string) ([]*Response, error) {
 	authorities := &PageResponse{}
-	err := orm.Find(database.Instance(), authorities, scope.InUuidsScope(uuids))
+	err := authorities.Find(database.Instance(), scope.InUuidsScope(uuids))
 	if err != nil {
-		zap_server.ZAPLOG.Error(err.Error())
 		return nil, err
 	}
 	return authorities.Item, nil
@@ -138,7 +135,8 @@ func AddPermForRole(uuid string, perms [][]string) error {
 		return err
 	}
 	if !b {
-		return errors.New("权限添加失败！！")
+		zap_server.ZAPLOG.Error("权限添加失败")
+		return errors.New("权限添加失败")
 	}
 
 	return nil
@@ -148,7 +146,8 @@ func GetRoleIds() ([]uint, error) {
 	var roleIds []uint
 	err := database.Instance().Model(&Authority{}).Select("authority_id").Find(&roleIds).Error
 	if err != nil {
-		return roleIds, fmt.Errorf("获取角色ids错误 %w", err)
+		zap_server.ZAPLOG.Error(err.Error())
+		return roleIds, err
 	}
 	return roleIds, nil
 }

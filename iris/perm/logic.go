@@ -2,11 +2,9 @@ package perm
 
 import (
 	"errors"
-	"fmt"
 
 	"github.com/snowlyg/iris-admin/server/database"
 	"github.com/snowlyg/iris-admin/server/zap_server"
-	"go.uber.org/zap"
 	"gorm.io/gorm"
 )
 
@@ -14,7 +12,7 @@ import (
 func CreatenInBatches(db *gorm.DB, perms PermCollection) error {
 	err := db.Model(&Permission{}).CreateInBatches(&perms, 500).Error
 	if err != nil {
-		zap_server.ZAPLOG.Error("添加权限失败", zap.String("错误:", err.Error()))
+		zap_server.ZAPLOG.Error(err.Error())
 		return err
 	}
 	return nil
@@ -24,7 +22,11 @@ func CreatenInBatches(db *gorm.DB, perms PermCollection) error {
 func CheckNameAndAct(scopes ...func(db *gorm.DB) *gorm.DB) bool {
 	perm := &Response{}
 	err := perm.First(database.Instance(), scopes...)
-	return errors.Is(err, gorm.ErrRecordNotFound)
+	isNotFound := errors.Is(err, gorm.ErrRecordNotFound)
+	if !isNotFound {
+		zap_server.ZAPLOG.Error(err.Error())
+	}
+	return isNotFound
 }
 
 // GetPermsForRole
@@ -33,7 +35,8 @@ func GetPermsForRole() ([][]string, error) {
 	perms := PermCollection{}
 	err := database.Instance().Model(&Permission{}).Find(&perms).Error
 	if err != nil {
-		return nil, fmt.Errorf("获取权限错误 %w", err)
+		zap_server.ZAPLOG.Error(err.Error())
+		return nil, err
 	}
 	for _, perm := range perms {
 		permsForRole := []string{perm.Name, perm.Act}

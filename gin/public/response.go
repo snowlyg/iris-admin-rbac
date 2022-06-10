@@ -1,7 +1,7 @@
 package public
 
 type LoginResponse struct {
-	Data  interface{} `json:"data"`
+	User  interface{} `json:"user"`
 	Token string      `json:"accessToken"`
 }
 

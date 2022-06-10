@@ -16,7 +16,7 @@ func GetOplogList(ctx *gin.Context) {
 	}
 
 	items := &PageResponse{}
-	total, err := orm.Pagination(database.Instance(), items, req.PaginateScope())
+	total, err := items.Paginate(database.Instance(), req.PaginateScope())
 	if err != nil {
 		response.FailWithMessage(err.Error(), ctx)
 		return

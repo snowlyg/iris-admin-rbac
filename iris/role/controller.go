@@ -20,7 +20,7 @@ func First(ctx iris.Context) {
 		return
 	}
 	perm := &Response{}
-	err := orm.First(database.Instance(), perm, scope.IdScope(req.Id))
+	err := perm.First(database.Instance(), scope.IdScope(req.Id))
 	if err != nil {
 		ctx.JSON(orm.Response{Status: http.StatusBadRequest, Data: nil, Msg: err.Error()})
 		return
@@ -69,7 +69,7 @@ func UpdateRole(ctx iris.Context) {
 	}
 
 	role := &Role{BaseRole: req.BaseRole}
-	err = orm.Update(database.Instance(), reqId.Id, role)
+	err = role.Update(database.Instance(), scope.IdScope(reqId.Id))
 	if err != nil {
 		ctx.JSON(orm.Response{Status: http.StatusBadRequest, Data: nil, Msg: err.Error()})
 		return
@@ -95,8 +95,8 @@ func DeleteRole(ctx iris.Context) {
 	if err != nil {
 		ctx.JSON(orm.Response{Status: http.StatusBadRequest, Data: nil, Msg: err.Error()})
 	}
-
-	err = orm.Delete(database.Instance(), &Role{}, scope.IdScope(reqId.Id))
+	role := &Role{}
+	err = role.Delete(database.Instance(), scope.IdScope(reqId.Id))
 	if err != nil {
 		ctx.JSON(orm.Response{Status: http.StatusBadRequest, Data: nil, Msg: err.Error()})
 		return
@@ -114,7 +114,7 @@ func GetAll(ctx iris.Context) {
 	}
 
 	items := &PageResponse{}
-	total, err := orm.Pagination(database.Instance(), items, req.PaginateScope())
+	total, err := items.Paginate(database.Instance(), req.PaginateScope())
 	if err != nil {
 		ctx.JSON(orm.Response{Status: http.StatusBadRequest, Data: nil, Msg: err.Error()})
 		return

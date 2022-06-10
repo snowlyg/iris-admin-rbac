@@ -15,7 +15,7 @@ import (
 // Profile 个人信息
 func Profile(ctx *gin.Context) {
 	item := &Response{}
-	err := orm.First(database.Instance(), item, scope.IdScope(multi.GetUserId(ctx)))
+	err := item.First(database.Instance(), scope.IdScope(multi.GetUserId(ctx)))
 	if err != nil {
 		response.FailWithMessage(err.Error(), ctx)
 		return
@@ -26,12 +26,12 @@ func Profile(ctx *gin.Context) {
 // GetAdmin 详情
 func GetAdmin(ctx *gin.Context) {
 	req := &orm.ReqId{}
-	if errs := ctx.ShouldBindUri(&req); errs != nil {
+	if errs := req.Request(ctx); errs != nil {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
 	admin := &Response{}
-	err := orm.First(database.Instance(), admin, scope.IdScope(req.Id))
+	err := admin.First(database.Instance(), scope.IdScope(req.Id))
 	if err != nil {
 		response.FailWithMessage(err.Error(), ctx)
 		return
@@ -57,7 +57,7 @@ func CreateAdmin(ctx *gin.Context) {
 // UpdateAdmin 更新
 func UpdateAdmin(ctx *gin.Context) {
 	reqId := &orm.ReqId{}
-	if errs := ctx.ShouldBindUri(&reqId); errs != nil {
+	if errs := reqId.Request(ctx); errs != nil {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
@@ -79,7 +79,7 @@ func UpdateAdmin(ctx *gin.Context) {
 	}
 
 	admin := &Admin{BaseAdmin: req.BaseAdmin}
-	err := orm.Update(database.Instance(), reqId.Id, admin)
+	err := admin.Update(database.Instance(), scope.IdScope(reqId.Id))
 	if err != nil {
 		response.FailWithMessage(err.Error(), ctx)
 		return
@@ -100,7 +100,8 @@ func DeleteAdmin(ctx *gin.Context) {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
-	err := orm.Delete(database.Instance(), &Admin{}, scope.IdScope(reqId.Id))
+	admin := &Admin{}
+	err := admin.Delete(database.Instance(), scope.IdScope(reqId.Id))
 	if err != nil {
 		response.FailWithMessage(err.Error(), ctx)
 		return
@@ -117,7 +118,7 @@ func GetAll(ctx *gin.Context) {
 	}
 
 	items := &PageResponse{}
-	total, err := orm.Pagination(database.Instance(), items, req.PaginateScope())
+	total, err := items.Paginate(database.Instance(), req.PaginateScope())
 	if err != nil {
 		response.FailWithMessage(err.Error(), ctx)
 		return

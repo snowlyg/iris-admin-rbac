@@ -77,7 +77,7 @@ func GetAdminAuthorityList(ctx *gin.Context) {
 	}
 
 	items := &PageResponse{}
-	total, err := orm.Pagination(database.Instance(), items, req.PaginateScope(), AuthorityTypeScope(multi.AdminAuthority))
+	total, err := items.Paginate(database.Instance(), req.PaginateScope(), AuthorityTypeScope(multi.AdminAuthority))
 	if err != nil {
 		response.FailWithMessage(err.Error(), ctx)
 		return
@@ -99,7 +99,7 @@ func GetTenancyAuthorityList(ctx *gin.Context) {
 	}
 
 	items := &PageResponse{}
-	total, err := orm.Pagination(database.Instance(), items, req.PaginateScope(), AuthorityTypeScope(multi.TenancyAuthority))
+	total, err := items.Paginate(database.Instance(), req.PaginateScope(), AuthorityTypeScope(multi.TenancyAuthority))
 	if err != nil {
 		response.FailWithMessage(err.Error(), ctx)
 		return
@@ -121,7 +121,7 @@ func GetGeneralAuthorityList(ctx *gin.Context) {
 	}
 
 	items := &PageResponse{}
-	total, err := orm.Pagination(database.Instance(), items, req.PaginateScope(), AuthorityTypeScope(multi.GeneralAuthority))
+	total, err := items.Paginate(database.Instance(), req.PaginateScope(), AuthorityTypeScope(multi.GeneralAuthority))
 	if err != nil {
 		response.FailWithMessage(err.Error(), ctx)
 		return
@@ -143,7 +143,7 @@ func GetAuthorityList(ctx *gin.Context) {
 	}
 
 	items := &PageResponse{}
-	total, err := orm.Pagination(database.Instance(), items, req.PaginateScope())
+	total, err := items.Paginate(database.Instance(), req.PaginateScope())
 	if err != nil {
 		response.FailWithMessage(err.Error(), ctx)
 		return
@@ -163,7 +163,8 @@ func DeleteAuthority(ctx *gin.Context) {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
-	err := orm.Delete(database.Instance(), &Authority{}, scope.IdScope(reqId.Id))
+	authority := &Authority{}
+	err := authority.Delete(database.Instance(), scope.IdScope(reqId.Id))
 	if err != nil {
 		response.FailWithMessage(err.Error(), ctx)
 		return

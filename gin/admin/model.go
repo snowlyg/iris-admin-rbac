@@ -7,8 +7,8 @@ import (
 
 type Admin struct {
 	gorm.Model
-	Password string `json:"-"  gorm:"not null;type:varchar(128);comment:用户登录密码"`
 	BaseAdmin
+	Password     string   `json:"-"  gorm:"not null;type:varchar(128);comment:用户登录密码"`
 	AuthorityIds []string `json:"authorityIds" gorm:"-"`
 }
 

@@ -19,8 +19,8 @@ var (
 )
 
 func TestUpload(t *testing.T) {
-	TestClient := httptest.Instance(t, str.Join("http://", web.CONFIG.System.Addr), TestServer.GetEngine())
-	TestClient.Login(rbac.LoginUrl, nil)
+	TestClient := httptest.Instance(t, TestServer.GetEngine(), str.Join("http://", web.CONFIG.System.Addr))
+	TestClient.Login(rbac.LoginUrl, "", httptest.NewResponses(http.StatusOK, response.ResponseOkMessage, rbac.LoginResponse))
 	if TestClient == nil {
 		return
 	}
@@ -52,15 +52,11 @@ func TestUpload(t *testing.T) {
 	}
 	local := file.GetPath(md5Name)
 	pageKeys := httptest.Responses{
-		{Key: "status", Value: http.StatusOK},
-		{Key: "message", Value: response.ResponseOkMessage},
-		{Key: "data", Value: httptest.Responses{
-			{Key: "local", Value: local},
-			{Key: "qiniu", Value: ""},
-		}},
+		{Key: "local", Value: local},
+		{Key: "qiniu", Value: ""},
 	}
 
-	TestClient.UPLOAD(url, pageKeys, httptest.NewWithFileParamFunc(files))
+	TestClient.UPLOAD(url, httptest.NewResponses(http.StatusOK, response.ResponseOkMessage, pageKeys), httptest.NewWithFileParamFunc(files))
 
 	local = filepath.Join(pwd, "static/upload")
 	err = os.RemoveAll(local)

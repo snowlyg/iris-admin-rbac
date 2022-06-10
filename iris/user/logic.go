@@ -2,14 +2,12 @@ package user
 
 import (
 	"errors"
-	"fmt"
 	"strconv"
 
 	"github.com/snowlyg/helper/arr"
 	"github.com/snowlyg/iris-admin-rbac/iris/role"
 	"github.com/snowlyg/iris-admin/server/casbin"
 	"github.com/snowlyg/iris-admin/server/database"
-	"github.com/snowlyg/iris-admin/server/database/orm"
 	"github.com/snowlyg/iris-admin/server/database/scope"
 	"github.com/snowlyg/iris-admin/server/zap_server"
 	"github.com/snowlyg/multi"
@@ -34,15 +32,13 @@ func getRoles(db *gorm.DB, users ...*Response) {
 		roleNames = append(roleNames, userRoleName...)
 	}
 
-	roles, err := role.FindInName(db, roleNames)
-	if err != nil {
-		zap_server.ZAPLOG.Error("查询角色失败", zap.String("role.FindInName", err.Error()))
-	}
-
-	for _, user := range users {
-		for _, role := range roles {
-			if arr.InArray(userRoleNames[user.Id], role.Name) {
-				user.Roles = append(user.Roles, role.DisplayName)
+	roles, _ := role.FindInName(db, roleNames)
+	if len(roles) > 0 {
+		for _, user := range users {
+			for _, role := range roles {
+				if arr.InArray(userRoleNames[user.Id], role.Name) {
+					user.Roles = append(user.Roles, role.DisplayName)
+				}
 			}
 		}
 	}
@@ -58,16 +54,18 @@ func FindByUserName(scopes ...func(db *gorm.DB) *gorm.DB) (*Response, error) {
 	return user, nil
 }
 
-func FindPasswordByUserName(db *gorm.DB, username string, ids ...uint) (*LoginResponse, error) {
+func FindPasswordByUserName(db *gorm.DB, username string, scopes ...func(db *gorm.DB) *gorm.DB) (*LoginResponse, error) {
 	user := &LoginResponse{}
 	db = db.Model(&User{}).Select("id,password").
 		Where("username = ?", username)
-	if len(ids) == 1 {
-		db.Where("id != ?", ids[0])
+
+	if len(scopes) > 0 {
+		db.Scopes(scopes...)
 	}
+
 	err := db.First(user).Error
 	if err != nil {
-		zap_server.ZAPLOG.Error("根据用户名查询用户错误", zap.String("用户名:", username), zap.Uints("ids:", ids), zap.String("错误:", err.Error()))
+		zap_server.ZAPLOG.Error(err.Error())
 		return nil, err
 	}
 	userId := strconv.FormatUint(uint64(user.Id), 10)
@@ -82,7 +80,7 @@ func FindPasswordByUserName(db *gorm.DB, username string, ids ...uint) (*LoginRe
 func getUserRoleNames(userId string) ([]string, error) {
 	roleNames, err := casbin.Instance().GetRolesForUser(userId)
 	if err != nil {
-		zap_server.ZAPLOG.Error("获取用户角色错误", zap.String("casbin.Instance().GetRolesForUser", err.Error()))
+		zap_server.ZAPLOG.Error(err.Error())
 		return nil, err
 	}
 	return roleNames, nil
@@ -95,20 +93,19 @@ func Create(req *Request) (uint, error) {
 	user := &User{BaseUser: req.BaseUser, RoleNames: req.RoleNames}
 	hash, err := bcrypt.GenerateFromPassword([]byte(req.Password), bcrypt.DefaultCost)
 	if err != nil {
-		zap_server.ZAPLOG.Error("密码加密错误", zap.String("错误:", err.Error()))
+		zap_server.ZAPLOG.Error(err.Error())
 		return 0, err
 	}
 
 	zap_server.ZAPLOG.Info("添加用户", zap.String("hash:", req.Password), zap.ByteString("hash:", hash))
 
 	user.Password = string(hash)
-	id, err := orm.Create(database.Instance(), user)
+	id, err := user.Create(database.Instance())
 	if err != nil {
 		return 0, err
 	}
 
 	if err := AddRoleForUser(user); err != nil {
-		zap_server.ZAPLOG.Error("添加用户角色错误", zap.String("错误:", err.Error()))
 		return 0, err
 	}
 
@@ -131,7 +128,7 @@ func FindById(db *gorm.DB, id uint) (Response, error) {
 	user := Response{}
 	err := db.Model(&User{}).Where("id = ?", id).First(&user).Error
 	if err != nil {
-		zap_server.ZAPLOG.Error("find user err ", zap.String("错误:", err.Error()))
+		zap_server.ZAPLOG.Error(err.Error())
 		return user, err
 	}
 
@@ -150,7 +147,7 @@ func AddRoleForUser(user *User) error {
 
 	if len(oldRoleNames) > 0 {
 		if _, err := casbin.Instance().DeleteRolesForUser(userId); err != nil {
-			zap_server.ZAPLOG.Error("添加角色到用户错误", zap.String("错误:", err.Error()))
+			zap_server.ZAPLOG.Error(err.Error())
 			return err
 		}
 	}
@@ -162,7 +159,7 @@ func AddRoleForUser(user *User) error {
 	roleNames = append(roleNames, user.RoleNames...)
 
 	if _, err := casbin.Instance().AddRolesForUser(userId, roleNames); err != nil {
-		zap_server.ZAPLOG.Error("添加角色到用户错误", zap.String("错误:", err.Error()))
+		zap_server.ZAPLOG.Error(err.Error())
 		return err
 	}
 
@@ -173,8 +170,8 @@ func AddRoleForUser(user *User) error {
 func DelToken(token string) error {
 	err := multi.AuthDriver.DelUserTokenCache(token)
 	if err != nil {
-		zap_server.ZAPLOG.Error("del token", zap.Any("err", err))
-		return fmt.Errorf("del token %w", err)
+		zap_server.ZAPLOG.Error(err.Error())
+		return err
 	}
 	return nil
 }
@@ -183,8 +180,8 @@ func DelToken(token string) error {
 func CleanToken(authorityType int, userId string) error {
 	err := multi.AuthDriver.CleanUserTokenCache(authorityType, userId)
 	if err != nil {
-		zap_server.ZAPLOG.Error("clean token", zap.Any("err", err))
-		return fmt.Errorf("clean token %w", err)
+		zap_server.ZAPLOG.Error(err.Error())
+		return err
 	}
 	return nil
 }
@@ -192,7 +189,7 @@ func CleanToken(authorityType int, userId string) error {
 func UpdateAvatar(db *gorm.DB, id uint, avatar string) error {
 	err := db.Model(&User{}).Where("id = ?", id).Update("avatar", avatar).Error
 	if err != nil {
-		zap_server.ZAPLOG.Error("更新头像失败", zap.String("UpdateAvatar", err.Error()))
+		zap_server.ZAPLOG.Error(err.Error())
 		return err
 	}
 

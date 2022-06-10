@@ -34,8 +34,8 @@ func TestList(t *testing.T) {
 	for _, pageParam := range pageParams {
 		t.Run(fmt.Sprintf("路由权限测试，第%d页", pageParam.Page), func(t *testing.T) {
 
-			TestClient := httptest.Instance(t, str.Join("http://", web.CONFIG.System.Addr), TestServer.GetEngine())
-			TestClient.Login(rbac.LoginUrl, nil)
+			TestClient := httptest.Instance(t, TestServer.GetEngine(), str.Join("http://", web.CONFIG.System.Addr))
+			TestClient.Login(rbac.LoginUrl, "", httptest.NewResponses(http.StatusOK, response.ResponseOkMessage, rbac.LoginResponse))
 			if TestClient == nil {
 				return
 			}
@@ -44,25 +44,21 @@ func TestList(t *testing.T) {
 				t.Fatalf("获取路由权限错误")
 			}
 			pageKeys := httptest.Responses{
-				{Key: "status", Value: http.StatusOK},
-				{Key: "message", Value: pageParam.Message},
-				{Key: "data", Value: httptest.Responses{
-					{Key: "pageSize", Value: pageParam.PageSize},
-					{Key: "page", Value: pageParam.Page},
-					{Key: "list", Value: items},
-					{Key: "total", Value: len(routes)},
-				}},
+				{Key: "pageSize", Value: pageParam.PageSize},
+				{Key: "page", Value: pageParam.Page},
+				{Key: "list", Value: items},
+				{Key: "total", Value: len(routes)},
 			}
 			data := map[string]interface{}{"page": pageParam.Page, "pageSize": pageParam.PageSize}
-			TestClient.GET(fmt.Sprintf("%s/getList", url), pageKeys, httptest.NewWithQueryObjectParamFunc(data))
+			TestClient.GET(fmt.Sprintf("%s/getList", url), httptest.NewResponses(http.StatusOK, response.ResponseOkMessage, pageKeys), httptest.NewWithQueryObjectParamFunc(data))
 		})
 	}
 }
 
 func TestGetAll(t *testing.T) {
 
-	TestClient := httptest.Instance(t, str.Join("http://", web.CONFIG.System.Addr), TestServer.GetEngine())
-	TestClient.Login(rbac.LoginUrl, nil)
+	TestClient := httptest.Instance(t, TestServer.GetEngine(), str.Join("http://", web.CONFIG.System.Addr))
+	TestClient.Login(rbac.LoginUrl, "", httptest.NewResponses(http.StatusOK, response.ResponseOkMessage, rbac.LoginResponse))
 	if TestClient == nil {
 		return
 	}
@@ -76,20 +72,16 @@ func TestGetAll(t *testing.T) {
 		if len(routes) != len(items) {
 			t.Errorf("接口需要返回 %d 个路由，实际返回了 %d 个数据", len(routes), len(items))
 		}
-		pageKeys := httptest.Responses{
-			{Key: "status", Value: http.StatusOK},
-			{Key: "message", Value: response.ResponseOkMessage},
-			{Key: "data", Value: items},
-		}
+
 		data := map[string]interface{}{"authorityType": multi.AdminAuthority}
-		TestClient.GET(fmt.Sprintf("%s/getAll", url), pageKeys, httptest.NewWithQueryObjectParamFunc(data))
+		TestClient.GET(fmt.Sprintf("%s/getAll", url), httptest.NewResponsesWithLength(http.StatusOK, response.ResponseOkMessage, items, len(items)), httptest.NewWithQueryObjectParamFunc(data))
 	})
 }
 
 func TestCreate(t *testing.T) {
 
-	TestClient := httptest.Instance(t, str.Join("http://", web.CONFIG.System.Addr), TestServer.GetEngine())
-	TestClient.Login(rbac.LoginUrl, nil)
+	TestClient := httptest.Instance(t, TestServer.GetEngine(), str.Join("http://", web.CONFIG.System.Addr))
+	TestClient.Login(rbac.LoginUrl, "", httptest.NewResponses(http.StatusOK, response.ResponseOkMessage, rbac.LoginResponse))
 	if TestClient == nil {
 		return
 	}
@@ -109,8 +101,8 @@ func TestCreate(t *testing.T) {
 
 func TestUpdate(t *testing.T) {
 
-	TestClient := httptest.Instance(t, str.Join("http://", web.CONFIG.System.Addr), TestServer.GetEngine())
-	TestClient.Login(rbac.LoginUrl, nil)
+	TestClient := httptest.Instance(t, TestServer.GetEngine(), str.Join("http://", web.CONFIG.System.Addr))
+	TestClient.Login(rbac.LoginUrl, "", httptest.NewResponses(http.StatusOK, response.ResponseOkMessage, rbac.LoginResponse))
 	if TestClient == nil {
 		return
 	}
@@ -135,17 +127,13 @@ func TestUpdate(t *testing.T) {
 		"authorityType": multi.AdminAuthority,
 	}
 
-	pageKeys := httptest.Responses{
-		{Key: "status", Value: http.StatusOK},
-		{Key: "message", Value: response.ResponseOkMessage},
-	}
-	TestClient.PUT(fmt.Sprintf("%s/updateApi/%d", url, id), pageKeys, httptest.NewWithJsonParamFunc(update))
+	TestClient.PUT(fmt.Sprintf("%s/updateApi/%d", url, id), httptest.SuccessResponse, httptest.NewWithJsonParamFunc(update))
 }
 
 func TestGetById(t *testing.T) {
 
-	TestClient := httptest.Instance(t, str.Join("http://", web.CONFIG.System.Addr), TestServer.GetEngine())
-	TestClient.Login(rbac.LoginUrl, nil)
+	TestClient := httptest.Instance(t, TestServer.GetEngine(), str.Join("http://", web.CONFIG.System.Addr))
+	TestClient.Login(rbac.LoginUrl, "", httptest.NewResponses(http.StatusOK, response.ResponseOkMessage, rbac.LoginResponse))
 	if TestClient == nil {
 		return
 	}
@@ -163,41 +151,26 @@ func TestGetById(t *testing.T) {
 	defer Delete(TestClient, id, data)
 
 	pageKeys := httptest.Responses{
-		{Key: "status", Value: http.StatusOK},
-		{Key: "message", Value: response.ResponseOkMessage},
-		{Key: "data", Value: httptest.Responses{
-			{Key: "id", Value: 1, Type: "ge"},
-			{Key: "path", Value: data["path"].(string)},
-			{Key: "apiGroup", Value: data["apiGroup"].(string)},
-			{Key: "description", Value: data["description"].(string)},
-			{Key: "method", Value: data["method"].(string)},
-			{Key: "authorityType", Value: data["authorityType"].(int)},
-			{Key: "updatedAt", Value: "", Type: "notempty"},
-			{Key: "createdAt", Value: "", Type: "notempty"},
-		},
-		},
+		{Key: "id", Value: 1, Type: "ge"},
+		{Key: "path", Value: data["path"].(string)},
+		{Key: "apiGroup", Value: data["apiGroup"].(string)},
+		{Key: "description", Value: data["description"].(string)},
+		{Key: "method", Value: data["method"].(string)},
+		{Key: "authorityType", Value: data["authorityType"].(int)},
+		{Key: "updatedAt", Value: "", Type: "notempty"},
+		{Key: "createdAt", Value: "", Type: "notempty"},
 	}
-	TestClient.GET(fmt.Sprintf("%s/getApiById/%d", url, id), pageKeys)
+	TestClient.GET(fmt.Sprintf("%s/getApiById/%d", url, id), httptest.NewResponses(http.StatusOK, response.ResponseOkMessage, pageKeys))
 }
 
 func Create(TestClient *httptest.Client, data map[string]interface{}) uint {
-	pageKeys := httptest.Responses{
-		{Key: "status", Value: http.StatusOK},
-		{Key: "message", Value: response.ResponseOkMessage},
-		{Key: "data", Value: httptest.Responses{
-			{Key: "id", Value: 1, Type: "ge"},
-		},
-		},
-	}
-	return TestClient.POST(fmt.Sprintf("%s/createApi", url), pageKeys, httptest.NewWithJsonParamFunc(data)).GetId()
+	pageKeys := httptest.IdKeys()
+	TestClient.POST(fmt.Sprintf("%s/createApi", url), httptest.NewResponses(http.StatusOK, response.ResponseOkMessage, pageKeys), httptest.NewWithJsonParamFunc(data))
+	return pageKeys.GetId()
 }
 
 func Delete(TestClient *httptest.Client, id uint, data map[string]interface{}) {
-	pageKeys := httptest.Responses{
-		{Key: "status", Value: http.StatusOK},
-		{Key: "message", Value: response.ResponseOkMessage},
-	}
-	TestClient.DELETE(fmt.Sprintf("%s/deleteApi/%d", url, id), pageKeys, httptest.NewWithJsonParamFunc(data))
+	TestClient.DELETE(fmt.Sprintf("%s/deleteApi/%d", url, id), httptest.SuccessResponse, httptest.NewWithJsonParamFunc(data))
 }
 
 func getAllApis(authorityType int) ([]httptest.Responses, error) {

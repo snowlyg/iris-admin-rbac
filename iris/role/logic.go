@@ -6,10 +6,8 @@ import (
 
 	"github.com/snowlyg/iris-admin/server/casbin"
 	"github.com/snowlyg/iris-admin/server/database"
-	"github.com/snowlyg/iris-admin/server/database/orm"
 	"github.com/snowlyg/iris-admin/server/database/scope"
 	"github.com/snowlyg/iris-admin/server/zap_server"
-	"go.uber.org/zap"
 	"gorm.io/gorm"
 )
 
@@ -26,7 +24,7 @@ func Create(req *Request) (uint, error) {
 		return 0, ErrRoleNameInvalide
 	}
 	role := &Role{BaseRole: req.BaseRole}
-	id, err := orm.Create(database.Instance(), role)
+	id, err := role.Create(database.Instance())
 	if err != nil {
 		return 0, err
 	}
@@ -40,7 +38,7 @@ func Create(req *Request) (uint, error) {
 // FindByName
 func FindByName(scopes ...func(db *gorm.DB) *gorm.DB) (*Response, error) {
 	role := &Response{}
-	err := orm.First(database.Instance(), role, scopes...)
+	err := role.First(database.Instance(), scopes...)
 	if err != nil {
 		return nil, err
 	}
@@ -49,7 +47,7 @@ func FindByName(scopes ...func(db *gorm.DB) *gorm.DB) (*Response, error) {
 
 func IsAdminRole(id uint) error {
 	role := &Response{}
-	err := orm.First(database.Instance(), role, scope.IdScope(id))
+	err := role.First(database.Instance(), scope.IdScope(id))
 	if err != nil {
 		return err
 	}
@@ -61,9 +59,8 @@ func IsAdminRole(id uint) error {
 
 func FindInId(db *gorm.DB, ids []uint) ([]*Response, error) {
 	roles := &PageResponse{}
-	err := orm.Find(database.Instance(), roles, scope.InIdsScope(ids))
+	err := roles.Find(database.Instance(), scope.InIdsScope(ids))
 	if err != nil {
-		zap_server.ZAPLOG.Error("通过ids查询角色错误", zap.String("错误:", err.Error()))
 		return nil, err
 	}
 	return roles.Item, nil
@@ -71,9 +68,8 @@ func FindInId(db *gorm.DB, ids []uint) ([]*Response, error) {
 
 func FindInName(db *gorm.DB, names []string) ([]*Response, error) {
 	roles := &PageResponse{}
-	err := orm.Find(database.Instance(), roles, scope.InNamesScope(names))
+	err := roles.Find(database.Instance(), scope.InNamesScope(names))
 	if err != nil {
-		zap_server.ZAPLOG.Error("通过name查询角色错误", zap.String("错误:", err.Error()))
 		return nil, err
 	}
 	return roles.Item, nil
@@ -84,10 +80,9 @@ func AddPermForRole(name string, perms [][]string) error {
 	oldPerms := casbin.Instance().GetPermissionsForUser(name)
 	_, err := casbin.Instance().RemovePolicies(oldPerms)
 	if err != nil {
-		zap_server.ZAPLOG.Error("add policy err: %+v", zap.String("错误:", err.Error()))
+		zap_server.ZAPLOG.Error(err.Error())
 		return err
 	}
-
 	if len(perms) == 0 {
 		zap_server.ZAPLOG.Debug("没有权限")
 		return nil
@@ -99,7 +94,7 @@ func AddPermForRole(name string, perms [][]string) error {
 	zap_server.ZAPLOG.Info("添加权限到角色", zap_server.Strings("新权限", newPerms))
 	_, err = casbin.Instance().AddPolicies(newPerms)
 	if err != nil {
-		zap_server.ZAPLOG.Error("add policy err: %+v", zap.String("错误:", err.Error()))
+		zap_server.ZAPLOG.Error(err.Error())
 		return err
 	}
 
@@ -110,7 +105,8 @@ func GetRoleNames() ([]string, error) {
 	var roleNames []string
 	err := database.Instance().Model(&Role{}).Select("name").Find(&roleNames).Error
 	if err != nil {
-		return roleNames, fmt.Errorf("获取角色名称错误 %w", err)
+		zap_server.ZAPLOG.Error(err.Error())
+		return roleNames, fmt.Errorf("get role's name return error: %w", err)
 	}
 	return roleNames, nil
 }

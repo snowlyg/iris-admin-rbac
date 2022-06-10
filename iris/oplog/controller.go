@@ -19,7 +19,7 @@ func GetAll(ctx iris.Context) {
 		return
 	}
 	items := &PageResponse{}
-	total, err := orm.Pagination(database.Instance(), items, req.PaginateScope())
+	total, err := items.Paginate(database.Instance(), req.PaginateScope())
 	if err != nil {
 		ctx.JSON(orm.Response{Status: http.StatusBadRequest, Data: nil, Msg: err.Error()})
 		return

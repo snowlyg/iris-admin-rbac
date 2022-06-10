@@ -19,7 +19,7 @@ func First(ctx iris.Context) {
 		return
 	}
 	perm := &Response{}
-	err := orm.First(database.Instance(), perm, scope.IdScope(req.Id))
+	err := perm.First(database.Instance(), scope.IdScope(req.Id))
 	if err != nil {
 		ctx.JSON(orm.Response{Status: http.StatusBadRequest, Data: nil, Msg: err.Error()})
 		return
@@ -39,7 +39,7 @@ func CreatePerm(ctx iris.Context) {
 		return
 	}
 	perm := &Permission{BasePermission: req.BasePermission}
-	id, err := orm.Create(database.Instance(), perm)
+	id, err := perm.Create(database.Instance())
 	if err != nil {
 		ctx.JSON(orm.Response{Status: http.StatusBadRequest, Data: nil, Msg: err.Error()})
 		return
@@ -64,7 +64,7 @@ func UpdatePerm(ctx iris.Context) {
 		return
 	}
 	perm := &Permission{BasePermission: req.BasePermission}
-	err := orm.Update(database.Instance(), reqId.Id, perm)
+	err := perm.Update(database.Instance(), scope.IdScope(reqId.Id))
 	if err != nil {
 		ctx.JSON(orm.Response{Status: http.StatusBadRequest, Data: nil, Msg: err.Error()})
 		return
@@ -79,7 +79,8 @@ func DeletePerm(ctx iris.Context) {
 		ctx.JSON(orm.Response{Status: http.StatusBadRequest, Data: nil, Msg: err.Error()})
 		return
 	}
-	err := orm.Delete(database.Instance(), &Permission{}, scope.IdScope(reqId.Id))
+	perm := &Permission{}
+	err := perm.Delete(database.Instance(), scope.IdScope(reqId.Id))
 	if err != nil {
 		ctx.JSON(orm.Response{Status: http.StatusBadRequest, Data: nil, Msg: err.Error()})
 		return
@@ -97,7 +98,7 @@ func GetAll(ctx iris.Context) {
 		return
 	}
 	items := &PageResponse{}
-	total, err := orm.Pagination(database.Instance(), items, req.PaginateScope())
+	total, err := items.Paginate(database.Instance(), req.PaginateScope())
 	if err != nil {
 		ctx.JSON(orm.Response{Status: http.StatusBadRequest, Data: nil, Msg: err.Error()})
 		return

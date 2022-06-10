@@ -1,6 +1,7 @@
 package iris
 
 import (
+	"github.com/snowlyg/httptest"
 	"github.com/snowlyg/iris-admin-rbac/iris/perm"
 	"github.com/snowlyg/iris-admin-rbac/iris/role"
 	"github.com/snowlyg/iris-admin-rbac/iris/user"
@@ -13,6 +14,11 @@ import (
 
 var LoginUrl = "/api/v1/auth/login"
 var LogoutUrl = "/api/v1/users/logout"
+var LoginResponse = httptest.Responses{
+	{Key: "accessToken", Value: "", Type: "notempty"},
+	{Key: "user", Value: httptest.Responses{
+		{Key: "id", Value: 0, Type: "ge"}}},
+}
 
 // 加载模块
 var PartyFunc = func(wi *web_iris.WebServer) {

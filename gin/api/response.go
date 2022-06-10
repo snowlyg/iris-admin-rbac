@@ -3,7 +3,6 @@ package api
 import (
 	"github.com/snowlyg/iris-admin/server/database/orm"
 	"github.com/snowlyg/iris-admin/server/zap_server"
-	"go.uber.org/zap"
 	"gorm.io/gorm"
 )
 
@@ -16,7 +15,7 @@ type Response struct {
 func (res *Response) First(db *gorm.DB, scopes ...func(db *gorm.DB) *gorm.DB) error {
 	err := db.Model(&Api{}).Scopes(scopes...).First(res).Error
 	if err != nil {
-		zap_server.ZAPLOG.Error("获取权限失败", zap.String("First()", err.Error()))
+		zap_server.ZAPLOG.Error(err.Error())
 		return err
 	}
 	return nil

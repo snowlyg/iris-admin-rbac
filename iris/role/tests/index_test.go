@@ -18,37 +18,33 @@ var (
 
 func TestList(t *testing.T) {
 
-	TestClient := httptest.Instance(t, str.Join("http://", web.CONFIG.System.Addr), TestServer.GetEngine())
-	TestClient.Login(rbac.LoginUrl, nil)
+	TestClient := httptest.Instance(t, TestServer.GetEngine(), str.Join("http://", web.CONFIG.System.Addr))
+	TestClient.Login(rbac.LoginUrl, "", httptest.NewResponses(http.StatusOK, response.ResponseOkMessage, rbac.LoginResponse))
 	if TestClient == nil {
 		return
 	}
 
 	pageKeys := httptest.Responses{
-		{Key: "status", Value: http.StatusOK},
-		{Key: "message", Value: response.ResponseOkMessage},
-		{Key: "data", Value: httptest.Responses{
-			{Key: "pageSize", Value: 10},
-			{Key: "page", Value: 1},
-			{Key: "items", Value: []httptest.Responses{
-				{
-					{Key: "id", Value: 1, Type: "ge"},
-					{Key: "name", Value: "SuperAdmin"},
-					{Key: "displayName", Value: "超级管理员"},
-					{Key: "description", Value: "超级管理员"},
-					{Key: "updatedAt", Value: "", Type: "notempty"},
-					{Key: "createdAt", Value: "", Type: "notempty"},
-				},
-			}},
-			{Key: "total", Value: 0, Type: "ge"},
+		{Key: "pageSize", Value: 10},
+		{Key: "page", Value: 1},
+		{Key: "items", Value: []httptest.Responses{
+			{
+				{Key: "id", Value: 1, Type: "ge"},
+				{Key: "name", Value: "SuperAdmin"},
+				{Key: "displayName", Value: "超级管理员"},
+				{Key: "description", Value: "超级管理员"},
+				{Key: "updatedAt", Value: "", Type: "notempty"},
+				{Key: "createdAt", Value: "", Type: "notempty"},
+			},
 		}},
+		{Key: "total", Value: 0, Type: "ge"},
 	}
-	TestClient.GET(url, pageKeys, httptest.RequestFunc)
+	TestClient.GET(url, httptest.NewResponses(http.StatusOK, response.ResponseOkMessage, pageKeys), httptest.GetRequestFunc)
 }
 
 func TestCreate(t *testing.T) {
-	TestClient := httptest.Instance(t, str.Join("http://", web.CONFIG.System.Addr), TestServer.GetEngine())
-	TestClient.Login(rbac.LoginUrl, nil)
+	TestClient := httptest.Instance(t, TestServer.GetEngine(), str.Join("http://", web.CONFIG.System.Addr))
+	TestClient.Login(rbac.LoginUrl, "", httptest.NewResponses(http.StatusOK, response.ResponseOkMessage, rbac.LoginResponse))
 	if TestClient == nil {
 		return
 	}
@@ -66,8 +62,8 @@ func TestCreate(t *testing.T) {
 }
 
 func TestUpdate(t *testing.T) {
-	TestClient := httptest.Instance(t, str.Join("http://", web.CONFIG.System.Addr), TestServer.GetEngine())
-	TestClient.Login(rbac.LoginUrl, nil)
+	TestClient := httptest.Instance(t, TestServer.GetEngine(), str.Join("http://", web.CONFIG.System.Addr))
+	TestClient.Login(rbac.LoginUrl, "", httptest.NewResponses(http.StatusOK, response.ResponseOkMessage, rbac.LoginResponse))
 	if TestClient == nil {
 		return
 	}
@@ -89,16 +85,12 @@ func TestUpdate(t *testing.T) {
 		"description": "更新测试描述信息",
 	}
 
-	pageKeys := httptest.Responses{
-		{Key: "status", Value: http.StatusOK},
-		{Key: "message", Value: response.ResponseOkMessage},
-	}
-	TestClient.POST(fmt.Sprintf("%s/%d", url, id), pageKeys, httptest.NewWithJsonParamFunc(update))
+	TestClient.POST(fmt.Sprintf("%s/%d", url, id), httptest.SuccessResponse, httptest.NewWithJsonParamFunc(update))
 }
 
 func TestGetById(t *testing.T) {
-	TestClient := httptest.Instance(t, str.Join("http://", web.CONFIG.System.Addr), TestServer.GetEngine())
-	TestClient.Login(rbac.LoginUrl, nil)
+	TestClient := httptest.Instance(t, TestServer.GetEngine(), str.Join("http://", web.CONFIG.System.Addr))
+	TestClient.Login(rbac.LoginUrl, "", httptest.NewResponses(http.StatusOK, response.ResponseOkMessage, rbac.LoginResponse))
 	if TestClient == nil {
 		return
 	}
@@ -132,21 +124,11 @@ func TestGetById(t *testing.T) {
 }
 
 func Create(TestClient *httptest.Client, data map[string]interface{}) uint {
-	pageKeys := httptest.Responses{
-		{Key: "status", Value: http.StatusOK},
-		{Key: "message", Value: response.ResponseOkMessage},
-		{Key: "data", Value: httptest.Responses{
-			{Key: "id", Value: 1, Type: "ge"},
-		},
-		},
-	}
-	return TestClient.POST(url, pageKeys, httptest.NewWithJsonParamFunc(data)).GetId()
+	pageKeys := httptest.IdKeys()
+	TestClient.POST(url, httptest.NewResponses(http.StatusOK, response.ResponseOkMessage, pageKeys), httptest.NewWithJsonParamFunc(data))
+	return pageKeys.GetId()
 }
 
 func Delete(TestClient *httptest.Client, id uint) {
-	pageKeys := httptest.Responses{
-		{Key: "status", Value: http.StatusOK},
-		{Key: "message", Value: response.ResponseOkMessage},
-	}
-	TestClient.DELETE(fmt.Sprintf("%s/%d", url, id), pageKeys)
+	TestClient.DELETE(fmt.Sprintf("%s/%d", url, id), httptest.SuccessResponse)
 }

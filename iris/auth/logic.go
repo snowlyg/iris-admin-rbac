@@ -17,15 +17,15 @@ var (
 )
 
 // GetAccessToken 登录
-func GetAccessToken(req *LoginRequest) (string, error) {
+func GetAccessToken(req *LoginRequest) (string, uint, error) {
 	admin, err := user.FindPasswordByUserName(database.Instance(), req.Username)
 	if err != nil {
-		return "", err
+		return "", 0, err
 	}
 
 	if err := bcrypt.CompareHashAndPassword([]byte(admin.Password), []byte(req.Password)); err != nil {
 		zap_server.ZAPLOG.Error("用户名或密码错误", zap.String("密码:", req.Password), zap.String("hash:", admin.Password), zap.String("bcrypt.CompareHashAndPassword()", err.Error()))
-		return "", ErrUserNameOrPassword
+		return "", 0, ErrUserNameOrPassword
 	}
 	expiresAt := time.Now().Local().Add(multi.RedisSessionTimeoutWeb).Unix()
 	claims := multi.New(&multi.Multi{
@@ -39,8 +39,9 @@ func GetAccessToken(req *LoginRequest) (string, error) {
 	})
 	token, _, err := multi.AuthDriver.GenerateToken(claims)
 	if err != nil {
-		return "", err
+		zap_server.ZAPLOG.Error(err.Error())
+		return "", 0, err
 	}
 
-	return token, nil
+	return token, admin.Id, nil
 }

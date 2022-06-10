@@ -19,7 +19,7 @@ import (
 // Profile 个人信息
 func Profile(ctx iris.Context) {
 	item := &Response{}
-	err := orm.First(database.Instance(), item, scope.IdScope(multi_iris.GetUserId(ctx)))
+	err := item.First(database.Instance(), scope.IdScope(multi_iris.GetUserId(ctx)))
 	if err != nil {
 		ctx.JSON(orm.Response{Status: http.StatusBadRequest, Data: nil, Msg: err.Error()})
 		return
@@ -35,7 +35,7 @@ func GetUser(ctx iris.Context) {
 		return
 	}
 	user := &Response{}
-	err := orm.First(database.Instance(), user, scope.IdScope(req.Id))
+	err := user.First(database.Instance(), scope.IdScope(req.Id))
 	if err != nil {
 		ctx.JSON(orm.Response{Status: http.StatusBadRequest, Data: nil, Msg: err.Error()})
 		return
@@ -82,7 +82,7 @@ func UpdateUser(ctx iris.Context) {
 	}
 
 	user := &User{BaseUser: req.BaseUser}
-	err := orm.Update(database.Instance(), reqId.Id, user)
+	err := user.Update(database.Instance(), scope.IdScope(reqId.Id))
 	if err != nil {
 		ctx.JSON(orm.Response{Status: http.StatusBadRequest, Data: nil, Msg: err.Error()})
 		return
@@ -102,7 +102,8 @@ func DeleteUser(ctx iris.Context) {
 		ctx.JSON(orm.Response{Status: http.StatusBadRequest, Data: nil, Msg: err.Error()})
 		return
 	}
-	err := orm.Delete(database.Instance(), &User{}, scope.IdScope(reqId.Id))
+	user := &User{}
+	err := user.Delete(database.Instance(), scope.IdScope(reqId.Id))
 	if err != nil {
 		ctx.JSON(orm.Response{Status: http.StatusBadRequest, Data: nil, Msg: err.Error()})
 		return
@@ -120,7 +121,7 @@ func GetAll(ctx iris.Context) {
 	}
 
 	items := &PageResponse{}
-	total, err := orm.Pagination(database.Instance(), items, req.PaginateScope())
+	total, err := items.Paginate(database.Instance(), req.PaginateScope())
 	if err != nil {
 		ctx.JSON(orm.Response{Status: http.StatusBadRequest, Data: nil, Msg: err.Error()})
 		return

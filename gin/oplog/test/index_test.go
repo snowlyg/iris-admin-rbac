@@ -18,21 +18,17 @@ var (
 
 func TestList(t *testing.T) {
 
-	TestClient := httptest.Instance(t, str.Join("http://", web.CONFIG.System.Addr), TestServer.GetEngine())
-	TestClient.Login(rbac.LoginUrl, nil)
+	TestClient := httptest.Instance(t, TestServer.GetEngine(), str.Join("http://", web.CONFIG.System.Addr))
+	TestClient.Login(rbac.LoginUrl, "", httptest.NewResponses(http.StatusOK, response.ResponseOkMessage, rbac.LoginResponse))
 	if TestClient == nil {
 		return
 	}
 	pageKeys := httptest.Responses{
-		{Key: "status", Value: http.StatusOK},
-		{Key: "message", Value: response.ResponseOkMessage},
-		{Key: "data", Value: httptest.Responses{
-			{Key: "pageSize", Value: 10},
-			{Key: "page", Value: 1},
-			{Key: "list", Value: []httptest.Responses{}},
-			{Key: "total", Value: 0, Type: "ge"},
-		}},
+		{Key: "pageSize", Value: 10},
+		{Key: "page", Value: 1},
+		{Key: "list", Value: []httptest.Responses{}},
+		{Key: "total", Value: 0, Type: "ge"},
 	}
 	requestParams := map[string]interface{}{"page": 1, "pageSize": 10, "orderBy": "id"}
-	TestClient.GET(fmt.Sprintf("%s/getOplogList", url), pageKeys, httptest.NewWithQueryObjectParamFunc(requestParams))
+	TestClient.GET(fmt.Sprintf("%s/getOplogList", url), httptest.NewResponses(http.StatusOK, response.ResponseOkMessage, pageKeys), httptest.NewWithQueryObjectParamFunc(requestParams))
 }

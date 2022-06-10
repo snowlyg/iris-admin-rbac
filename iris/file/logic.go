@@ -10,7 +10,6 @@ import (
 	"github.com/snowlyg/helper/dir"
 	"github.com/snowlyg/helper/str"
 	"github.com/snowlyg/iris-admin/server/zap_server"
-	"go.uber.org/zap"
 )
 
 var (
@@ -21,23 +20,23 @@ var (
 func UploadFile(ctx iris.Context, fh *multipart.FileHeader) (iris.Map, error) {
 	filename, err := GetFileName(fh.Filename)
 	if err != nil {
-
 		return nil, err
 	}
 	path := filepath.Join(dir.GetCurrentAbPath(), "static", "upload", "images")
 	err = dir.InsureDir(path)
 	if err != nil {
-		zap_server.ZAPLOG.Error("文件上传失败", zap.String("dir.InsureDir", err.Error()))
+		zap_server.ZAPLOG.Error(err.Error())
 		return nil, err
 	}
 	_, err = ctx.SaveFormFile(fh, filepath.Join(path, filename))
 	if err != nil {
-		zap_server.ZAPLOG.Error("文件上传失败", zap.String("ctx.SaveFormFile", "保存文件到本地"))
+		zap_server.ZAPLOG.Error(err.Error())
 		return nil, err
 	}
 
 	qiniuUrl := ""
 	path = GetPath(filename)
+
 	// if libs.Config.Qiniu.Enable {
 	// 	var key string
 	// 	var hash string
@@ -62,13 +61,13 @@ func UploadFile(ctx iris.Context, fh *multipart.FileHeader) (iris.Map, error) {
 func GetFileName(name string) (string, error) {
 	fns := strings.Split(strings.TrimLeft(name, "./"), ".")
 	if len(fns) != 2 {
-		zap_server.ZAPLOG.Error("文件上传失败", zap.String("trings.Split", name))
+		zap_server.ZAPLOG.Error(ErrEmpty.Error())
 		return "", ErrEmpty
 	}
 	ext := fns[1]
 	md5, err := dir.MD5(name)
 	if err != nil {
-		zap_server.ZAPLOG.Error("文件上传失败", zap.String("dir.MD5", err.Error()))
+		zap_server.ZAPLOG.Error(err.Error())
 		return "", err
 	}
 	return str.Join(md5, ".", ext), nil
