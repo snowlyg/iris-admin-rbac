@@ -20,7 +20,7 @@ var (
 
 // GetAccessToken 登录
 func GetAccessToken(req *LoginRequest) (*LoginResponse, error) {
-	if !store.Verify(req.CaptchaId, req.Captcha, true) && web.CONFIG.System.Level != "test" {
+	if !store.Verify(req.CaptchaId, req.Captcha, true) && web.CONFIG.System.Level != "test" && web.CONFIG.Captcha.KeyLong > 0 {
 		return nil, ErrCaptcha
 	}
 	admin, err := admin.FindPasswordByUserName(database.Instance(), req.Username)
