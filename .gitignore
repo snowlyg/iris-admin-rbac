@@ -20,3 +20,5 @@
 # vendor/
 
 printer.go
+
+.DS_Store
