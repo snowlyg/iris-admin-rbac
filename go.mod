@@ -8,10 +8,10 @@ require (
 	github.com/gookit/color v1.5.0
 	github.com/kataras/iris/v12 v12.2.0-beta3
 	github.com/mojocn/base64Captcha v1.3.5
-	github.com/snowlyg/helper v0.0.7
+	github.com/snowlyg/helper v0.1.0
 	github.com/snowlyg/httptest v0.0.91
 	github.com/snowlyg/iris-admin v1.2.0
-	github.com/snowlyg/multi v0.0.4
+	github.com/snowlyg/multi v0.0.41
 	go.uber.org/zap v1.19.1
 	golang.org/x/crypto v0.0.0-20220622213112-05595931fe9d
 	gorm.io/gorm v1.22.4
@@ -98,7 +98,7 @@ require (
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/russross/blackfriday/v2 v2.1.0 // indirect
-	github.com/satori/go.uuid v1.2.0 // indirect
+	github.com/satori/go.uuid v1.2.1-0.20181028125025-b2ce2384e17b // indirect
 	github.com/schollz/closestmatch v2.1.0+incompatible // indirect
 	github.com/sergi/go-diff v1.2.0 // indirect
 	github.com/sirupsen/logrus v1.8.1 // indirect
@@ -114,7 +114,7 @@ require (
 	github.com/ugorji/go/codec v1.2.7 // indirect
 	github.com/unrolled/secure v1.0.9 // indirect
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
-	github.com/valyala/fasthttp v1.32.0 // indirect
+	github.com/valyala/fasthttp v1.40.0 // indirect
 	github.com/vmihailenco/msgpack/v5 v5.3.5 // indirect
 	github.com/vmihailenco/tagparser/v2 v2.0.0 // indirect
 	github.com/xeipuuv/gojsonpointer v0.0.0-20190905194746-02993c407bfb // indirect
