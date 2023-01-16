@@ -8,7 +8,7 @@ import (
 
 	"github.com/kataras/iris/v12"
 	"github.com/kataras/iris/v12/context"
-	"github.com/snowlyg/helper/str"
+	"github.com/snowlyg/helper/arr"
 	"github.com/snowlyg/iris-admin/server/operation"
 	multi "github.com/snowlyg/multi/iris"
 )
@@ -34,7 +34,9 @@ func OperationRecord() iris.Handler {
 
 		contentTyp := ctx.Request().Header.Get("Content-Type")
 		// 文件上传过滤body,规则设置了 request 过滤body
-		if !strings.Contains(contentTyp, "multipart/form-data") || !str.InStrArray("request", rules) {
+		ruleType := arr.NewCheckArrayType(len(rules))
+		ruleType.AddMutil(rules)
+		if !strings.Contains(contentTyp, "multipart/form-data") || !ruleType.Check("request") {
 			body, err = ctx.GetBody()
 			if err == nil {
 				ctx.Request().Body = ioutil.NopCloser(bytes.NewBuffer(body))
@@ -67,9 +69,10 @@ func OperationRecord() iris.Handler {
 			Status:       ctx.GetStatusCode(),
 			Latency:      latency,
 		}
-
+		responseRuleType := arr.NewCheckArrayType(len(rules))
+		responseRuleType.AddMutil(rules)
 		//规则设置了 response 过滤响应数据
-		if !str.InStrArray("response", rules) {
+		if !responseRuleType.Check("response") {
 			record.Resp = writer.body.String()
 		}
 

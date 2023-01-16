@@ -38,7 +38,9 @@ func transform(admins ...*Response) {
 
 	for _, admin := range admins {
 		for _, role := range roles {
-			if arr.InArray(userRoleUuids[admin.Id], role.Uuid) {
+			roleUuidType := arr.NewCheckArrayType(len(userRoleUuids[admin.Id]))
+			roleUuidType.AddMutil(userRoleUuids[admin.Id])
+			if roleUuidType.Check(role.Uuid) {
 				admin.Authorities = append(admin.Authorities, role.AuthorityName)
 			}
 		}
@@ -116,7 +118,9 @@ func IsAdminUser(id uint) error {
 	if err != nil {
 		return err
 	}
-	if arr.InArray(admin.Authorities, authority.GetAdminRoleName()) {
+	authoritiyType := arr.NewCheckArrayType(len(admin.Authorities))
+	authoritiyType.AddMutil(admin.Authorities)
+	if authoritiyType.Check(authority.GetAdminRoleName()) {
 		zap_server.ZAPLOG.Error("不能操作超级管理员")
 		return errors.New("不能操作超级管理员")
 	}

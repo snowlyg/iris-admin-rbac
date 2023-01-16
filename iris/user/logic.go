@@ -5,6 +5,7 @@ import (
 	"strconv"
 
 	"github.com/snowlyg/helper/arr"
+	"github.com/snowlyg/iris-admin-rbac/gin/authority"
 	"github.com/snowlyg/iris-admin-rbac/iris/role"
 	"github.com/snowlyg/iris-admin/server/casbin"
 	"github.com/snowlyg/iris-admin/server/database"
@@ -36,7 +37,9 @@ func getRoles(db *gorm.DB, users ...*Response) {
 	if len(roles) > 0 {
 		for _, user := range users {
 			for _, role := range roles {
-				if arr.InArray(userRoleNames[user.Id], role.Name) {
+				roleUuidType := arr.NewCheckArrayType(len(userRoleNames[user.Id]))
+				roleUuidType.AddMutil(userRoleNames[user.Id])
+				if roleUuidType.Check(role.Name) {
 					user.Roles = append(user.Roles, role.DisplayName)
 				}
 			}
@@ -118,7 +121,9 @@ func IsAdminUser(id uint) error {
 	if err != nil {
 		return err
 	}
-	if arr.InArray(user.Roles, role.GetAdminRoleName()) {
+	roleType := arr.NewCheckArrayType(len(user.Roles))
+	roleType.AddMutil(user.Roles)
+	if roleType.Check(authority.GetAdminRoleName()) {
 		return errors.New("不能操作超级管理员")
 	}
 	return nil

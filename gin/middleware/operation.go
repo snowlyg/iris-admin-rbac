@@ -7,7 +7,7 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	"github.com/snowlyg/helper/str"
+	"github.com/snowlyg/helper/arr"
 	"github.com/snowlyg/iris-admin/server/operation"
 	multi "github.com/snowlyg/multi/gin"
 )
@@ -32,7 +32,9 @@ func OperationRecord() gin.HandlerFunc {
 
 		contentTyp := ctx.Request.Header.Get("Content-Type")
 		// 文件上传过滤body,规则设置了 request 过滤body
-		if !strings.Contains(contentTyp, "multipart/form-data") || !str.InStrArray("request", rules) {
+		ruleType := arr.NewCheckArrayType(len(rules))
+		ruleType.AddMutil(rules)
+		if !strings.Contains(contentTyp, "multipart/form-data") || !ruleType.Check("request") {
 			body, err = ioutil.ReadAll(ctx.Request.Body)
 			if err == nil {
 				// ioutil.ReadAll 读取数据后重新回写数据
@@ -62,8 +64,11 @@ func OperationRecord() gin.HandlerFunc {
 		record.ErrorMessage = ctx.Errors.ByType(gin.ErrorTypePrivate).String()
 		record.Status = ctx.Writer.Status()
 		record.Latency = latency
+
+		responseRuleType := arr.NewCheckArrayType(len(rules))
+		responseRuleType.AddMutil(rules)
 		//规则设置了 response 过滤响应数据
-		if !str.InStrArray("response", rules) {
+		if !responseRuleType.Check("response") {
 			record.Resp = writer.body.String()
 		}
 
