@@ -35,7 +35,9 @@ func OperationRecord() iris.Handler {
 		contentTyp := ctx.Request().Header.Get("Content-Type")
 		// 文件上传过滤body,规则设置了 request 过滤body
 		ruleType := arr.NewCheckArrayType(len(rules))
-		ruleType.AddMutil(rules)
+		for _, rule := range rules {
+			ruleType.Add(rule)
+		}
 		if !strings.Contains(contentTyp, "multipart/form-data") || !ruleType.Check("request") {
 			body, err = ctx.GetBody()
 			if err == nil {
@@ -70,7 +72,9 @@ func OperationRecord() iris.Handler {
 			Latency:      latency,
 		}
 		responseRuleType := arr.NewCheckArrayType(len(rules))
-		responseRuleType.AddMutil(rules)
+		for _, rule := range rules {
+			responseRuleType.Add(rule)
+		}
 		//规则设置了 response 过滤响应数据
 		if !responseRuleType.Check("response") {
 			record.Resp = writer.body.String()

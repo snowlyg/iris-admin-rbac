@@ -37,10 +37,15 @@ func getRoles(db *gorm.DB, users ...*Response) {
 	if len(roles) > 0 {
 		for _, user := range users {
 			for _, role := range roles {
-				roleUuidType := arr.NewCheckArrayType(len(userRoleNames[user.Id]))
-				roleUuidType.AddMutil(userRoleNames[user.Id])
-				if roleUuidType.Check(role.Name) {
-					user.Roles = append(user.Roles, role.DisplayName)
+				userRoleNameLen := len(userRoleNames[user.Id])
+				if userRoleNameLen > 0 {
+					roleUuidType := arr.NewCheckArrayType(userRoleNameLen)
+					for _, v := range userRoleNames[user.Id] {
+						roleUuidType.Add(v)
+					}
+					if roleUuidType.Check(role.Name) {
+						user.Roles = append(user.Roles, role.DisplayName)
+					}
 				}
 			}
 		}
@@ -122,7 +127,9 @@ func IsAdminUser(id uint) error {
 		return err
 	}
 	roleType := arr.NewCheckArrayType(len(user.Roles))
-	roleType.AddMutil(user.Roles)
+	for _, userRole := range user.Roles {
+		roleType.Add(userRole)
+	}
 	if roleType.Check(authority.GetAdminRoleName()) {
 		return errors.New("不能操作超级管理员")
 	}
