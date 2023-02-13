@@ -8,8 +8,8 @@ require (
 	github.com/gookit/color v1.5.0
 	github.com/kataras/iris/v12 v12.2.0-beta3
 	github.com/mojocn/base64Captcha v1.3.5
-	github.com/snowlyg/helper v0.1.33
-	github.com/snowlyg/httptest v0.0.91
+	github.com/snowlyg/helper v0.1.37
+	github.com/snowlyg/httptest v0.1.12
 	github.com/snowlyg/iris-admin v1.2.11
 	github.com/snowlyg/multi v0.0.42
 	go.uber.org/zap v1.19.1
@@ -39,7 +39,7 @@ require (
 	github.com/flosch/pongo2/v4 v4.0.2 // indirect
 	github.com/fsnotify/fsnotify v1.5.4 // indirect
 	github.com/fvbock/endless v0.0.0-20170109170031-447134032cb6 // indirect
-	github.com/gavv/httpexpect/v2 v2.3.1 // indirect
+	github.com/gavv/httpexpect/v2 v2.11.0 // indirect
 	github.com/gin-contrib/pprof v1.3.0 // indirect
 	github.com/gin-contrib/sse v0.1.0 // indirect
 	github.com/go-playground/locales v0.14.0 // indirect
@@ -89,6 +89,7 @@ require (
 	github.com/mattn/go-colorable v0.1.12 // indirect
 	github.com/mattn/go-isatty v0.0.14 // indirect
 	github.com/microcosm-cc/bluemonday v1.0.18 // indirect
+	github.com/mitchellh/go-wordwrap v1.0.1 // indirect
 	github.com/mitchellh/mapstructure v1.5.0 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.2 // indirect
@@ -98,6 +99,7 @@ require (
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/russross/blackfriday/v2 v2.1.0 // indirect
+	github.com/sanity-io/litter v1.5.5 // indirect
 	github.com/satori/go.uuid v1.2.1-0.20181028125025-b2ce2384e17b // indirect
 	github.com/schollz/closestmatch v2.1.0+incompatible // indirect
 	github.com/sergi/go-diff v1.2.0 // indirect
@@ -141,4 +143,5 @@ require (
 	gorm.io/driver/sqlserver v1.0.4 // indirect
 	gorm.io/plugin/dbresolver v1.1.0 // indirect
 	moul.io/http2curl v1.0.1-0.20190925090545-5cd742060b0e // indirect
+	moul.io/http2curl/v2 v2.3.0 // indirect
 )
