@@ -543,6 +543,8 @@ github.com/snowlyg/httptest v0.1.12 h1:pG634RnW23vakQaC3fQDUDaps9DSG5o1VxkQzIgbb
 github.com/snowlyg/httptest v0.1.12/go.mod h1:Vs5pSN2HuUFui9//yQfJk1KTJt5WDP1CDKHeSRsqQ5Y=
 github.com/snowlyg/iris-admin v1.2.11 h1:y438AnqKINIf1xFlyGCyCCt9EU4ZH1juyqq2Ceaj9nw=
 github.com/snowlyg/iris-admin v1.2.11/go.mod h1:hUNB7HOTrUJJMdXAHjB3nArglTiapOzm/TiwdXQBJjs=
+github.com/snowlyg/iris-admin v1.2.12 h1:oAXirJeGTtqmoU0mR3kgV1qabCc3vOmxKvnTDILBETw=
+github.com/snowlyg/iris-admin v1.2.12/go.mod h1:hUNB7HOTrUJJMdXAHjB3nArglTiapOzm/TiwdXQBJjs=
 github.com/snowlyg/multi v0.0.42 h1:1wGSjtZ12mCTzaCSMB5watz56VantdPZyoVkuY3iG2w=
 github.com/snowlyg/multi v0.0.42/go.mod h1:CF0o/f4L2ht3sAK1I8UBmFqe993WoC8Yvn5U5QXYxPk=
 github.com/spaolacci/murmur3 v0.0.0-20180118202830-f09979ecbc72/go.mod h1:JwIasOWyU6f++ZhiEuf87xNszmSA2myDM2Kzu9HwQUA=

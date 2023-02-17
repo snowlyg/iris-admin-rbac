@@ -10,7 +10,7 @@ require (
 	github.com/mojocn/base64Captcha v1.3.5
 	github.com/snowlyg/helper v0.1.37
 	github.com/snowlyg/httptest v0.1.12
-	github.com/snowlyg/iris-admin v1.2.11
+	github.com/snowlyg/iris-admin v1.2.12
 	github.com/snowlyg/multi v0.0.42
 	go.uber.org/zap v1.19.1
 	golang.org/x/crypto v0.0.0-20220622213112-05595931fe9d
