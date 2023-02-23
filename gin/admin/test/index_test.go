@@ -18,6 +18,16 @@ var (
 	url = "/api/v1/admin"
 )
 
+func TestErrorLoginWith401(t *testing.T) {
+	TestClient := httptest.Instance(t, TestServer.GetEngine(), str.Join("http://", web.CONFIG.System.Addr))
+	TestClient.Login(rbac.LoginUrl, "", httptest.NewResponses(http.StatusOK, response.ResponseOkMessage, rbac.LoginResponse))
+	if TestClient == nil {
+		return
+	}
+	TestClient.GET("/api/v1/public/logout", httptest.NewResponses(http.StatusOK, response.ResponseOkMessage))
+	TestClient.GET(fmt.Sprintf("%s/getAll", url), httptest.NewResponses(http.StatusUnauthorized, "TOKEN为空"))
+}
+
 func TestList(t *testing.T) {
 	TestClient := httptest.Instance(t, TestServer.GetEngine(), str.Join("http://", web.CONFIG.System.Addr))
 	TestClient.Login(rbac.LoginUrl, "", httptest.NewResponses(http.StatusOK, response.ResponseOkMessage, rbac.LoginResponse))

@@ -1,12 +1,15 @@
 package v1
 
 import (
+	"os"
+
 	"github.com/snowlyg/helper/str"
 	"github.com/snowlyg/httptest"
 	"github.com/snowlyg/iris-admin-rbac/gin/admin"
 	"github.com/snowlyg/iris-admin-rbac/gin/api"
 	"github.com/snowlyg/iris-admin-rbac/gin/authority"
 	"github.com/snowlyg/iris-admin/migration"
+	"github.com/snowlyg/iris-admin/server/cache"
 	"github.com/snowlyg/iris-admin/server/operation"
 	"github.com/snowlyg/iris-admin/server/web/web_gin"
 	"github.com/snowlyg/iris-admin/server/zap_server"
@@ -24,15 +27,23 @@ var LoginResponse = httptest.Responses{
 
 // 加载模块
 var PartyFunc = func(wi *web_gin.WebServer) {
+	driverType := os.Getenv("driverType")
+	if driverType == "" {
+		driverType = "jwt"
+	}
+	config := &multi.Config{DriverType: driverType, HmacSecret: nil}
+	if driverType == "redis" {
+		config.UniversalClient = cache.Instance()
+	}
 	// 初始化驱动
-	err := multi.InitDriver(&multi.Config{DriverType: "jwt", HmacSecret: nil})
+	err := multi.InitDriver(config)
 	if err != nil {
 		zap_server.ZAPLOG.Panic("err")
 	}
 	Party(wi.GetRouterGroup(prefix))
 }
 
-//  填充数据
+// 填充数据
 var SeedFunc = func(wi *web_gin.WebServer, mc *migration.MigrationCmd) {
 	mc.AddMigration(api.GetMigration(), authority.GetMigration(), admin.GetMigration(), operation.GetMigration())
 	routes, _ := wi.GetSources()
