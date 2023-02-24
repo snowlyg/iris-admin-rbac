@@ -5,12 +5,13 @@ go 1.18
 require (
 	github.com/gin-gonic/gin v1.8.1
 	github.com/go-gormigrate/gormigrate/v2 v2.0.0
+	github.com/golang-jwt/jwt v3.2.2+incompatible
 	github.com/gookit/color v1.5.0
 	github.com/kataras/iris/v12 v12.2.0-beta3
 	github.com/mojocn/base64Captcha v1.3.5
-	github.com/snowlyg/helper v0.1.37
-	github.com/snowlyg/httptest v0.1.12
-	github.com/snowlyg/iris-admin v1.2.12
+	github.com/snowlyg/helper v0.1.41
+	github.com/snowlyg/httptest v0.1.13
+	github.com/snowlyg/iris-admin v1.2.13
 	github.com/snowlyg/multi v0.0.42
 	go.uber.org/zap v1.19.1
 	golang.org/x/crypto v0.0.0-20220622213112-05595931fe9d
@@ -48,7 +49,6 @@ require (
 	github.com/go-redis/redis/v8 v8.11.5 // indirect
 	github.com/go-sql-driver/mysql v1.6.0 // indirect
 	github.com/goccy/go-json v0.9.8-0.20220506185958-23bd66f4c0d5 // indirect
-	github.com/golang-jwt/jwt v3.2.2+incompatible // indirect
 	github.com/golang-sql/civil v0.0.0-20190719163853-cb61b32ac6fe // indirect
 	github.com/golang/freetype v0.0.0-20170609003504-e2365dfdc4a0 // indirect
 	github.com/golang/snappy v0.0.4 // indirect
@@ -142,6 +142,5 @@ require (
 	gorm.io/driver/postgres v1.2.3 // indirect
 	gorm.io/driver/sqlserver v1.0.4 // indirect
 	gorm.io/plugin/dbresolver v1.1.0 // indirect
-	moul.io/http2curl v1.0.1-0.20190925090545-5cd742060b0e // indirect
 	moul.io/http2curl/v2 v2.3.0 // indirect
 )

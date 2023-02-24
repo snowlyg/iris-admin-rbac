@@ -6,6 +6,7 @@ import (
 
 	"github.com/snowlyg/iris-admin-rbac/iris/user"
 	"github.com/snowlyg/iris-admin/server/database"
+	"github.com/snowlyg/iris-admin/server/web"
 	"github.com/snowlyg/iris-admin/server/zap_server"
 	"github.com/snowlyg/multi"
 	"go.uber.org/zap"
@@ -27,7 +28,7 @@ func GetAccessToken(req *LoginRequest) (string, uint, error) {
 		zap_server.ZAPLOG.Error("用户名或密码错误", zap.String("密码:", req.Password), zap.String("hash:", admin.Password), zap.String("bcrypt.CompareHashAndPassword()", err.Error()))
 		return "", 0, ErrUserNameOrPassword
 	}
-	expiresAt := time.Now().Local().Add(multi.RedisSessionTimeoutWeb).Unix()
+	expiresAt := time.Now().Local().Add(time.Duration(web.CONFIG.SessionTimeout) * time.Minute).Unix()
 	claims := multi.New(&multi.Multi{
 		Id:            admin.Id,
 		Username:      req.Username,

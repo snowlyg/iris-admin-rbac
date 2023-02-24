@@ -10,6 +10,6 @@ import (
 func Party() func(index iris.Party) {
 	return func(index iris.Party) {
 		index.Use(middleware.MultiHandler(), middleware.Casbin())
-		index.Post("/", iris.LimitRequestBodySize(web.CONFIG.MaxSize+1<<20), Upload).Name = "上传文件"
+		index.Post("/", iris.LimitRequestBodySize(web.CONFIG.FileMaxSize+1<<20), Upload).Name = "上传文件"
 	}
 }

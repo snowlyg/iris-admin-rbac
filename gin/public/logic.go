@@ -35,7 +35,7 @@ func GetAccessToken(req *LoginRequest) (*LoginResponse, error) {
 			zap.String("错误:", err.Error()))
 		return nil, ErrUserNameOrPassword
 	}
-	expiresAt := time.Now().Local().Add(multi.RedisSessionTimeoutWeb).Unix()
+	expiresAt := time.Now().Local().Add(time.Duration(web.CONFIG.SessionTimeout) * time.Minute).Unix()
 	claims := multi.New(&multi.Multi{
 		Id:            admin.Id,
 		Username:      req.Username,

@@ -15,11 +15,13 @@ var TestServer *web_gin.WebServer
 var TestClient *httptest.Client
 
 func TestMain(m *testing.M) {
+
 	os.Setenv("driverType", "redis")
 	cache.CONFIG.DB = 5
 	cache.CONFIG.Password = os.Getenv("redisProPwd")
 	cache.CONFIG.Addr = os.Getenv("redisAdd")
 	cache.Recover()
+	defer cache.Remove()
 
 	var uuid string
 	uuid, TestServer = common.BeforeTestMainGin(rbac.PartyFunc, rbac.SeedFunc)
