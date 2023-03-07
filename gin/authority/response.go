@@ -13,7 +13,7 @@ type Response struct {
 	Uuid string `json:"uuid"`
 	Menus    []BaseMenu  `json:"menus" gorm:"many2many:authority_menus;"`
 	Children []Authority `json:"children" gorm:"-"`
-	Perms    [][]string  `json:"perms" gorm:"-"`
+	Perms    []map[string]string  `json:"perms" gorm:"-"`
 }
 
 func (res *Response) First(db *gorm.DB, scopes ...func(db *gorm.DB) *gorm.DB) error {
@@ -22,7 +22,7 @@ func (res *Response) First(db *gorm.DB, scopes ...func(db *gorm.DB) *gorm.DB) er
 		zap_server.ZAPLOG.Error(err.Error())
 		return err
 	}
-	apis, err := api.GetApisForRole()
+	apis, err := api.GetApisForRoleMap()
 	if err != nil {
 		return  err
 	}
@@ -52,7 +52,7 @@ func (res *PageResponse) Paginate(db *gorm.DB, pageScope func(db *gorm.DB) *gorm
 		return count, err
 	}
 
-	apis, err := api.GetApisForRole()
+	apis, err := api.GetApisForRoleMap()
 	if err != nil {
 		return  count,err
 	}
@@ -72,7 +72,7 @@ func (res *PageResponse) Find(db *gorm.DB, scopes ...func(db *gorm.DB) *gorm.DB)
 	}
 
 	
-	apis, err := api.GetApisForRole()
+	apis, err := api.GetApisForRoleMap()
 	if err != nil {
 		return err
 	}

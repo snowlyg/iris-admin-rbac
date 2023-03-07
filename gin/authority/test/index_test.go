@@ -64,113 +64,120 @@ func TestList(t *testing.T) {
 					{Key: "authorityName", Value: "超级管理员"},
 					{Key: "authorityType", Value: multi.AdminAuthority},
 					{Key: "parentId", Value: 0},
-					{Key: "Perms", Value: [][]string{
-						 {"/api/v1/authority/getAuthorityList",
-                "GET",
-					},
-              {
-                "/api/v1/authority/getAdminAuthorityList",
-                "GET",
+					{Key: "perms", Value: []httptest.Responses{
+						 {
+								{Key: "path", Value: "/api/v1/authority/getAuthorityList"},
+								{Key: "method", Value:"GET"},
 							},
               {
-                "/api/v1/authority/getTenancyAuthorityList",
-                "GET",
+																{Key: "path", Value: "/api/v1/authority/getAdminAuthorityList"},
+								{Key: "method", Value:"GET"},
 							},
               {
-                "/api/v1/authority/getGeneralAuthorityList",
-                "GET",
+																{Key: "path", Value: "/api/v1/authority/getTenancyAuthorityList"},
+								{Key: "method", Value:"GET"},
 							},
               {
-                "/api/v1/api/getAll",
-                "GET",
+																{Key: "path", Value: "/api/v1/authority/getGeneralAuthorityList"},
+								{Key: "method", Value:"GET"},
+
 							},
               {
-                "/api/v1/api/getApiById/:id",
-                "GET",
+																{Key: "path", Value: "/api/v1/api/getAll"},
+								{Key: "method", Value:"GET"},
 							},
               {
-                "/api/v1/api/getList",
-                "GET",
+																{Key: "path", Value: "/api/v1/api/getApiById/:id"},
+								{Key: "method", Value:"GET"},
+
 							},
               {
-                "/api/v1/admin/getAll",
-                "GET",
+																{Key: "path", Value: "/api/v1/api/getList"},
+								{Key: "method", Value:"GET"},
+
 							},
               {
-                "/api/v1/admin/getAdmin/:id",
-                "GET",
+																{Key: "path", Value: "/api/v1/admin/getAll"},
+								{Key: "method", Value:"GET"},
+
 							},
               {
-                "/api/v1/admin/profile",
-                "GET",
+																{Key: "path", Value: "/api/v1/admin/getAdmin/:id"},
+								{Key: "method", Value:"GET"},
 							},
               {
-                "/api/v1/public/captcha",
-                "GET",
+																{Key: "path", Value: "/api/v1/admin/profile"},
+								{Key: "method", Value:"GET"},
 							},
               {
-                "/api/v1/public/clean",
-                "GET",
+																{Key: "path", Value: "/api/v1/public/captcha"},
+								{Key: "method", Value:"GET"},
 							},
               {
-                "/api/v1/public/logout",
-                "GET",
+																{Key: "path", Value: "/api/v1/public/clean"},
+								{Key: "method", Value:"GET"},
 							},
               {
-                "/api/v1/oplog/getOplogList",
-                "GET",
+																{Key: "path", Value: "/api/v1/public/logout"},
+								{Key: "method", Value:"GET"},
 							},
               {
-                "/api/v1/admin/createAdmin",
-                "POST",
+																{Key: "path", Value: "/api/v1/oplog/getOplogList"},
+								{Key: "method", Value:"GET"},
 							},
               {
-                "/api/v1/admin/changeAvatar",
-                "POST",
+																																{Key: "path", Value: "/api/v1/admin/createAdmin"},
+								{Key: "method", Value:"POST"},
+
 							},
               {
-                "/api/v1/authority/createAuthority",
-                "POST",
+																																{Key: "path", Value: "/api/v1/admin/changeAvatar"},
+								{Key: "method", Value:"POST"},
+
 							},
               {
-                "/api/v1/authority/copyAuthority/:id",
-                "POST",
+																																{Key: "path", Value: "/api/v1/authority/createAuthority"},
+								{Key: "method", Value:"POST"},
 							},
               {
-                "/api/v1/api/createApi",
-                "POST",
+																																{Key: "path", Value: "/api/v1/authority/copyAuthority/:id"},
+								{Key: "method", Value:"POST"},
 							},
               {
-                "/api/v1/public/admin/login",
-                "POST",
+																																{Key: "path", Value: "/api/v1/api/createApi"},
+								{Key: "method", Value:"POST"},
 							},
               {
-                "/api/v1/api/deleteApi/:id",
-                "DELETE",
+																								{Key: "path", Value: "/api/v1/public/admin/login"},
+								{Key: "method", Value:"POST"},
 							},
               {
-                "/api/v1/api/deleteApisByIds",
-                "DELETE",
+																								{Key: "path", Value: "/api/v1/api/deleteApi/:id"},
+								{Key: "method", Value:"DELETE"},
 							},
               {
-                "/api/v1/admin/deleteAdmin/:id",
-                "DELETE",
+																								{Key: "path", Value: "/api/v1/api/deleteApisByIds"},
+								{Key: "method", Value:"DELETE"},
 							},
               {
-                "/api/v1/authority/deleteAuthority/:id",
-                "DELETE",
+																								{Key: "path", Value: "/api/v1/admin/deleteAdmin/:id"},
+								{Key: "method", Value:"DELETE"},
 							},
               {
-                "/api/v1/api/updateApi/:id",
-                "PUT",
+																{Key: "path", Value: "/api/v1/authority/deleteAuthority/:id"},
+								{Key: "method", Value:"DELETE"},
 							},
               {
-                "/api/v1/admin/updateAdmin/:id",
-                "PUT",
+																{Key: "path", Value: "/api/v1/api/updateApi/:id"},
+								{Key: "method", Value:"PUT"},
 							},
               {
-                "/api/v1/authority/updateAuthority/:id",
-                "PUT",
+																{Key: "path", Value: "/api/v1/admin/updateAdmin/:id"},
+								{Key: "method", Value:"PUT"},
+							},
+              {
+								{Key: "path", Value: "/api/v1/authority/updateAuthority/:id"},
+								{Key: "method", Value:"PUT"},
 							},
 					}},
 					{Key: "defaultRouter", Value: "dashboard"},

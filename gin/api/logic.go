@@ -69,3 +69,19 @@ func GetApisForRole() (map[int][][]string, error) {
 	}
 	return apisForRoles, nil
 }
+
+// GetApisForRoleMap
+func GetApisForRoleMap() (map[int][]map[string]string, error) {
+	apis := ApiCollection{}
+	err := database.Instance().Model(&Api{}).Find(&apis).Error
+	if err != nil {
+		zap_server.ZAPLOG.Error(err.Error())
+		return nil, err
+	}
+	apisForRoles := map[int][]map[string]string{}
+	for _, api := range apis {
+		apisForRole := map[string]string{"path":api.Path, "method":api.Method}
+		apisForRoles[api.AuthorityType] = append(apisForRoles[api.AuthorityType], apisForRole)
+	}
+	return apisForRoles, nil
+}
