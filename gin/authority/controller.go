@@ -163,10 +163,9 @@ func GetAuthorityList(ctx *gin.Context) {
 		scopes = append(scopes, AuthorityNameScope(req.AuthorityName))
 	}
 
-	if req.AuthorityType >0{
+	if req.AuthorityType > 0{
 		scopes = append(scopes, AuthorityTypeScope(req.AuthorityType))
 	}
-
 
 	items := &PageResponse{}
 	total, err := items.Paginate(database.Instance(), req.PaginateScope(),scopes...)

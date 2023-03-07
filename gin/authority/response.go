@@ -1,6 +1,7 @@
 package authority
 
 import (
+	"github.com/snowlyg/iris-admin-rbac/gin/api"
 	"github.com/snowlyg/iris-admin/server/database/orm"
 	"github.com/snowlyg/iris-admin/server/zap_server"
 	"gorm.io/gorm"
@@ -10,6 +11,9 @@ type Response struct {
 	orm.Model
 	BaseAuthority
 	Uuid string `json:"uuid"`
+	Menus    []BaseMenu  `json:"menus" gorm:"many2many:authority_menus;"`
+	Children []Authority `json:"children" gorm:"-"`
+	Perms    [][]string  `json:"perms" gorm:"-"`
 }
 
 func (res *Response) First(db *gorm.DB, scopes ...func(db *gorm.DB) *gorm.DB) error {
@@ -18,6 +22,11 @@ func (res *Response) First(db *gorm.DB, scopes ...func(db *gorm.DB) *gorm.DB) er
 		zap_server.ZAPLOG.Error(err.Error())
 		return err
 	}
+	apis, err := api.GetApisForRole()
+	if err != nil {
+		return  err
+	}
+	res.Perms = apis[res.AuthorityType]
 	return nil
 }
 
@@ -43,6 +52,14 @@ func (res *PageResponse) Paginate(db *gorm.DB, pageScope func(db *gorm.DB) *gorm
 		return count, err
 	}
 
+	apis, err := api.GetApisForRole()
+	if err != nil {
+		return  count,err
+	}
+	for i := 0; i < len(res.Item); i++ {
+		res.Item[i].Perms = apis[res.Item[i].AuthorityType]
+	}
+
 	return count, nil
 }
 
@@ -52,6 +69,15 @@ func (res *PageResponse) Find(db *gorm.DB, scopes ...func(db *gorm.DB) *gorm.DB)
 	if err != nil {
 		zap_server.ZAPLOG.Error(err.Error())
 		return err
+	}
+
+	
+	apis, err := api.GetApisForRole()
+	if err != nil {
+		return err
+	}
+	for i := 0; i < len(res.Item); i++ {
+		res.Item[i].Perms = apis[res.Item[i].AuthorityType]
 	}
 
 	return nil
