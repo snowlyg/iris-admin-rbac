@@ -7,6 +7,7 @@ import (
 	"github.com/snowlyg/iris-admin/server/database/scope"
 	"github.com/snowlyg/iris-admin/server/web/web_gin/response"
 	"github.com/snowlyg/multi"
+	"gorm.io/gorm"
 )
 
 // CreateAuthority 创建角色
@@ -70,14 +71,19 @@ func UpdateAuthority(ctx *gin.Context) {
 
 // GetAdminAuthorityList 分页获取管理角色列表
 func GetAdminAuthorityList(ctx *gin.Context) {
-	req := &orm.Paginate{}
+	req := &ReqPaginate{}
 	if errs := ctx.ShouldBind(&req); errs != nil {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
 
+	scopes := []func(db *gorm.DB) *gorm.DB{AuthorityTypeScope(multi.AdminAuthority)}
+	if req.AuthorityName !=""{
+		scopes = append(scopes, AuthorityNameScope(req.AuthorityName))
+	}
+
 	items := &PageResponse{}
-	total, err := items.Paginate(database.Instance(), req.PaginateScope(), AuthorityTypeScope(multi.AdminAuthority))
+	total, err := items.Paginate(database.Instance(), req.PaginateScope(), scopes...)
 	if err != nil {
 		response.FailWithMessage(err.Error(), ctx)
 		return
@@ -92,14 +98,19 @@ func GetAdminAuthorityList(ctx *gin.Context) {
 
 // GetTenancyAuthorityList 分页获取商户角色列表
 func GetTenancyAuthorityList(ctx *gin.Context) {
-	req := &orm.Paginate{}
+	req := &ReqPaginate{}
 	if errs := ctx.ShouldBind(&req); errs != nil {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
 
+	scopes := []func(db *gorm.DB) *gorm.DB{AuthorityTypeScope(multi.TenancyAuthority)}
+	if req.AuthorityName !=""{
+		scopes = append(scopes, AuthorityNameScope(req.AuthorityName))
+	}
+
 	items := &PageResponse{}
-	total, err := items.Paginate(database.Instance(), req.PaginateScope(), AuthorityTypeScope(multi.TenancyAuthority))
+	total, err := items.Paginate(database.Instance(), req.PaginateScope(), scopes...)
 	if err != nil {
 		response.FailWithMessage(err.Error(), ctx)
 		return
@@ -114,14 +125,19 @@ func GetTenancyAuthorityList(ctx *gin.Context) {
 
 // GetGeneralAuthorityList 分页获取用户角色列表
 func GetGeneralAuthorityList(ctx *gin.Context) {
-	req := &orm.Paginate{}
+	req := &ReqPaginate{}
 	if errs := ctx.ShouldBind(&req); errs != nil {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
 
+	scopes := []func(db *gorm.DB) *gorm.DB{AuthorityTypeScope(multi.GeneralAuthority)}
+	if req.AuthorityName !=""{
+		scopes = append(scopes, AuthorityNameScope(req.AuthorityName))
+	}
+
 	items := &PageResponse{}
-	total, err := items.Paginate(database.Instance(), req.PaginateScope(), AuthorityTypeScope(multi.GeneralAuthority))
+	total, err := items.Paginate(database.Instance(), req.PaginateScope(), scopes...)
 	if err != nil {
 		response.FailWithMessage(err.Error(), ctx)
 		return
@@ -136,14 +152,20 @@ func GetGeneralAuthorityList(ctx *gin.Context) {
 
 // GetAuthorityList 分页获取所有角色列表
 func GetAuthorityList(ctx *gin.Context) {
-	req := &orm.Paginate{}
+	req := &ReqPaginate{}
 	if errs := ctx.ShouldBind(&req); errs != nil {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
 
+	scopes := []func(db *gorm.DB) *gorm.DB{}
+	if req.AuthorityName !=""{
+		scopes = append(scopes, AuthorityNameScope(req.AuthorityName))
+	}
+
+
 	items := &PageResponse{}
-	total, err := items.Paginate(database.Instance(), req.PaginateScope())
+	total, err := items.Paginate(database.Instance(), req.PaginateScope(),scopes...)
 	if err != nil {
 		response.FailWithMessage(err.Error(), ctx)
 		return

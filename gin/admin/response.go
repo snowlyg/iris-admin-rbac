@@ -51,11 +51,15 @@ type PageResponse struct {
 func (res *PageResponse) Paginate(db *gorm.DB, pageScope func(db *gorm.DB) *gorm.DB, scopes ...func(db *gorm.DB) *gorm.DB) (int64, error) {
 	db = db.Model(&Admin{})
 	var count int64
-	err := db.Scopes(scopes...).Count(&count).Error
+		if len(scopes)>0{
+		 db.Scopes(scopes...)
+	}
+	err := db.Count(&count).Error
 	if err != nil {
 		zap_server.ZAPLOG.Error(err.Error())
 		return count, err
 	}
+	
 	err = db.Scopes(pageScope).Find(&res.Item).Error
 	if err != nil {
 		zap_server.ZAPLOG.Error(err.Error())

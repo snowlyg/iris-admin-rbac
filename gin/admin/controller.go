@@ -111,14 +111,23 @@ func DeleteAdmin(ctx *gin.Context) {
 
 // GetAll 分页列表
 func GetAll(ctx *gin.Context) {
-	req := &orm.Paginate{}
+	req := &ReqPaginate{}
 	if errs := ctx.ShouldBind(&req); errs != nil {
 		response.FailWithMessage(errs.Error(), ctx)
 		return
 	}
 
+	scopes := []func(db *gorm.DB) *gorm.DB{}
+	if req.SearchKey !="" {
+		scopes = append(scopes, SearchKeyScope(req.SearchKey))
+	}
+
+	if req.Status > 0 {
+		scopes = append(scopes, StatusScope(req.Status))
+	}
+
 	items := &PageResponse{}
-	total, err := items.Paginate(database.Instance(), req.PaginateScope())
+	total, err := items.Paginate(database.Instance(), req.PaginateScope(),scopes...)
 	if err != nil {
 		response.FailWithMessage(err.Error(), ctx)
 		return

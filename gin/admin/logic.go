@@ -6,6 +6,7 @@ import (
 
 	"github.com/snowlyg/helper/arr"
 	"github.com/snowlyg/iris-admin-rbac/gin/authority"
+	"github.com/snowlyg/iris-admin/g"
 	"github.com/snowlyg/iris-admin/server/casbin"
 	"github.com/snowlyg/iris-admin/server/database"
 	"github.com/snowlyg/iris-admin/server/database/scope"
@@ -105,6 +106,8 @@ func Create(req *Request) (uint, error) {
 	zap_server.ZAPLOG.Info("添加用户", zap.String("hash:", req.Password), zap.ByteString("hash:", hash))
 
 	admin.Password = string(hash)
+	admin.Status = g.StatusFalse
+	admin.IsShow = g.StatusFalse
 	id, err := admin.Create(database.Instance())
 	if err != nil {
 		return 0, err

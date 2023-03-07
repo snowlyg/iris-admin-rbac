@@ -29,33 +29,107 @@ func TestErrorLoginWith401(t *testing.T) {
 }
 
 func TestList(t *testing.T) {
-	TestClient := httptest.Instance(t, TestServer.GetEngine(), str.Join("http://", web.CONFIG.System.Addr))
-	TestClient.Login(rbac.LoginUrl, "", httptest.NewResponses(http.StatusOK, response.ResponseOkMessage, rbac.LoginResponse))
-	if TestClient == nil {
-		return
+	t.Run("test pagination",func(t *testing.T) {
+		TestClient := httptest.Instance(t, TestServer.GetEngine(), str.Join("http://", web.CONFIG.System.Addr))
+		TestClient.Login(rbac.LoginUrl, "", httptest.NewResponses(http.StatusOK, response.ResponseOkMessage, rbac.LoginResponse))
+		if TestClient == nil {
+			return
+		}
+		pageKeys := httptest.Responses{
+			{Key: "pageSize", Value: 10},
+			{Key: "page", Value: 1},
+			{Key: "list", Value: []httptest.Responses{
+				{
+					{Key: "id", Value: 1},
+					{Key: "nickName", Value: "超级管理员"},
+					{Key: "username", Value: "admin"},
+					{Key: "headerImg", Value: "http://qmplusimg.henrongyi.top/head.png"},
+					{Key: "status", Value: g.StatusFalse},
+					{Key: "isShow", Value: g.StatusFalse},
+					{Key: "phone", Value: "13800138000"},
+					{Key: "email", Value: "admin@admin.com"},
+					{Key: "authorities", Value: []string{"超级管理员"}},
+					{Key: "updatedAt", Value: "", Type: "notempty"},
+					{Key: "createdAt", Value: "", Type: "notempty"},
+					{Key: "deletedAt", Value: ""},
+				},
+			}},
+			{Key: "total", Value: 1},
+		}
+		TestClient.GET(fmt.Sprintf("%s/getAll", url), httptest.NewResponses(http.StatusOK, response.ResponseOkMessage, pageKeys), httptest.GetRequestFunc)
+	})
+
+	t.Run("test status key",func(t *testing.T) {
+		TestClient := httptest.Instance(t, TestServer.GetEngine(), str.Join("http://", web.CONFIG.System.Addr))
+		TestClient.Login(rbac.LoginUrl, "", httptest.NewResponses(http.StatusOK, response.ResponseOkMessage, rbac.LoginResponse))
+		if TestClient == nil {
+			return
+		}
+		data := map[string]interface{}{
+		"nickName":     "测试名称",
+		"username":     "create_test_username",
+		"authorityIds": []string{"super_admin"},
+		"email":        "get@admin.com",
+		"phone":        "13800138001",
+		"password":     "123456",
 	}
-	pageKeys := httptest.Responses{
-		{Key: "pageSize", Value: 10},
-		{Key: "page", Value: 1},
-		{Key: "list", Value: []httptest.Responses{
-			{
-				{Key: "id", Value: 1},
-				{Key: "nickName", Value: "超级管理员"},
-				{Key: "username", Value: "admin"},
-				{Key: "headerImg", Value: "http://qmplusimg.henrongyi.top/head.png"},
-				{Key: "status", Value: g.StatusTrue},
-				{Key: "isShow", Value: g.StatusFalse},
-				{Key: "phone", Value: "13800138000"},
-				{Key: "email", Value: "admin@admin.com"},
-				{Key: "authorities", Value: []string{"超级管理员"}},
-				{Key: "updatedAt", Value: "", Type: "notempty"},
-				{Key: "createdAt", Value: "", Type: "notempty"},
-				{Key: "deletedAt", Value: ""},
-			},
-		}},
-		{Key: "total", Value: 1},
+	id := Create(TestClient, data)
+	if id == 0 {
+		t.Fatalf("测试添加用户失败 id=%d", id)
 	}
-	TestClient.GET(fmt.Sprintf("%s/getAll", url), httptest.NewResponses(http.StatusOK, response.ResponseOkMessage, pageKeys), httptest.GetRequestFunc)
+	defer Delete(TestClient, id)
+
+		pageKeys := httptest.Responses{
+			{Key: "pageSize", Value: 10},
+			{Key: "page", Value: 1},
+			{Key: "list", Value: nil},
+			{Key: "total", Value: 0},
+		}
+		TestClient.GET(fmt.Sprintf("%s/getAll", url), httptest.NewResponses(http.StatusOK, response.ResponseOkMessage, pageKeys), httptest.NewWithQueryObjectParamFunc(map[string]interface{}{"page": 1, "pageSize": 10,"status":g.StatusTrue}))
+	})
+	t.Run("test searchKey key",func(t *testing.T) {
+		TestClient := httptest.Instance(t, TestServer.GetEngine(), str.Join("http://", web.CONFIG.System.Addr))
+		TestClient.Login(rbac.LoginUrl, "", httptest.NewResponses(http.StatusOK, response.ResponseOkMessage, rbac.LoginResponse))
+		if TestClient == nil {
+			return
+		}
+		data := map[string]interface{}{
+		"nickName":     "测试名称",
+		"username":     "create_test_username",
+		"authorityIds": []string{"super_admin"},
+		"email":        "get@admin.com",
+		"phone":        "13800138001",
+		"password":     "123456",
+	}
+	id := Create(TestClient, data)
+	if id == 0 {
+		t.Fatalf("测试添加用户失败 id=%d", id)
+	}
+	defer Delete(TestClient, id)
+
+		pageKeys := httptest.Responses{
+			{Key: "pageSize", Value: 10},
+			{Key: "page", Value: 1},
+	{Key: "list", Value: []httptest.Responses{
+				{
+					{Key: "id", Value: 3},
+					{Key: "nickName", Value: "测试名称"},
+					{Key: "username", Value: "create_test_username"},
+					{Key: "headerImg", Value: "http://qmplusimg.henrongyi.top/head.png"},
+					{Key: "status", Value: g.StatusFalse},
+					{Key: "isShow", Value: g.StatusFalse},
+					{Key: "phone", Value: "13800138001"},
+					{Key: "email", Value: "get@admin.com"},
+					{Key: "authorities", Value: []string{"超级管理员"}},
+					{Key: "updatedAt", Value: "", Type: "notempty"},
+					{Key: "createdAt", Value: "", Type: "notempty"},
+					{Key: "deletedAt", Value: ""},
+				},
+			}},
+			{Key: "total", Value: 1},
+		}
+		TestClient.GET(fmt.Sprintf("%s/getAll", url), httptest.NewResponses(http.StatusOK, response.ResponseOkMessage, pageKeys), httptest.NewWithQueryObjectParamFunc(map[string]interface{}{"page": 1, "pageSize": 10,"searchKey":"create_test_username"}))
+	})
 }
 
 func TestCreate(t *testing.T) {

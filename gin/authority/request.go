@@ -8,7 +8,7 @@ import (
 
 type ReqPaginate struct {
 	orm.Paginate
-	Name string `json:"name"`
+	AuthorityName string `json:"authorityName" form:"authorityName"`
 }
 
 type CreateAuthorityRequest struct {

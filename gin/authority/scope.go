@@ -1,19 +1,27 @@
 package authority
 
-import "gorm.io/gorm"
+import (
+	"github.com/snowlyg/helper/str"
+	"gorm.io/gorm"
+)
 
-// AuthorityUuidScope 根据 uuid 查询
-// - uuid 名称
+// AuthorityUuidScope
 func AuthorityUuidScope(uuid string) func(db *gorm.DB) *gorm.DB {
 	return func(db *gorm.DB) *gorm.DB {
 		return db.Where("uuid = ?", uuid)
 	}
 }
 
-// AuthorityTypeScope 根据 type 查询
-// - authorityType 角色类型
+// AuthorityTypeScope 
 func AuthorityTypeScope(authorityType int) func(db *gorm.DB) *gorm.DB {
 	return func(db *gorm.DB) *gorm.DB {
 		return db.Where("authority_type = ?", authorityType)
+	}
+}
+
+// AuthorityNameScope
+func AuthorityNameScope(authorityName string) func(db *gorm.DB) *gorm.DB {
+	return func(db *gorm.DB) *gorm.DB {
+		return db.Where("authority_name LIKE ?", str.Join(authorityName,"%"))
 	}
 }
