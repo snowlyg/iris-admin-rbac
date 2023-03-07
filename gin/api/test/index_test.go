@@ -78,6 +78,32 @@ func TestList(t *testing.T) {
 			data := map[string]interface{}{"page": 1, "pageSize": 10,"path":"/api/v1/authority/getAuthorityL"}
 			TestClient.GET(fmt.Sprintf("%s/getList", url), httptest.NewResponses(http.StatusOK, response.ResponseOkMessage, pageKeys), httptest.NewWithQueryObjectParamFunc(data))
 		})
+
+	t.Run("路由权限测试，sort key", func(t *testing.T) {
+			TestClient := httptest.Instance(t, TestServer.GetEngine(), str.Join("http://", web.CONFIG.System.Addr))
+			TestClient.Login(rbac.LoginUrl, "", httptest.NewResponses(http.StatusOK, response.ResponseOkMessage, rbac.LoginResponse))
+			if TestClient == nil {
+				return
+			}
+			pageKeys := httptest.Responses{
+				{Key: "pageSize", Value: 10},
+				{Key: "page", Value: 1},
+				{Key: "list", Value: []httptest.Responses{
+					{
+						{Key: "id", Value: 14},
+						{Key: "path", Value: "/api/v1/oplog/getOplogList"},
+						{Key: "description", Value: "GetOplogList"},
+						{Key: "apiGroup", Value: "oplog"},
+						{Key: "method", Value: "GET"},
+						{Key: "authorityType", Value: 1},
+						{Key: "updatedAt", Value: "",Type: "notempty"},
+						{Key: "createdAt", Value: "",Type: "notempty"},},
+		},Length: 1,},
+				{Key: "total", Value: 14},
+			}
+			data := map[string]interface{}{"page": 1, "pageSize": 10,"method":"GET","sort":"","orderBy":"id"}
+			TestClient.GET(fmt.Sprintf("%s/getList", url), httptest.NewResponses(http.StatusOK, response.ResponseOkMessage, pageKeys), httptest.NewWithQueryObjectParamFunc(data))
+		})
 		
 	t.Run("路由权限测试，method key", func(t *testing.T) {
 			TestClient := httptest.Instance(t, TestServer.GetEngine(), str.Join("http://", web.CONFIG.System.Addr))
