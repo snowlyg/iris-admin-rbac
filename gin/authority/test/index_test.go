@@ -76,7 +76,7 @@ func TestList(t *testing.T) {
 	})
 
 	t.Run("test authorityName key",func(t *testing.T) {
-				TestClient := httptest.Instance(t, TestServer.GetEngine(), str.Join("http://", web.CONFIG.System.Addr))
+		TestClient := httptest.Instance(t, TestServer.GetEngine(), str.Join("http://", web.CONFIG.System.Addr))
 		TestClient.Login(rbac.LoginUrl, "", httptest.NewResponses(http.StatusOK, response.ResponseOkMessage, rbac.LoginResponse))
 		if TestClient == nil {
 			return
