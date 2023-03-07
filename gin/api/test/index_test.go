@@ -33,7 +33,6 @@ func TestList(t *testing.T) {
 	routes, _ := TestServer.GetSources()
 	for _, pageParam := range pageParams {
 		t.Run(fmt.Sprintf("路由权限测试，第%d页", pageParam.Page), func(t *testing.T) {
-
 			TestClient := httptest.Instance(t, TestServer.GetEngine(), str.Join("http://", web.CONFIG.System.Addr))
 			TestClient.Login(rbac.LoginUrl, "", httptest.NewResponses(http.StatusOK, response.ResponseOkMessage, rbac.LoginResponse))
 			if TestClient == nil {
@@ -53,6 +52,84 @@ func TestList(t *testing.T) {
 			TestClient.GET(fmt.Sprintf("%s/getList", url), httptest.NewResponses(http.StatusOK, response.ResponseOkMessage, pageKeys), httptest.NewWithQueryObjectParamFunc(data))
 		})
 	}
+
+	t.Run("路由权限测试，path key", func(t *testing.T) {
+			TestClient := httptest.Instance(t, TestServer.GetEngine(), str.Join("http://", web.CONFIG.System.Addr))
+			TestClient.Login(rbac.LoginUrl, "", httptest.NewResponses(http.StatusOK, response.ResponseOkMessage, rbac.LoginResponse))
+			if TestClient == nil {
+				return
+			}
+			pageKeys := httptest.Responses{
+				{Key: "pageSize", Value: 10},
+				{Key: "page", Value: 1},
+				{Key: "list", Value: []httptest.Responses{
+					{
+						{Key: "id", Value: 1},
+						{Key: "path", Value: "/api/v1/authority/getAuthorityList"},
+						{Key: "description", Value: "GetAuthorityList"},
+						{Key: "apiGroup", Value: "authority"},
+						{Key: "method", Value: "GET"},
+						{Key: "authorityType", Value: 1},
+						{Key: "updatedAt", Value: "",Type: "notempty"},
+						{Key: "createdAt", Value: "",Type: "notempty"},},
+		}},
+				{Key: "total", Value: 1},
+			}
+			data := map[string]interface{}{"page": 1, "pageSize": 10,"path":"/api/v1/authority/getAuthorityL"}
+			TestClient.GET(fmt.Sprintf("%s/getList", url), httptest.NewResponses(http.StatusOK, response.ResponseOkMessage, pageKeys), httptest.NewWithQueryObjectParamFunc(data))
+		})
+		
+	t.Run("路由权限测试，method key", func(t *testing.T) {
+			TestClient := httptest.Instance(t, TestServer.GetEngine(), str.Join("http://", web.CONFIG.System.Addr))
+			TestClient.Login(rbac.LoginUrl, "", httptest.NewResponses(http.StatusOK, response.ResponseOkMessage, rbac.LoginResponse))
+			if TestClient == nil {
+				return
+			}
+			pageKeys := httptest.Responses{
+				{Key: "pageSize", Value: 10},
+				{Key: "page", Value: 1},
+				{Key: "list", Value: []httptest.Responses{
+					{
+						{Key: "id", Value: 1},
+						{Key: "path", Value: "/api/v1/authority/getAuthorityList"},
+						{Key: "description", Value: "GetAuthorityList"},
+						{Key: "apiGroup", Value: "authority"},
+						{Key: "method", Value: "GET"},
+						{Key: "authorityType", Value: 1},
+						{Key: "updatedAt", Value: "",Type: "notempty"},
+						{Key: "createdAt", Value: "",Type: "notempty"},},
+		},Length: 1,},
+				{Key: "total", Value: 14},
+			}
+			data := map[string]interface{}{"page": 1, "pageSize": 10,"method":"GET"}
+			TestClient.GET(fmt.Sprintf("%s/getList", url), httptest.NewResponses(http.StatusOK, response.ResponseOkMessage, pageKeys), httptest.NewWithQueryObjectParamFunc(data))
+		})
+		
+	t.Run("路由权限测试，apiGroup key", func(t *testing.T) {
+			TestClient := httptest.Instance(t, TestServer.GetEngine(), str.Join("http://", web.CONFIG.System.Addr))
+			TestClient.Login(rbac.LoginUrl, "", httptest.NewResponses(http.StatusOK, response.ResponseOkMessage, rbac.LoginResponse))
+			if TestClient == nil {
+				return
+			}
+			pageKeys := httptest.Responses{
+				{Key: "pageSize", Value: 10},
+				{Key: "page", Value: 1},
+				{Key: "list", Value: []httptest.Responses{
+					{
+						{Key: "id", Value: 1},
+						{Key: "path", Value: "/api/v1/authority/getAuthorityList"},
+						{Key: "description", Value: "GetAuthorityList"},
+						{Key: "apiGroup", Value: "authority"},
+						{Key: "method", Value: "GET"},
+						{Key: "authorityType", Value: 1},
+						{Key: "updatedAt", Value: "",Type: "notempty"},
+						{Key: "createdAt", Value: "",Type: "notempty"},},
+		},Length: 1,},
+				{Key: "total", Value: 8},
+			}
+			data := map[string]interface{}{"page": 1, "pageSize": 10,"apiGroup":"authority"}
+			TestClient.GET(fmt.Sprintf("%s/getList", url), httptest.NewResponses(http.StatusOK, response.ResponseOkMessage, pageKeys), httptest.NewWithQueryObjectParamFunc(data))
+		})
 }
 
 func TestGetAll(t *testing.T) {

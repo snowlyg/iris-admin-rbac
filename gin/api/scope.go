@@ -1,11 +1,36 @@
 package api
 
-import "gorm.io/gorm"
+import (
+	"log"
 
-// AuthorityTypeScope 根据 name 查询
-// - authorityType 权限类型
+	"github.com/snowlyg/helper/str"
+	"gorm.io/gorm"
+)
+
+// AuthorityTypeScope
 func AuthorityTypeScope(authorityType int) func(db *gorm.DB) *gorm.DB {
 	return func(db *gorm.DB) *gorm.DB {
 		return db.Where("authority_type = ?", authorityType)
+	}
+}
+
+// MethodScope
+func MethodScope(method string) func(db *gorm.DB) *gorm.DB {
+	return func(db *gorm.DB) *gorm.DB {
+		return db.Where("method = ?", method)
+	}
+}
+
+// ApiGroupScope
+func ApiGroupScope(apiGroup string) func(db *gorm.DB) *gorm.DB {
+	return func(db *gorm.DB) *gorm.DB {
+		return db.Where("api_group = ?", apiGroup)
+	}
+}
+// PathScope
+func PathScope(path string) func(db *gorm.DB) *gorm.DB {
+	return func(db *gorm.DB) *gorm.DB {
+		log.Println(str.Join(`'%`,path,`'`))
+		return db.Where("path LIKE ?", str.Join(path,`%`))
 	}
 }

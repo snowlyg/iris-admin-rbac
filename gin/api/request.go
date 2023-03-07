@@ -15,10 +15,9 @@ type AuthorityType struct {
 
 type ReqPaginate struct {
 	orm.Paginate
+	AuthorityType
 	Path        string `json:"path" form:"path"`
 	Description string `json:"description" form:"description"`
 	ApiGroup    string `json:"apiGroup" form:"apiGroup"`
 	Method      string `json:"method" form:"method"`
-	OrderKey    string `json:"orderKey" form:"orderKey"`
-	Desc        bool   `json:"desc" form:"desc"`
 }

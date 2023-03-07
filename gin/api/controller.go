@@ -6,6 +6,7 @@ import (
 	"github.com/snowlyg/iris-admin/server/database/scope"
 	"github.com/snowlyg/iris-admin/server/web/web_gin/request"
 	"github.com/snowlyg/iris-admin/server/web/web_gin/response"
+	"gorm.io/gorm"
 )
 
 // CreateApi 创建基础api
@@ -49,7 +50,20 @@ func GetApiList(ctx *gin.Context) {
 		return
 	}
 	items := &PageResponse{}
-	total, err := items.Paginate(database.Instance(), pageInfo.PaginateScope())
+	scopes := []func(db *gorm.DB) *gorm.DB{}
+	if pageInfo.AuthorityType.AuthorityType > 0{
+		scopes = append(scopes, AuthorityTypeScope(pageInfo.AuthorityType.AuthorityType))
+	}
+	if pageInfo.Method !=""{
+		scopes = append(scopes, MethodScope(pageInfo.Method))
+	}
+	if pageInfo.ApiGroup !=""{
+		scopes = append(scopes, ApiGroupScope(pageInfo.ApiGroup))
+	}
+	if pageInfo.Path !=""{
+		scopes = append(scopes,PathScope(pageInfo.Path))
+	}
+	total, err := items.Paginate(database.Instance(),pageInfo.PaginateScope(), scopes...)
 	if err != nil {
 		response.FailWithMessage(err.Error(), ctx)
 	} else {
