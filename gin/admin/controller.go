@@ -73,7 +73,7 @@ func UpdateAdmin(ctx *gin.Context) {
 		return
 	}
 
-	if _, err := FindByUserName(UserNameScope(req.Username), scope.NeIdScope(reqId.Id)); !errors.Is(err, gorm.ErrRecordNotFound) {
+	if _, err := FindByUserName(UserNameScope(req.Username), scope.NeIdScope(reqId.Id)); err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
 		response.FailWithMessage(err.Error(), ctx)
 		return
 	}
@@ -118,7 +118,7 @@ func GetAll(ctx *gin.Context) {
 	}
 
 	scopes := []func(db *gorm.DB) *gorm.DB{}
-	if req.SearchKey !="" {
+	if req.SearchKey != "" {
 		scopes = append(scopes, SearchKeyScope(req.SearchKey))
 	}
 
@@ -127,7 +127,7 @@ func GetAll(ctx *gin.Context) {
 	}
 
 	items := &PageResponse{}
-	total, err := items.Paginate(database.Instance(), req.PaginateScope(),scopes...)
+	total, err := items.Paginate(database.Instance(), req.PaginateScope(), scopes...)
 	if err != nil {
 		response.FailWithMessage(err.Error(), ctx)
 		return

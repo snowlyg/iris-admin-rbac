@@ -368,6 +368,9 @@ func TestUpdate(t *testing.T) {
 		"authorityName": "test_authorityName_for_update",
 		"parentId":      0,
 		"authorityType": multi.AdminAuthority,
+		"perms": [][]string{
+			{"/api/v1/authority/updateAuthority/:id", "PUT"},
+		},
 	}
 	id := Create(TestClient, data)
 	if id == 0 {
@@ -379,9 +382,39 @@ func TestUpdate(t *testing.T) {
 		"authorityName": "test_authorityName_for_update1",
 		"parentId":      0,
 		"authorityType": multi.AdminAuthority,
+		"perms": [][]string{
+			{"/api/v1/authority/updateAuthority/:id", "GET"},
+		},
 	}
 
 	TestClient.PUT(fmt.Sprintf("%s/updateAuthority/%d", url, id), httptest.SuccessResponse, httptest.NewWithJsonParamFunc(requestParams))
+
+	pageKeys := httptest.Responses{
+		{Key: "pageSize", Value: 10},
+		{Key: "page", Value: 1},
+		{Key: "list", Value: []httptest.Responses{
+			{
+				{Key: "id", Value: 0, Type: "ge"},
+				{Key: "uuid", Value: "test_authorityName_for_update"},
+				{Key: "authorityName", Value: "test_authorityName_for_update1"},
+				{Key: "authorityType", Value: multi.AdminAuthority},
+				{Key: "parentId", Value: 0},
+				{Key: "defaultRouter", Value: "dashboard"},
+				{Key: "updatedAt", Value: "", Type: "notempty"},
+				{Key: "createdAt", Value: "", Type: "notempty"},
+				{Key: "perms", Value: []httptest.Responses{
+					{
+						{Key: "path", Value: "/api/v1/authority/updateAuthority/:id"},
+						{Key: "method", Value: "GET"},
+					},
+				}},
+			},
+		}},
+		{Key: "total", Value: 0, Type: "ge"},
+	}
+
+	dataPage := map[string]interface{}{"page": 1, "pageSize": 10, "orderBy": "id", "authorityName": "test_authorityName_for_update"}
+	TestClient.GET(fmt.Sprintf("%s/getAuthorityList", url), httptest.NewResponses(http.StatusOK, response.ResponseOkMessage, pageKeys), httptest.NewWithQueryObjectParamFunc(dataPage))
 }
 
 func TestCopyAuthority(t *testing.T) {

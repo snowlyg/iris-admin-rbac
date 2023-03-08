@@ -63,7 +63,7 @@ func UpdateRole(ctx iris.Context) {
 		return
 	}
 
-	if _, err := FindByName(NameScope(req.Name), scope.NeIdScope(reqId.Id)); !errors.Is(err, gorm.ErrRecordNotFound) {
+	if _, err := FindByName(NameScope(req.Name), scope.NeIdScope(reqId.Id)); err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
 		ctx.JSON(orm.Response{Status: http.StatusBadRequest, Data: nil, Msg: "角色名称已经被使用"})
 		return
 	}

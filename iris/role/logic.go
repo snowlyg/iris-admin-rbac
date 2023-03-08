@@ -20,7 +20,7 @@ func GetAdminRoleName() string {
 
 // Create 添加
 func Create(req *Request) (uint, error) {
-	if _, err := FindByName(NameScope(req.Name)); !errors.Is(err, gorm.ErrRecordNotFound) {
+	if _, err := FindByName(NameScope(req.Name)); err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
 		return 0, ErrRoleNameInvalide
 	}
 	role := &Role{BaseRole: req.BaseRole}

@@ -95,7 +95,7 @@ func getUserRoleNames(userId string) ([]string, error) {
 }
 
 func Create(req *Request) (uint, error) {
-	if _, err := FindByUserName(UserNameScope(req.Username)); !errors.Is(err, gorm.ErrRecordNotFound) {
+	if _, err := FindByUserName(UserNameScope(req.Username)); err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
 		return 0, ErrUserNameInvalide
 	}
 	user := &User{BaseUser: req.BaseUser, RoleNames: req.RoleNames}

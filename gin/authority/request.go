@@ -27,6 +27,7 @@ func (req *CreateAuthorityRequest) Request(ctx *gin.Context) error {
 }
 
 type UpdateAuthorityRequest struct {
+	Perms [][]string `json:"perms" gorm:"-"`
 	BaseAuthority
 }
 

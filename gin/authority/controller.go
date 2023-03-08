@@ -60,8 +60,7 @@ func UpdateAuthority(ctx *gin.Context) {
 		return
 	}
 
-	admin := &Authority{BaseAuthority: req.BaseAuthority}
-	err := Update(reqId.Id, admin)
+	err := Update(reqId.Id, req)
 	if err != nil {
 		response.FailWithMessage(err.Error(), ctx)
 		return

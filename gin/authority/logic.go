@@ -25,7 +25,7 @@ func Copy(id uint, req *CreateAuthorityRequest) (uint, error) {
 		return 0, err
 	}
 
-	if _, err := FindByUuid(AuthorityUuidScope(req.Uuid)); !errors.Is(err, gorm.ErrRecordNotFound) {
+	if _, err := First(AuthorityUuidScope(req.Uuid)); err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
 		return 0, ErrRoleNameInvalide
 	}
 	authority := &Authority{BaseAuthority: req.BaseAuthority}
@@ -44,10 +44,19 @@ func Copy(id uint, req *CreateAuthorityRequest) (uint, error) {
 	return newId, nil
 }
 
-func Update(id uint, req *Authority) error {
-	err := database.Instance().Model(&Authority{}).Scopes(scope.IdScope(id)).Updates(req).Error
+func Update(id uint, req *UpdateAuthorityRequest) error {
+	first, err := First(scope.IdScope(id))
+	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
+		return ErrRoleNameInvalide
+	}
+	admin := &Authority{BaseAuthority: req.BaseAuthority}
+	err = database.Instance().Model(&Authority{}).Scopes(scope.IdScope(id)).Updates(admin).Error
 	if err != nil {
 		zap_server.ZAPLOG.Error(err.Error())
+		return err
+	}
+	err = AddPermForRole(first.Uuid, req.Perms)
+	if err != nil {
 		return err
 	}
 	return nil
@@ -55,23 +64,26 @@ func Update(id uint, req *Authority) error {
 
 // Create 添加
 func Create(req *CreateAuthorityRequest) (uint, error) {
-	if _, err := FindByUuid(AuthorityUuidScope(req.Uuid)); !errors.Is(err, gorm.ErrRecordNotFound) {
+	if _, err := First(AuthorityUuidScope(req.Uuid)); !errors.Is(err, gorm.ErrRecordNotFound) {
 		return 0, ErrRoleNameInvalide
 	}
 	authority := &Authority{BaseAuthority: req.BaseAuthority, Uuid: req.Uuid}
+	if len(req.Perms) > 0 && len(req.Perms[0]) > 0 {
+		authority.Perms = req.Perms
+	}
 	id, err := authority.Create(database.Instance())
 	if err != nil {
 		return 0, err
 	}
-	err = AddPermForRole(authority.Uuid, req.Perms)
+	err = AddPermForRole(authority.Uuid, authority.Perms)
 	if err != nil {
 		return 0, err
 	}
 	return id, nil
 }
 
-// FindByUuid
-func FindByUuid(scopes ...func(db *gorm.DB) *gorm.DB) (*Response, error) {
+// First
+func First(scopes ...func(db *gorm.DB) *gorm.DB) (*Response, error) {
 	role := &Response{}
 	err := role.First(database.Instance(), scopes...)
 	if err != nil {
