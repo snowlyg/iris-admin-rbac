@@ -68,7 +68,7 @@ func FormatApis(items []*Response) []*Response {
 		for i := 0; i < len(items); i++ {
 			if !parentApiCheck.Check(items[i].ApiGroup) {
 				router := &Response{}
-				router.Path = ""
+				router.Path = "/"
 				router.Description = items[i].ApiGroup
 				routers = append(routers, router)
 				parentApiCheck.Add(items[i].ApiGroup)
