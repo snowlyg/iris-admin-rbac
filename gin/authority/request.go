@@ -9,11 +9,12 @@ import (
 type ReqPaginate struct {
 	orm.Paginate
 	AuthorityName string `json:"authorityName" form:"authorityName"`
-	AuthorityType int `json:"authorityType" form:"authorityType"`
+	AuthorityType int    `json:"authorityType" form:"authorityType"`
 }
 
 type CreateAuthorityRequest struct {
-	Uuid string `json:"uuid"`
+	Uuid  string     `json:"uuid"`
+	Perms [][]string `json:"perms" gorm:"-"`
 	BaseAuthority
 }
 

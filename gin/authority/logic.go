@@ -63,7 +63,7 @@ func Create(req *CreateAuthorityRequest) (uint, error) {
 	if err != nil {
 		return 0, err
 	}
-	err = AddPermForRole(authority.Uuid, authority.Perms)
+	err = AddPermForRole(authority.Uuid, req.Perms)
 	if err != nil {
 		return 0, err
 	}

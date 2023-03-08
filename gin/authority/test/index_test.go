@@ -308,7 +308,6 @@ func TestGetGeneralAuthorityList(t *testing.T) {
 }
 
 func TestCreate(t *testing.T) {
-
 	TestClient := httptest.Instance(t, TestServer.GetEngine(), str.Join("http://", web.CONFIG.System.Addr))
 	TestClient.Login(rbac.LoginUrl, "", httptest.NewResponses(http.StatusOK, response.ResponseOkMessage, rbac.LoginResponse))
 	if TestClient == nil {
@@ -319,12 +318,43 @@ func TestCreate(t *testing.T) {
 		"authorityName": "test_authorityName_for_create",
 		"parentId":      0,
 		"authorityType": multi.AdminAuthority,
+		"perms": [][]string{
+			{"/api/v1/authority/updateAuthority/:id", "PUT"},
+		},
 	}
 	id := Create(TestClient, data)
 	if id == 0 {
 		t.Fatalf("测试添加用户失败 id=%d", id)
 	}
 	defer Delete(TestClient, id)
+
+	pageKeys := httptest.Responses{
+		{Key: "pageSize", Value: 10},
+		{Key: "page", Value: 1},
+		{Key: "list", Value: []httptest.Responses{
+			{
+				{Key: "id", Value: 0, Type: "ge"},
+				{Key: "uuid", Value: "test_authorityName_for_create"},
+				{Key: "authorityName", Value: "test_authorityName_for_create"},
+				{Key: "authorityType", Value: multi.AdminAuthority},
+				{Key: "parentId", Value: 0},
+				{Key: "defaultRouter", Value: "dashboard"},
+				{Key: "updatedAt", Value: "", Type: "notempty"},
+				{Key: "createdAt", Value: "", Type: "notempty"},
+				{Key: "perms", Value: []httptest.Responses{
+					{
+						{Key: "path", Value: "/api/v1/authority/updateAuthority/:id"},
+						{Key: "method", Value: "PUT"},
+					},
+				}},
+			},
+		}},
+		{Key: "total", Value: 0, Type: "ge"},
+	}
+
+	dataPage := map[string]interface{}{"page": 1, "pageSize": 10, "orderBy": "id", "authorityName": "test_authorityName_for_create"}
+	TestClient.GET(fmt.Sprintf("%s/getAuthorityList", url), httptest.NewResponses(http.StatusOK, response.ResponseOkMessage, pageKeys), httptest.NewWithQueryObjectParamFunc(dataPage))
+
 }
 
 func TestUpdate(t *testing.T) {
@@ -388,6 +418,5 @@ func Create(TestClient *httptest.Client, data map[string]interface{}) uint {
 }
 
 func Delete(TestClient *httptest.Client, id uint) {
-
 	TestClient.DELETE(fmt.Sprintf("%s/deleteAuthority/%d", url, id), httptest.SuccessResponse)
 }
