@@ -12,7 +12,7 @@ func AuthorityUuidScope(uuid string) func(db *gorm.DB) *gorm.DB {
 	}
 }
 
-// AuthorityTypeScope 
+// AuthorityTypeScope
 func AuthorityTypeScope(authorityType int) func(db *gorm.DB) *gorm.DB {
 	return func(db *gorm.DB) *gorm.DB {
 		return db.Where("authority_type = ?", authorityType)
@@ -22,6 +22,13 @@ func AuthorityTypeScope(authorityType int) func(db *gorm.DB) *gorm.DB {
 // AuthorityNameScope
 func AuthorityNameScope(authorityName string) func(db *gorm.DB) *gorm.DB {
 	return func(db *gorm.DB) *gorm.DB {
-		return db.Where("authority_name LIKE ?", str.Join(authorityName,"%"))
+		return db.Where("authority_name LIKE ?", str.Join(authorityName, "%"))
+	}
+}
+
+// ParentIdScope
+func ParentIdScope(id uint) func(db *gorm.DB) *gorm.DB {
+	return func(db *gorm.DB) *gorm.DB {
+		return db.Where("parent_id = ?", id)
 	}
 }

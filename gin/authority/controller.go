@@ -77,8 +77,8 @@ func GetAdminAuthorityList(ctx *gin.Context) {
 		return
 	}
 
-	scopes := []func(db *gorm.DB) *gorm.DB{AuthorityTypeScope(multi.AdminAuthority)}
-	if req.AuthorityName !=""{
+	scopes := []func(db *gorm.DB) *gorm.DB{AuthorityTypeScope(multi.AdminAuthority), ParentIdScope(0)}
+	if req.AuthorityName != "" {
 		scopes = append(scopes, AuthorityNameScope(req.AuthorityName))
 	}
 
@@ -104,8 +104,8 @@ func GetTenancyAuthorityList(ctx *gin.Context) {
 		return
 	}
 
-	scopes := []func(db *gorm.DB) *gorm.DB{AuthorityTypeScope(multi.TenancyAuthority)}
-	if req.AuthorityName !=""{
+	scopes := []func(db *gorm.DB) *gorm.DB{AuthorityTypeScope(multi.TenancyAuthority), ParentIdScope(0)}
+	if req.AuthorityName != "" {
 		scopes = append(scopes, AuthorityNameScope(req.AuthorityName))
 	}
 
@@ -131,8 +131,8 @@ func GetGeneralAuthorityList(ctx *gin.Context) {
 		return
 	}
 
-	scopes := []func(db *gorm.DB) *gorm.DB{AuthorityTypeScope(multi.GeneralAuthority)}
-	if req.AuthorityName !=""{
+	scopes := []func(db *gorm.DB) *gorm.DB{AuthorityTypeScope(multi.GeneralAuthority), ParentIdScope(0)}
+	if req.AuthorityName != "" {
 		scopes = append(scopes, AuthorityNameScope(req.AuthorityName))
 	}
 
@@ -159,16 +159,16 @@ func GetAuthorityList(ctx *gin.Context) {
 	}
 
 	scopes := []func(db *gorm.DB) *gorm.DB{}
-	if req.AuthorityName !=""{
+	if req.AuthorityName != "" {
 		scopes = append(scopes, AuthorityNameScope(req.AuthorityName))
 	}
 
-	if req.AuthorityType > 0{
+	if req.AuthorityType > 0 {
 		scopes = append(scopes, AuthorityTypeScope(req.AuthorityType))
 	}
 
 	items := &PageResponse{}
-	total, err := items.Paginate(database.Instance(), req.PaginateScope(),scopes...)
+	total, err := items.Paginate(database.Instance(), req.PaginateScope(), scopes...)
 	if err != nil {
 		response.FailWithMessage(err.Error(), ctx)
 		return
