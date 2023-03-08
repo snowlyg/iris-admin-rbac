@@ -46,7 +46,10 @@ func transform(admins ...*Response) {
 					roleUuidType.Add(v)
 				}
 				if roleUuidType.Check(role.Uuid) {
-					admin.Authorities = append(admin.Authorities, role.AuthorityName)
+					admin.Authorities = append(admin.Authorities, Authorities{
+						AuthorityName: role.AuthorityName,
+						Uuid:          role.Uuid,
+					})
 				}
 			}
 		}

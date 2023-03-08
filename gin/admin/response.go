@@ -13,7 +13,12 @@ import (
 type Response struct {
 	orm.Model
 	BaseAdmin
-	Authorities []string `gorm:"-" json:"authorities"`
+	Authorities []Authorities `gorm:"-" json:"authorities"`
+}
+
+type Authorities struct {
+	AuthorityName string `json:"authorityName" gorm:"-" `
+	Uuid          string `json:"uuid" gorm:"-" `
 }
 
 func (res *Response) ToString() {
@@ -51,15 +56,15 @@ type PageResponse struct {
 func (res *PageResponse) Paginate(db *gorm.DB, pageScope func(db *gorm.DB) *gorm.DB, scopes ...func(db *gorm.DB) *gorm.DB) (int64, error) {
 	db = db.Model(&Admin{})
 	var count int64
-		if len(scopes)>0{
-		 db.Scopes(scopes...)
+	if len(scopes) > 0 {
+		db.Scopes(scopes...)
 	}
 	err := db.Count(&count).Error
 	if err != nil {
 		zap_server.ZAPLOG.Error(err.Error())
 		return count, err
 	}
-	
+
 	err = db.Scopes(pageScope).Find(&res.Item).Error
 	if err != nil {
 		zap_server.ZAPLOG.Error(err.Error())
