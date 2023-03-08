@@ -1,6 +1,7 @@
 package api
 
 import (
+	"github.com/snowlyg/helper/arr"
 	"github.com/snowlyg/iris-admin/server/database/orm"
 	"github.com/snowlyg/iris-admin/server/zap_server"
 	"gorm.io/gorm"
@@ -10,6 +11,7 @@ import (
 type Response struct {
 	orm.Model
 	BaseApi
+	Children []*Response `json:"children" gorm:"-"`
 }
 
 func (res *Response) First(db *gorm.DB, scopes ...func(db *gorm.DB) *gorm.DB) error {
@@ -29,8 +31,8 @@ type PageResponse struct {
 func (res *PageResponse) Paginate(db *gorm.DB, pageScope func(db *gorm.DB) *gorm.DB, scopes ...func(db *gorm.DB) *gorm.DB) (int64, error) {
 	db = db.Model(&Api{})
 	var count int64
-	if len(scopes)>0{
-		 db.Scopes(scopes...)
+	if len(scopes) > 0 {
+		db.Scopes(scopes...)
 	}
 	err := db.Count(&count).Error
 	if err != nil {
@@ -55,4 +57,31 @@ func (res *PageResponse) Find(db *gorm.DB, scopes ...func(db *gorm.DB) *gorm.DB)
 	}
 
 	return nil
+}
+
+// FormatApis
+func FormatApis(items []*Response) []*Response {
+	routers := []*Response{}
+	if len(items) > 0 {
+		// NOTICE: api,admin,authority,public,oplog
+		parentApiCheck := arr.NewCheckArrayType(5)
+		for i := 0; i < len(items); i++ {
+			if !parentApiCheck.Check(items[i].ApiGroup) {
+				router := &Response{}
+				router.Path = ""
+				router.Description = items[i].ApiGroup
+				routers = append(routers, router)
+				parentApiCheck.Add(items[i].ApiGroup)
+			}
+		}
+
+		for i := 0; i < len(items); i++ {
+			for _, router := range routers {
+				if router.Description == items[i].ApiGroup {
+					router.Children = append(router.Children, items[i])
+				}
+			}
+		}
+	}
+	return routers
 }

@@ -23,11 +23,6 @@ func (res *Response) First(db *gorm.DB, scopes ...func(db *gorm.DB) *gorm.DB) er
 		zap_server.ZAPLOG.Error(err.Error())
 		return err
 	}
-	// apis, err := api.GetApisForRoleMap()
-	// if err != nil {
-	// 	return err
-	// }
-	// res.Perms = apis[res.AuthorityType]
 
 	return nil
 }

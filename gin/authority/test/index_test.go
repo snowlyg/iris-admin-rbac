@@ -383,7 +383,7 @@ func TestUpdate(t *testing.T) {
 		"parentId":      0,
 		"authorityType": multi.AdminAuthority,
 		"perms": [][]string{
-			{"/api/v1/authority/updateAuthority/:id", "GET"},
+			{"/api/v1/authority/updateAuthority1/:id", "GET"},
 		},
 	}
 
@@ -404,7 +404,7 @@ func TestUpdate(t *testing.T) {
 				{Key: "createdAt", Value: "", Type: "notempty"},
 				{Key: "perms", Value: []httptest.Responses{
 					{
-						{Key: "path", Value: "/api/v1/authority/updateAuthority/:id"},
+						{Key: "path", Value: "/api/v1/authority/updateAuthority1/:id"},
 						{Key: "method", Value: "GET"},
 					},
 				}},

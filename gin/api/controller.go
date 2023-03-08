@@ -51,19 +51,19 @@ func GetApiList(ctx *gin.Context) {
 	}
 	items := &PageResponse{}
 	scopes := []func(db *gorm.DB) *gorm.DB{}
-	if pageInfo.AuthorityType.AuthorityType > 0{
+	if pageInfo.AuthorityType.AuthorityType > 0 {
 		scopes = append(scopes, AuthorityTypeScope(pageInfo.AuthorityType.AuthorityType))
 	}
-	if pageInfo.Method !=""{
+	if pageInfo.Method != "" {
 		scopes = append(scopes, MethodScope(pageInfo.Method))
 	}
-	if pageInfo.ApiGroup !=""{
+	if pageInfo.ApiGroup != "" {
 		scopes = append(scopes, ApiGroupScope(pageInfo.ApiGroup))
 	}
-	if pageInfo.Path !=""{
-		scopes = append(scopes,PathScope(pageInfo.Path))
+	if pageInfo.Path != "" {
+		scopes = append(scopes, PathScope(pageInfo.Path))
 	}
-	total, err := items.Paginate(database.Instance(),pageInfo.PaginateScope(), scopes...)
+	total, err := items.Paginate(database.Instance(), pageInfo.PaginateScope(), scopes...)
 	if err != nil {
 		response.FailWithMessage(err.Error(), ctx)
 	} else {
@@ -119,13 +119,17 @@ func GetAllApis(ctx *gin.Context) {
 		response.FailWithMessage(err.Error(), ctx)
 		return
 	}
-	apis := &PageResponse{}
-	err := apis.Find(database.Instance(), AuthorityTypeScope(req.AuthorityType))
+	res := &PageResponse{}
+	err := res.Find(database.Instance(), AuthorityTypeScope(req.AuthorityType))
 	if err != nil {
 		response.FailWithMessage(err.Error(), ctx)
-	} else {
-		response.OkWithData(apis.Item, ctx)
+		return
 	}
+
+	routers := FormatApis(res.Item)
+
+	response.OkWithData(routers, ctx)
+
 }
 
 // DeleteApisByIds 删除选中Api

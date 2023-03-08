@@ -172,6 +172,9 @@ func GetAuthorityList(ctx *gin.Context) {
 		response.FailWithMessage(err.Error(), ctx)
 		return
 	}
+
+	
+
 	response.OkWithData(response.PageResult{
 		List:     items.Item,
 		Total:    total,
