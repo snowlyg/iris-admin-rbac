@@ -199,7 +199,7 @@ func TestUpdate(t *testing.T) {
 	data := map[string]interface{}{
 		"nickName":     "测试名称",
 		"username":     "create_test_username_for_update",
-		"authorityIds": []string{"super_admin", "tenancy_admin"},
+		"authorityIds": []string{"super_admin"},
 		"email":        "get@admin.com",
 		"phone":        "13800138001",
 		"password":     "123456",
@@ -211,10 +211,11 @@ func TestUpdate(t *testing.T) {
 	defer Delete(TestClient, id)
 
 	update := map[string]interface{}{
-		"nickName": "测试名称",
-		"email":    "get@admin.com",
-		"phone":    "13800138001",
-		"password": "123456",
+		"nickName":     "测试名称",
+		"email":        "get@admin.com",
+		"phone":        "13800138001",
+		"password":     "123456",
+		"authorityIds": []string{"super_admin", "tenancy_admin"},
 	}
 
 	TestClient.PUT(fmt.Sprintf("%s/updateAdmin/%d", url, id), httptest.SuccessResponse, httptest.NewWithJsonParamFunc(update))

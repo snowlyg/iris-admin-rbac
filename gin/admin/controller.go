@@ -78,13 +78,13 @@ func UpdateAdmin(ctx *gin.Context) {
 		return
 	}
 
-	admin := &Admin{BaseAdmin: req.BaseAdmin}
+	admin := &Admin{BaseAdmin: req.BaseAdmin, AuthorityIds: req.AuthorityUuids}
 	err := admin.Update(database.Instance(), scope.IdScope(reqId.Id))
 	if err != nil {
 		response.FailWithMessage(err.Error(), ctx)
 		return
 	}
-
+	admin.ID = reqId.Id
 	if err := AddRoleForUser(admin); err != nil {
 		response.FailWithMessage(err.Error(), ctx)
 		return
