@@ -8,8 +8,8 @@ import (
 
 type Request struct {
 	BaseAdmin
-	Password     string   `json:"password"`
-	AuthorityUuids []string `json:"authorityIds"`
+	Password       string   `json:"password"`
+	AuthorityUuids []string `json:"authorityIds" form:"authorityIds"`
 }
 
 func (req *Request) Request(ctx *gin.Context) error {
@@ -23,5 +23,5 @@ func (req *Request) Request(ctx *gin.Context) error {
 type ReqPaginate struct {
 	orm.Paginate
 	SearchKey string `json:"searchKey" form:"searchKey"`
-	Status int `json:"status" form:"status"`
+	Status    int    `json:"status" form:"status"`
 }

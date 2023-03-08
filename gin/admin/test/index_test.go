@@ -152,7 +152,7 @@ func TestCreate(t *testing.T) {
 	data := map[string]interface{}{
 		"nickName":     "测试名称",
 		"username":     "create_test_username",
-		"authorityIds": []string{"super_admin"},
+		"authorityIds": []string{"super_admin", "tenancy_admin"},
 		"email":        "get@admin.com",
 		"phone":        "13800138001",
 		"password":     "123456",
@@ -162,6 +162,31 @@ func TestCreate(t *testing.T) {
 		t.Fatalf("测试添加用户失败 id=%d", id)
 	}
 	defer Delete(TestClient, id)
+
+	pageKeys := httptest.Responses{
+		{Key: "id", Value: 1, Type: "ge"},
+		{Key: "nickName", Value: data["nickName"].(string)},
+		{Key: "username", Value: data["username"].(string)},
+		{Key: "status", Value: g.StatusFalse},
+		{Key: "email", Value: data["email"].(string)},
+		{Key: "phone", Value: data["phone"].(string)},
+		{Key: "isShow", Value: g.StatusFalse},
+		{Key: "headerImg", Value: "http://qmplusimg.henrongyi.top/head.png"},
+		{Key: "updatedAt", Value: "", Type: "notempty"},
+		{Key: "createdAt", Value: "", Type: "notempty"},
+		{Key: "createdAt", Value: "", Type: "notempty"},
+		{Key: "authorities", Value: []httptest.Responses{
+			{
+				{Key: "authorityName", Value: "超级管理员"},
+				{Key: "uuid", Value: "super_admin"},
+			},
+			{
+				{Key: "authorityName", Value: "商户管理员"},
+				{Key: "uuid", Value: "tenancy_admin"},
+			},
+		}},
+	}
+	TestClient.GET(fmt.Sprintf("%s/getAdmin/%d", url, id), httptest.NewResponses(http.StatusOK, response.ResponseOkMessage, pageKeys))
 }
 
 func TestUpdate(t *testing.T) {
@@ -174,7 +199,7 @@ func TestUpdate(t *testing.T) {
 	data := map[string]interface{}{
 		"nickName":     "测试名称",
 		"username":     "create_test_username_for_update",
-		"authorityIds": []string{"super_admin"},
+		"authorityIds": []string{"super_admin", "tenancy_admin"},
 		"email":        "get@admin.com",
 		"phone":        "13800138001",
 		"password":     "123456",
@@ -210,6 +235,10 @@ func TestUpdate(t *testing.T) {
 			{
 				{Key: "authorityName", Value: "超级管理员"},
 				{Key: "uuid", Value: "super_admin"},
+			},
+			{
+				{Key: "authorityName", Value: "商户管理员"},
+				{Key: "uuid", Value: "tenancy_admin"},
 			},
 		}},
 	}
