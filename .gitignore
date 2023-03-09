@@ -23,3 +23,5 @@
 printer.go
 
 .DS_Store
+
+!go.json
