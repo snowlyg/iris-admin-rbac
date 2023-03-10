@@ -1,8 +1,6 @@
 package api
 
 import (
-	"log"
-
 	"github.com/snowlyg/helper/str"
 	"gorm.io/gorm"
 )
@@ -27,10 +25,10 @@ func ApiGroupScope(apiGroup string) func(db *gorm.DB) *gorm.DB {
 		return db.Where("api_group = ?", apiGroup)
 	}
 }
+
 // PathScope
 func PathScope(path string) func(db *gorm.DB) *gorm.DB {
 	return func(db *gorm.DB) *gorm.DB {
-		log.Println(str.Join(`'%`,path,`'`))
-		return db.Where("path LIKE ?", str.Join(path,`%`))
+		return db.Where("path LIKE ?", str.Join(path, `%`))
 	}
 }
