@@ -44,8 +44,8 @@ func TestList(t *testing.T) {
 					{Key: "nickName", Value: "超级管理员"},
 					{Key: "username", Value: "admin"},
 					{Key: "headerImg", Value: "http://qmplusimg.henrongyi.top/head.png"},
-					{Key: "status", Value: g.StatusFalse},
-					{Key: "isShow", Value: g.StatusFalse},
+					{Key: "status", Value: g.StatusTrue},
+					{Key: "isShow", Value: g.StatusTrue},
 					{Key: "phone", Value: "13800138000"},
 					{Key: "email", Value: "admin@admin.com"},
 					{Key: "authorities", Value: []httptest.Responses{
@@ -61,7 +61,7 @@ func TestList(t *testing.T) {
 			}},
 			{Key: "total", Value: 1},
 		}
-		TestClient.GET(fmt.Sprintf("%s/getAll", url), httptest.NewResponses(http.StatusOK, response.ResponseOkMessage, pageKeys), httptest.GetRequestFunc)
+		TestClient.GET(fmt.Sprintf("%s/getAll", url), httptest.NewResponses(http.StatusOK, response.ResponseOkMessage, pageKeys), httptest.NewWithQueryObjectParamFunc(map[string]interface{}{"page": 1, "pageSize": 10, "status": g.StatusTrue}))
 	})
 
 	t.Run("test status key", func(t *testing.T) {
@@ -90,7 +90,7 @@ func TestList(t *testing.T) {
 			{Key: "list", Value: nil},
 			{Key: "total", Value: 0},
 		}
-		TestClient.GET(fmt.Sprintf("%s/getAll", url), httptest.NewResponses(http.StatusOK, response.ResponseOkMessage, pageKeys), httptest.NewWithQueryObjectParamFunc(map[string]interface{}{"page": 1, "pageSize": 10, "status": g.StatusTrue}))
+		TestClient.GET(fmt.Sprintf("%s/getAll", url), httptest.NewResponses(http.StatusOK, response.ResponseOkMessage, pageKeys), httptest.NewWithQueryObjectParamFunc(map[string]interface{}{"page": 1, "pageSize": 10, "status": g.StatusUnknown}))
 	})
 	t.Run("test searchKey key", func(t *testing.T) {
 		TestClient := httptest.Instance(t, TestServer.GetEngine(), str.Join("http://", web.CONFIG.System.Addr))
@@ -121,8 +121,8 @@ func TestList(t *testing.T) {
 					{Key: "nickName", Value: "测试名称"},
 					{Key: "username", Value: "create_test_username"},
 					{Key: "headerImg", Value: "http://qmplusimg.henrongyi.top/head.png"},
-					{Key: "status", Value: g.StatusFalse},
-					{Key: "isShow", Value: g.StatusFalse},
+					{Key: "status", Value: g.StatusTrue},
+					{Key: "isShow", Value: g.StatusTrue},
 					{Key: "phone", Value: "13800138001"},
 					{Key: "email", Value: "get@admin.com"},
 					{Key: "authorities", Value: []httptest.Responses{
@@ -138,7 +138,7 @@ func TestList(t *testing.T) {
 			}},
 			{Key: "total", Value: 1},
 		}
-		TestClient.GET(fmt.Sprintf("%s/getAll", url), httptest.NewResponses(http.StatusOK, response.ResponseOkMessage, pageKeys), httptest.NewWithQueryObjectParamFunc(map[string]interface{}{"page": 1, "pageSize": 10, "searchKey": "create_test_username"}))
+		TestClient.GET(fmt.Sprintf("%s/getAll", url), httptest.NewResponses(http.StatusOK, response.ResponseOkMessage, pageKeys), httptest.NewWithQueryObjectParamFunc(map[string]interface{}{"page": 1, "pageSize": 10, "searchKey": "create_test_username", "status": g.StatusTrue}))
 	})
 }
 
@@ -167,10 +167,10 @@ func TestCreate(t *testing.T) {
 		{Key: "id", Value: 1, Type: "ge"},
 		{Key: "nickName", Value: data["nickName"].(string)},
 		{Key: "username", Value: data["username"].(string)},
-		{Key: "status", Value: g.StatusFalse},
+		{Key: "status", Value: g.StatusTrue},
 		{Key: "email", Value: data["email"].(string)},
 		{Key: "phone", Value: data["phone"].(string)},
-		{Key: "isShow", Value: g.StatusFalse},
+		{Key: "isShow", Value: g.StatusTrue},
 		{Key: "headerImg", Value: "http://qmplusimg.henrongyi.top/head.png"},
 		{Key: "updatedAt", Value: "", Type: "notempty"},
 		{Key: "createdAt", Value: "", Type: "notempty"},
@@ -203,6 +203,7 @@ func TestUpdate(t *testing.T) {
 		"email":        "get@admin.com",
 		"phone":        "13800138001",
 		"password":     "123456",
+		"headerImg":    "http://qmplusimg.henrongyi.top/head.png",
 	}
 	id := Create(TestClient, data)
 	if id == 0 {
@@ -216,6 +217,8 @@ func TestUpdate(t *testing.T) {
 		"phone":        "13800138001",
 		"password":     "123456",
 		"authorityIds": []string{"super_admin", "tenancy_admin"},
+		"status":       g.StatusUnknown,
+		"isShow":       g.StatusTrue,
 	}
 
 	TestClient.PUT(fmt.Sprintf("%s/updateAdmin/%d", url, id), httptest.SuccessResponse, httptest.NewWithJsonParamFunc(update))
@@ -224,11 +227,11 @@ func TestUpdate(t *testing.T) {
 		{Key: "id", Value: 1, Type: "ge"},
 		{Key: "nickName", Value: data["nickName"].(string)},
 		{Key: "username", Value: data["username"].(string)},
-		{Key: "status", Value: g.StatusFalse},
+		{Key: "status", Value: g.StatusUnknown},
 		{Key: "email", Value: data["email"].(string)},
 		{Key: "phone", Value: data["phone"].(string)},
-		{Key: "isShow", Value: g.StatusFalse},
-		{Key: "headerImg", Value: "http://qmplusimg.henrongyi.top/head.png"},
+		{Key: "isShow", Value: g.StatusTrue},
+		{Key: "headerImg", Value: ""},
 		{Key: "updatedAt", Value: "", Type: "notempty"},
 		{Key: "createdAt", Value: "", Type: "notempty"},
 		{Key: "createdAt", Value: "", Type: "notempty"},
@@ -270,10 +273,10 @@ func TestGetById(t *testing.T) {
 		{Key: "id", Value: 1, Type: "ge"},
 		{Key: "nickName", Value: data["nickName"].(string)},
 		{Key: "username", Value: data["username"].(string)},
-		{Key: "status", Value: g.StatusFalse},
+		{Key: "status", Value: g.StatusTrue},
 		{Key: "email", Value: data["email"].(string)},
 		{Key: "phone", Value: data["phone"].(string)},
-		{Key: "isShow", Value: g.StatusFalse},
+		{Key: "isShow", Value: g.StatusTrue},
 		{Key: "headerImg", Value: "http://qmplusimg.henrongyi.top/head.png"},
 		{Key: "updatedAt", Value: "", Type: "notempty"},
 		{Key: "createdAt", Value: "", Type: "notempty"},
@@ -305,8 +308,8 @@ func TestChangeAvatar(t *testing.T) {
 		{Key: "nickName", Value: "超级管理员"},
 		{Key: "username", Value: "admin"},
 		{Key: "headerImg", Value: filepath.ToSlash(web.ToStaticUrl("/avatar.png"))},
-		{Key: "status", Value: g.StatusFalse},
-		{Key: "isShow", Value: g.StatusFalse},
+		{Key: "status", Value: g.StatusTrue},
+		{Key: "isShow", Value: g.StatusTrue},
 		{Key: "phone", Value: "13800138000"},
 		{Key: "email", Value: "admin@admin.com"},
 		{Key: "authorities", Value: []httptest.Responses{

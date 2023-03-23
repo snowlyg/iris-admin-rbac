@@ -24,6 +24,16 @@ type BaseApi struct {
 	AuthorityType int    `json:"authorityType" gorm:"comment:角色类型"`
 }
 
+func (item *Api) mc() map[string]interface{} {
+	return map[string]interface{}{
+		"path":           item.Path,
+		"description":    item.Description,
+		"api_group":      item.ApiGroup,
+		"method":         item.Method,
+		"authority_type": item.AuthorityType,
+	}
+}
+
 // Create 添加
 func (item *Api) Create(db *gorm.DB) (uint, error) {
 	err := db.Model(item).Create(item).Error
@@ -36,7 +46,7 @@ func (item *Api) Create(db *gorm.DB) (uint, error) {
 
 // Update 更新
 func (item *Api) Update(db *gorm.DB, scopes ...func(db *gorm.DB) *gorm.DB) error {
-	err := db.Model(item).Scopes(scopes...).Updates(item).Error
+	err := db.Model(item).Scopes(scopes...).Updates(item.mc()).Error
 	if err != nil {
 		zap_server.ZAPLOG.Error(err.Error())
 		return err

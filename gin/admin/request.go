@@ -22,6 +22,6 @@ func (req *Request) Request(ctx *gin.Context) error {
 
 type ReqPaginate struct {
 	orm.Paginate
-	SearchKey string `json:"searchKey" form:"searchKey"`
-	Status    int    `json:"status" form:"status"`
+	SearchKey string `json:"searchKey" form:"searchKey" uri:"searchKey" param:"searchKey"`
+	Status    int    `json:"status" form:"status" uri:"status" param:"status"`
 }

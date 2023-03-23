@@ -197,7 +197,7 @@ func TestCreate(t *testing.T) {
 	}
 	id := Create(TestClient, data)
 	if id == 0 {
-		t.Fatalf("测试添加用户失败 id=%d", id)
+		t.Fatalf("测试添加路由失败 id=%d", id)
 	}
 	defer Delete(TestClient, id, data)
 }
@@ -218,7 +218,7 @@ func TestUpdate(t *testing.T) {
 	}
 	id := Create(TestClient, data)
 	if id == 0 {
-		t.Fatalf("测试添加用户失败 id=%d", id)
+		t.Fatalf("测试添加路由失败 id=%d", id)
 	}
 	defer Delete(TestClient, id, data)
 
@@ -249,7 +249,7 @@ func TestGetById(t *testing.T) {
 	}
 	id := Create(TestClient, data)
 	if id == 0 {
-		t.Fatalf("测试添加用户失败 id=%d", id)
+		t.Fatalf("测试添加路由失败 id=%d", id)
 	}
 	defer Delete(TestClient, id, data)
 

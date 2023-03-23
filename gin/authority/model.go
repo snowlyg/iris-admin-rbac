@@ -40,6 +40,15 @@ type BaseMenu struct {
 	Children   []BaseMenu  `json:"children" gorm:"-"`
 }
 
+func (item *Authority) mc() map[string]interface{} {
+	return map[string]interface{}{
+		"authority_name": item.AuthorityName,
+		"authority_type": item.AuthorityType,
+		"parent_id":      item.ParentId,
+		"default_router": item.DefaultRouter,
+	}
+}
+
 // Create 添加
 func (item *Authority) Create(db *gorm.DB) (uint, error) {
 	err := db.Model(item).Create(item).Error
@@ -52,7 +61,7 @@ func (item *Authority) Create(db *gorm.DB) (uint, error) {
 
 // Update 更新
 func (item *Authority) Update(db *gorm.DB, scopes ...func(db *gorm.DB) *gorm.DB) error {
-	err := db.Model(item).Scopes(scopes...).Updates(item).Error
+	err := db.Model(item).Scopes(scopes...).Updates(item.mc()).Error
 	if err != nil {
 		zap_server.ZAPLOG.Error(err.Error())
 		return err

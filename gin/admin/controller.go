@@ -117,13 +117,9 @@ func GetAll(ctx *gin.Context) {
 		return
 	}
 
-	scopes := []func(db *gorm.DB) *gorm.DB{}
+	scopes := []func(db *gorm.DB) *gorm.DB{StatusScope(req.Status)}
 	if req.SearchKey != "" {
 		scopes = append(scopes, SearchKeyScope(req.SearchKey))
-	}
-
-	if req.Status > 0 {
-		scopes = append(scopes, StatusScope(req.Status))
 	}
 
 	items := &PageResponse{}

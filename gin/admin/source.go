@@ -17,7 +17,7 @@ func GetSources() ([]*Request, error) {
 		BaseAdmin: BaseAdmin{
 			Username: "admin",
 			Status:   g.StatusTrue,
-			IsShow:   g.StatusFalse,
+			IsShow:   g.StatusTrue,
 			Email:    "admin@admin.com",
 			Phone:    "13800138000",
 			NickName: "超级管理员",

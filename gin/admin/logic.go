@@ -109,13 +109,12 @@ func Create(req *Request) (uint, error) {
 	zap_server.ZAPLOG.Info("添加用户", zap.String("hash:", req.Password), zap.ByteString("hash:", hash))
 
 	admin.Password = string(hash)
-	admin.Status = g.StatusFalse
-	admin.IsShow = g.StatusFalse
+	admin.Status = g.StatusTrue
+	admin.IsShow = g.StatusTrue
 	id, err := admin.Create(database.Instance())
 	if err != nil {
 		return 0, err
 	}
-
 	if err := AddRoleForUser(admin); err != nil {
 		return 0, err
 	}
