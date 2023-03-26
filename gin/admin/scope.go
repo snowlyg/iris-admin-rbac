@@ -12,15 +12,18 @@ func UserNameScope(username string) func(db *gorm.DB) *gorm.DB {
 	}
 }
 
-// SearchKeyScope 
+// SearchKeyScope
 func SearchKeyScope(key string) func(db *gorm.DB) *gorm.DB {
 	return func(db *gorm.DB) *gorm.DB {
-		return db.Where(db.Where("username Like ?",str.Join(key,"%")).Or("nick_name Like ?",str.Join(key,"%")).Or("phone Like ?",str.Join(key,"%")))
+		return db.Where(db.Where("username Like ?", str.Join(key, "%")).Or("nick_name Like ?", str.Join(key, "%")).Or("phone Like ?", str.Join(key, "%")))
 	}
 }
 
 //StatusScope
-func StatusScope(status int) func(db *gorm.DB) *gorm.DB {
+func StatusScope(status string) func(db *gorm.DB) *gorm.DB {
+	if status != "1" {
+		status = "0"
+	}
 	return func(db *gorm.DB) *gorm.DB {
 		return db.Where("status = ?", status)
 	}

@@ -38,7 +38,7 @@ var PartyFunc = func(wi *web_gin.WebServer) {
 	// 初始化驱动
 	err := multi.InitDriver(config)
 	if err != nil {
-		zap_server.ZAPLOG.Panic("err")
+		zap_server.ZAPLOG.Panic(err.Error())
 	}
 	Party(wi.GetRouterGroup(prefix))
 }

@@ -90,7 +90,7 @@ func TestList(t *testing.T) {
 			{Key: "list", Value: nil},
 			{Key: "total", Value: 0},
 		}
-		TestClient.GET(fmt.Sprintf("%s/getAll", url), httptest.NewResponses(http.StatusOK, response.ResponseOkMessage, pageKeys), httptest.NewWithQueryObjectParamFunc(map[string]interface{}{"page": 1, "pageSize": 10, "status": g.StatusUnknown}))
+		TestClient.GET(fmt.Sprintf("%s/getAll", url), httptest.NewResponses(http.StatusOK, response.ResponseOkMessage, pageKeys), httptest.NewWithQueryObjectParamFunc(map[string]interface{}{"page": 1, "pageSize": 10, "status": "0"}))
 	})
 	t.Run("test searchKey key", func(t *testing.T) {
 		TestClient := httptest.Instance(t, TestServer.GetEngine(), str.Join("http://", web.CONFIG.System.Addr))

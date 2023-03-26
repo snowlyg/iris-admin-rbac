@@ -18,14 +18,20 @@ func TestMain(m *testing.M) {
 
 	os.Setenv("driverType", "redis")
 	cache.CONFIG.DB = 5
-	cache.CONFIG.Password = os.Getenv("redisProPwd")
-	cache.CONFIG.Addr = os.Getenv("redisAdd")
+	redisPwd := os.Getenv("redisProPwd")
+	if redisPwd != "" {
+		cache.CONFIG.Password = redisPwd
+	}
+	redisAddr := os.Getenv("redisAddr")
+	if redisAddr != "" {
+		cache.CONFIG.Addr = os.Getenv("redisAddr")
+	}
 	cache.Recover()
-	defer cache.Remove()
-
+	
 	var uuid string
 	uuid, TestServer = common.BeforeTestMainGin(rbac.PartyFunc, rbac.SeedFunc)
 	code := m.Run()
 	common.AfterTestMain(uuid, true)
+	cache.Remove()
 	os.Exit(code)
 }
