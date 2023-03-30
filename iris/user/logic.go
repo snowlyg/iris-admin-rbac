@@ -64,6 +64,9 @@ func FindByUserName(scopes ...func(db *gorm.DB) *gorm.DB) (*Response, error) {
 
 func FindPasswordByUserName(db *gorm.DB, username string, scopes ...func(db *gorm.DB) *gorm.DB) (*LoginResponse, error) {
 	user := &LoginResponse{}
+	if db == nil {
+		return nil, gorm.ErrInvalidDB
+	}
 	db = db.Model(&User{}).Select("id,password").
 		Where("username = ?", username)
 
@@ -138,6 +141,9 @@ func IsAdminUser(id uint) error {
 
 func FindById(db *gorm.DB, id uint) (Response, error) {
 	user := Response{}
+	if db == nil {
+		return user, gorm.ErrInvalidDB
+	}
 	err := db.Model(&User{}).Where("id = ?", id).First(&user).Error
 	if err != nil {
 		zap_server.ZAPLOG.Error(err.Error())
@@ -199,6 +205,9 @@ func CleanToken(authorityType int, userId string) error {
 }
 
 func UpdateAvatar(db *gorm.DB, id uint, avatar string) error {
+	if db == nil {
+		return gorm.ErrInvalidDB
+	}
 	err := db.Model(&User{}).Where("id = ?", id).Update("avatar", avatar).Error
 	if err != nil {
 		zap_server.ZAPLOG.Error(err.Error())

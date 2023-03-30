@@ -10,6 +10,9 @@ import (
 
 // CreatenInBatches 批量加入
 func CreatenInBatches(db *gorm.DB, perms PermCollection) error {
+	if db == nil {
+		return gorm.ErrInvalidDB
+	}
 	err := db.Model(&Permission{}).CreateInBatches(&perms, 500).Error
 	if err != nil {
 		zap_server.ZAPLOG.Error(err.Error())

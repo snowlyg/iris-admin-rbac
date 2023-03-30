@@ -15,6 +15,9 @@ type Response struct {
 }
 
 func (res *Response) First(db *gorm.DB, scopes ...func(db *gorm.DB) *gorm.DB) error {
+	if db == nil {
+		return gorm.ErrInvalidDB
+	}
 	err := db.Model(&Api{}).Scopes(scopes...).First(res).Error
 	if err != nil {
 		zap_server.ZAPLOG.Error(err.Error())
@@ -29,6 +32,9 @@ type PageResponse struct {
 }
 
 func (res *PageResponse) Paginate(db *gorm.DB, pageScope func(db *gorm.DB) *gorm.DB, scopes ...func(db *gorm.DB) *gorm.DB) (int64, error) {
+	if db == nil {
+		return 0, gorm.ErrInvalidDB
+	}
 	db = db.Model(&Api{})
 	var count int64
 	if len(scopes) > 0 {
@@ -49,6 +55,9 @@ func (res *PageResponse) Paginate(db *gorm.DB, pageScope func(db *gorm.DB) *gorm
 }
 
 func (res *PageResponse) Find(db *gorm.DB, scopes ...func(db *gorm.DB) *gorm.DB) error {
+	if db == nil {
+		return gorm.ErrInvalidDB
+	}
 	db = db.Model(&Api{})
 	err := db.Scopes(scopes...).Find(&res.Item).Error
 	if err != nil {

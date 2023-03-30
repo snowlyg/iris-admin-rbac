@@ -25,6 +25,9 @@ type Avatar struct {
 
 // Create 添加
 func (item *User) Create(db *gorm.DB) (uint, error) {
+	if db == nil {
+		return 0, gorm.ErrInvalidDB
+	}
 	err := db.Model(item).Create(item).Error
 	if err != nil {
 		zap_server.ZAPLOG.Error(err.Error())
@@ -35,6 +38,9 @@ func (item *User) Create(db *gorm.DB) (uint, error) {
 
 // Update 更新
 func (item *User) Update(db *gorm.DB, scopes ...func(db *gorm.DB) *gorm.DB) error {
+	if db == nil {
+		return gorm.ErrInvalidDB
+	}
 	err := db.Model(item).Scopes(scopes...).Updates(item).Error
 	if err != nil {
 		zap_server.ZAPLOG.Error(err.Error())
@@ -45,6 +51,9 @@ func (item *User) Update(db *gorm.DB, scopes ...func(db *gorm.DB) *gorm.DB) erro
 
 // Delete 删除
 func (item *User) Delete(db *gorm.DB, scopes ...func(db *gorm.DB) *gorm.DB) error {
+	if db == nil {
+		return gorm.ErrInvalidDB
+	}
 	err := db.Model(item).Unscoped().Scopes(scopes...).Delete(item).Error
 	if err != nil {
 		zap_server.ZAPLOG.Error(err.Error())

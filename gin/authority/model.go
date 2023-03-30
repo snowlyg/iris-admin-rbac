@@ -34,6 +34,9 @@ func (item *Authority) mc() map[string]interface{} {
 
 // Create 添加
 func (item *Authority) Create(db *gorm.DB) (uint, error) {
+	if db == nil {
+		return 0, gorm.ErrInvalidDB
+	}
 	err := db.Model(item).Create(item).Error
 	if err != nil {
 		zap_server.ZAPLOG.Error(err.Error())
@@ -44,6 +47,9 @@ func (item *Authority) Create(db *gorm.DB) (uint, error) {
 
 // Update 更新
 func (item *Authority) Update(db *gorm.DB, scopes ...func(db *gorm.DB) *gorm.DB) error {
+	if db == nil {
+		return gorm.ErrInvalidDB
+	}
 	err := db.Model(item).Scopes(scopes...).Updates(item.mc()).Error
 	if err != nil {
 		zap_server.ZAPLOG.Error(err.Error())
@@ -54,6 +60,9 @@ func (item *Authority) Update(db *gorm.DB, scopes ...func(db *gorm.DB) *gorm.DB)
 
 // Delete 删除
 func (item *Authority) Delete(db *gorm.DB, scopes ...func(db *gorm.DB) *gorm.DB) error {
+	if db == nil {
+		return gorm.ErrInvalidDB
+	}
 	err := db.Model(item).Unscoped().Scopes(scopes...).Delete(item).Error
 	if err != nil {
 		zap_server.ZAPLOG.Error(err.Error())

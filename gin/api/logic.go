@@ -11,6 +11,9 @@ import (
 
 // CreatenInBatches 批量加入
 func CreatenInBatches(db *gorm.DB, apis ApiCollection) error {
+	if db == nil {
+		return gorm.ErrInvalidDB
+	}
 	err := db.Model(&Api{}).CreateInBatches(&apis, 500).Error
 	if err != nil {
 		zap_server.ZAPLOG.Error(err.Error())
