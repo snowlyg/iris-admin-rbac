@@ -12,7 +12,6 @@ type Authority struct {
 	BaseAuthority
 	Uuid string `json:"uuid" gorm:"uniqueIndex;not null;type:varchar(64);comment:角色标识" binding:"required"`
 
-	Menus    []BaseMenu  `json:"menus" gorm:"many2many:authority_menus;"`
 	Children []Authority `json:"children" gorm:"-"`
 	Perms    [][]string  `json:"perms" gorm:"-"`
 }
@@ -22,22 +21,6 @@ type BaseAuthority struct {
 	AuthorityType int    `json:"authorityType" gorm:"comment:角色类型"`
 	ParentId      uint   `json:"parentId" gorm:"default:0;comment:父角色ID"`
 	DefaultRouter string `json:"defaultRouter" gorm:"comment:默认菜单;default:dashboard"`
-}
-
-type BaseMenu struct {
-	gorm.Model
-	Pid        uint        `gorm:"index:pid;column:pid;type:int unsigned;not null;default:0" json:"pid"`         // 父级id
-	Path       string      `gorm:"column:path;type:varchar(512);not null" json:"path"`                           // 路径
-	Icon       string      `gorm:"column:icon;type:varchar(32);default:''" json:"icon"`                          // 图标
-	MenuName   string      `gorm:"column:menu_name;type:varchar(128);not null;default:''" json:"menu_name"`      // 按钮名
-	Route      string      `gorm:"column:route;type:varchar(64);not null" json:"route"`                          // 路由名称
-	Params     string      `gorm:"column:params;type:varchar(128);not null;default:''" json:"params"`            // 参数
-	Sort       int8        `gorm:"column:sort;type:tinyint;not null;default:0" json:"sort"`                      // 排序
-	Hidden     int         `gorm:"column:hidden;type:tinyint unsigned;not null;default:1" json:"hidden"`         // 是否显示
-	IsTenancy  int         `gorm:"column:is_tenancy;type:tinyint unsigned;not null;default:1" json:"is_tenancy"` // 模块，1 平台， 2商户
-	IsMenu     int         `gorm:"column:is_menu;type:tinyint unsigned;not null;default:1" json:"is_menu"`       // 类型，1菜单 2 权限
-	Authoritys []Authority `json:"authoritys" gorm:"many2many:authority_menus;"`
-	Children   []BaseMenu  `json:"children" gorm:"-"`
 }
 
 func (item *Authority) mc() map[string]interface{} {

@@ -12,7 +12,6 @@ type Response struct {
 	orm.Model
 	BaseAuthority
 	Uuid     string              `json:"uuid"`
-	Menus    []BaseMenu          `json:"menus" gorm:"many2many:authority_menus;"`
 	Children []Response          `json:"children" gorm:"-"`
 	Perms    []map[string]string `json:"perms" gorm:"-"`
 }

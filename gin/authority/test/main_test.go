@@ -6,6 +6,7 @@ import (
 
 	"github.com/snowlyg/httptest"
 	rbac "github.com/snowlyg/iris-admin-rbac/gin"
+	"github.com/snowlyg/iris-admin/server/cache"
 	"github.com/snowlyg/iris-admin/server/web/common"
 	"github.com/snowlyg/iris-admin/server/web/web_gin"
 )
@@ -18,5 +19,6 @@ func TestMain(m *testing.M) {
 	uuid, TestServer = common.BeforeTestMainGin(rbac.PartyFunc, rbac.SeedFunc)
 	code := m.Run()
 	common.AfterTestMain(uuid, true)
+	cache.Remove()
 	os.Exit(code)
 }
