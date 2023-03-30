@@ -13,7 +13,10 @@ func Group(group *gin.RouterGroup) {
 		adminRouter.POST("/createAdmin", CreateAdmin)
 		adminRouter.PUT("/updateAdmin/:id", UpdateAdmin)
 		adminRouter.DELETE("/deleteAdmin/:id", DeleteAdmin)
-		adminRouter.GET("/profile", Profile)
-		adminRouter.POST("/changeAvatar", ChangeAvatar)
+	}
+	profileRouter := group.Group("/profile", middleware.Auth(), middleware.CasbinHandler())
+	{
+		profileRouter.GET("/", Profile)
+		profileRouter.POST("/changeAvatar", ChangeAvatar)
 	}
 }

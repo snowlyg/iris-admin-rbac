@@ -1,6 +1,7 @@
 package api
 
 import (
+	"github.com/snowlyg/iris-admin/g"
 	"github.com/snowlyg/iris-admin/server/casbin"
 	"github.com/snowlyg/iris-admin/server/database"
 	"github.com/snowlyg/iris-admin/server/database/scope"
@@ -57,7 +58,7 @@ func BatcheDelete(ids []uint) error {
 // GetApisForRole
 func GetApisForRole() (map[int][][]string, error) {
 	apis := ApiCollection{}
-	err := database.Instance().Model(&Api{}).Find(&apis).Error
+	err := database.Instance().Model(&Api{}).Where("is_menu=?", g.StatusUnknown).Find(&apis).Error
 	if err != nil {
 		zap_server.ZAPLOG.Error(err.Error())
 		return nil, err

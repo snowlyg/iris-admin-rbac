@@ -5,6 +5,13 @@ import (
 	"gorm.io/gorm"
 )
 
+// IsMenuScope
+func IsMenuScope(isMenu int) func(db *gorm.DB) *gorm.DB {
+	return func(db *gorm.DB) *gorm.DB {
+		return db.Where("is_menu = ?", isMenu)
+	}
+}
+
 // AuthorityTypeScope
 func AuthorityTypeScope(authorityType int) func(db *gorm.DB) *gorm.DB {
 	return func(db *gorm.DB) *gorm.DB {

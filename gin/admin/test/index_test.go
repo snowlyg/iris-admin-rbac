@@ -15,7 +15,8 @@ import (
 )
 
 var (
-	url = "/api/v1/admin"
+	url        = "/api/v1/admin"
+	profileUrl = "/api/v1/profile"
 )
 
 func TestErrorLoginWith401(t *testing.T) {
@@ -301,7 +302,7 @@ func TestChangeAvatar(t *testing.T) {
 	data := map[string]interface{}{
 		"headerImg": "/avatar.png",
 	}
-	TestClient.POST(fmt.Sprintf("%s/changeAvatar", url), httptest.SuccessResponse, httptest.NewWithJsonParamFunc(data))
+	TestClient.POST(fmt.Sprintf("%s/changeAvatar", profileUrl), httptest.SuccessResponse, httptest.NewWithJsonParamFunc(data))
 
 	profile := httptest.Responses{
 		{Key: "id", Value: 1, Type: "ge"},
@@ -321,7 +322,7 @@ func TestChangeAvatar(t *testing.T) {
 		{Key: "updatedAt", Value: "", Type: "notempty"},
 		{Key: "createdAt", Value: "", Type: "notempty"},
 	}
-	TestClient.GET(fmt.Sprintf("%s/profile", url), httptest.NewResponses(http.StatusOK, response.ResponseOkMessage, profile))
+	TestClient.GET(profileUrl, httptest.NewResponses(http.StatusOK, response.ResponseOkMessage, profile))
 }
 
 func Create(TestClient *httptest.Client, data map[string]interface{}) uint {

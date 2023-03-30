@@ -22,10 +22,12 @@ type BaseApi struct {
 	ApiGroup      string `json:"apiGroup" gorm:"comment:api组" binding:"required"`
 	Method        string `json:"method" gorm:"default:POST;comment:方法" binding:"required"`
 	AuthorityType int    `json:"authorityType" gorm:"comment:角色类型"`
+	IsMenu        int    `gorm:"column:is_menu;type:tinyint(1);not null;default:0" json:"isMenu"` // 是否显示 1为正常，0为禁止
 }
 
 func (item *Api) mc() map[string]interface{} {
 	return map[string]interface{}{
+		"is_menu":        item.IsMenu,
 		"path":           item.Path,
 		"description":    item.Description,
 		"api_group":      item.ApiGroup,

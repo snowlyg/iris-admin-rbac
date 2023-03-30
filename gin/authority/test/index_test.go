@@ -102,10 +102,6 @@ func TestList(t *testing.T) {
 							{Key: "method", Value: "GET"},
 						},
 						{
-							{Key: "path", Value: "/api/v1/admin/profile"},
-							{Key: "method", Value: "GET"},
-						},
-						{
 							{Key: "path", Value: "/api/v1/public/captcha"},
 							{Key: "method", Value: "GET"},
 						},
@@ -118,16 +114,12 @@ func TestList(t *testing.T) {
 							{Key: "method", Value: "GET"},
 						},
 						{
-							{Key: "path", Value: "/api/v1/oplog/getOplogList"},
+							{Key: "path", Value: "/api/v1/profile"},
 							{Key: "method", Value: "GET"},
 						},
 						{
-							{Key: "path", Value: "/api/v1/admin/createAdmin"},
-							{Key: "method", Value: "POST"},
-						},
-						{
-							{Key: "path", Value: "/api/v1/admin/changeAvatar"},
-							{Key: "method", Value: "POST"},
+							{Key: "path", Value: "/api/v1/oplog/getOplogList"},
+							{Key: "method", Value: "GET"},
 						},
 						{
 							{Key: "path", Value: "/api/v1/authority/createAuthority"},
@@ -139,6 +131,14 @@ func TestList(t *testing.T) {
 						},
 						{
 							{Key: "path", Value: "/api/v1/api/createApi"},
+							{Key: "method", Value: "POST"},
+						},
+						{
+							{Key: "path", Value: "/api/v1/admin/createAdmin"},
+							{Key: "method", Value: "POST"},
+						},
+						{
+							{Key: "path", Value: "/api/v1/profile/changeAvatar"},
 							{Key: "method", Value: "POST"},
 						},
 						{

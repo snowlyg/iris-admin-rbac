@@ -67,9 +67,10 @@ func TestList(t *testing.T) {
 					{Key: "id", Value: 1},
 					{Key: "path", Value: "/api/v1/authority/getAuthorityList"},
 					{Key: "description", Value: "GetAuthorityList"},
-					{Key: "apiGroup", Value: "authority"},
+					{Key: "apiGroup", Value: "角色管理"},
 					{Key: "method", Value: "GET"},
 					{Key: "authorityType", Value: 1},
+					{Key: "isMenu", Value: 0},
 					{Key: "updatedAt", Value: "", Type: "notempty"},
 					{Key: "createdAt", Value: "", Type: "notempty"}},
 			}},
@@ -93,9 +94,10 @@ func TestList(t *testing.T) {
 					{Key: "id", Value: 14},
 					{Key: "path", Value: "/api/v1/oplog/getOplogList"},
 					{Key: "description", Value: "GetOplogList"},
-					{Key: "apiGroup", Value: "oplog"},
+					{Key: "apiGroup", Value: "操作日志"},
 					{Key: "method", Value: "GET"},
 					{Key: "authorityType", Value: 1},
+					{Key: "isMenu", Value: 0},
 					{Key: "updatedAt", Value: "", Type: "notempty"},
 					{Key: "createdAt", Value: "", Type: "notempty"}},
 			}, Length: 1},
@@ -119,11 +121,13 @@ func TestList(t *testing.T) {
 					{Key: "id", Value: 1},
 					{Key: "path", Value: "/api/v1/authority/getAuthorityList"},
 					{Key: "description", Value: "GetAuthorityList"},
-					{Key: "apiGroup", Value: "authority"},
+					{Key: "apiGroup", Value: "角色管理"},
 					{Key: "method", Value: "GET"},
 					{Key: "authorityType", Value: 1},
+					{Key: "isMenu", Value: 0},
 					{Key: "updatedAt", Value: "", Type: "notempty"},
-					{Key: "createdAt", Value: "", Type: "notempty"}},
+					{Key: "createdAt", Value: "", Type: "notempty"},
+				},
 			}, Length: 1},
 			{Key: "total", Value: 14},
 		}
@@ -145,15 +149,16 @@ func TestList(t *testing.T) {
 					{Key: "id", Value: 1},
 					{Key: "path", Value: "/api/v1/authority/getAuthorityList"},
 					{Key: "description", Value: "GetAuthorityList"},
-					{Key: "apiGroup", Value: "authority"},
+					{Key: "apiGroup", Value: "角色管理"},
 					{Key: "method", Value: "GET"},
 					{Key: "authorityType", Value: 1},
+					{Key: "isMenu", Value: 0},
 					{Key: "updatedAt", Value: "", Type: "notempty"},
 					{Key: "createdAt", Value: "", Type: "notempty"}},
 			}, Length: 1},
 			{Key: "total", Value: 8},
 		}
-		data := map[string]interface{}{"page": 1, "pageSize": 10, "apiGroup": "authority"}
+		data := map[string]interface{}{"page": 1, "pageSize": 10, "apiGroup": "角色管理"}
 		TestClient.GET(fmt.Sprintf("%s/getList", url), httptest.NewResponses(http.StatusOK, response.ResponseOkMessage, pageKeys), httptest.NewWithQueryObjectParamFunc(data))
 	})
 }
@@ -193,6 +198,7 @@ func TestCreate(t *testing.T) {
 		"apiGroup":      "apiGroup",
 		"description":   "测试描述信息",
 		"method":        "GET",
+		"isMenu":        1,
 		"authorityType": multi.AdminAuthority,
 	}
 	id := Create(TestClient, data)
@@ -214,6 +220,7 @@ func TestUpdate(t *testing.T) {
 		"apiGroup":      "apiGroup",
 		"description":   "测试描述信息",
 		"method":        "GET",
+		"isMenu":        1,
 		"authorityType": multi.AdminAuthority,
 	}
 	id := Create(TestClient, data)
@@ -227,6 +234,7 @@ func TestUpdate(t *testing.T) {
 		"apiGroup":      "apiGroup",
 		"description":   "测试描述信息",
 		"method":        "GET",
+		"isMenu":        1,
 		"authorityType": multi.AdminAuthority,
 	}
 
@@ -245,6 +253,7 @@ func TestGetById(t *testing.T) {
 		"apiGroup":      "apiGroup",
 		"description":   "测试描述信息",
 		"method":        "GET",
+		"isMenu":        1,
 		"authorityType": multi.AdminAuthority,
 	}
 	id := Create(TestClient, data)
@@ -259,6 +268,7 @@ func TestGetById(t *testing.T) {
 		{Key: "apiGroup", Value: data["apiGroup"].(string)},
 		{Key: "description", Value: data["description"].(string)},
 		{Key: "method", Value: data["method"].(string)},
+		{Key: "isMenu", Value: data["isMenu"].(int)},
 		{Key: "authorityType", Value: data["authorityType"].(int)},
 		{Key: "updatedAt", Value: "", Type: "notempty"},
 		{Key: "createdAt", Value: "", Type: "notempty"},
@@ -296,6 +306,7 @@ func getAllApis(authorityType int) ([]httptest.Responses, error) {
 					{Key: "description", Value: routeChild.Description},
 					{Key: "apiGroup", Value: routeChild.ApiGroup},
 					{Key: "method", Value: routeChild.Method},
+					{Key: "isMenu", Value: routeChild.IsMenu},
 					{Key: "authorityType", Value: routeChild.AuthorityType},
 					{Key: "updatedAt", Value: routeChild.UpdatedAt},
 					{Key: "createdAt", Value: routeChild.CreatedAt},
@@ -310,6 +321,7 @@ func getAllApis(authorityType int) ([]httptest.Responses, error) {
 			{Key: "apiGroup", Value: route.ApiGroup},
 			{Key: "method", Value: route.Method},
 			{Key: "authorityType", Value: route.AuthorityType},
+			{Key: "isMenu", Value: route.IsMenu},
 			{Key: "updatedAt", Value: route.UpdatedAt},
 			{Key: "createdAt", Value: route.CreatedAt},
 			{Key: "children", Value: children},
@@ -341,6 +353,7 @@ func getPageApis(pageParam PageParam) ([]httptest.Responses, error) {
 			{Key: "description", Value: route.Description},
 			{Key: "apiGroup", Value: route.ApiGroup},
 			{Key: "method", Value: route.Method},
+			{Key: "isMenu", Value: route.IsMenu},
 			{Key: "authorityType", Value: route.AuthorityType},
 			{Key: "updatedAt", Value: route.UpdatedAt},
 			{Key: "createdAt", Value: route.CreatedAt},

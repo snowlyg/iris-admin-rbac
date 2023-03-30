@@ -1,10 +1,41 @@
 package api
 
 import (
+	"sync"
+
 	"github.com/gookit/color"
 	"github.com/snowlyg/iris-admin/server/database"
 	"gorm.io/gorm"
 )
+
+var GroupNames = GroupName{
+	M: map[string]string{
+		"public":    "公共",
+		"oplog":     "操作日志",
+		"api":       "路由管理",
+		"admin":     "管理员管理",
+		"authority": "角色管理",
+	},
+}
+
+type GroupName struct {
+	M map[string]string
+	sync.Mutex
+}
+
+func (gn *GroupName) Add(k, v string) {
+	gn.Lock()
+	defer gn.Unlock()
+
+	gn.M[k] = v
+}
+
+func (gn *GroupName) Get(k string) string {
+	gn.Lock()
+	defer gn.Unlock()
+
+	return gn.M[k]
+}
 
 type source struct {
 	routes         []map[string]string
@@ -21,10 +52,14 @@ func New(routes []map[string]string, authorityTypes map[string]int) *source {
 func (s *source) GetSources() ApiCollection {
 	apis := make(ApiCollection, 0, len(s.routes))
 	for _, permRoute := range s.routes {
+		group := permRoute["group"]
+		if g := GroupNames.Get(group); g != "" {
+			group = g
+		}
 		api := Api{BaseApi: BaseApi{
 			Path:          permRoute["path"],
 			Description:   permRoute["desc"],
-			ApiGroup:      permRoute["group"],
+			ApiGroup:      group,
 			AuthorityType: s.AuthorityTypes[permRoute["path"]],
 			Method:        permRoute["method"],
 		}}
