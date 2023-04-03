@@ -146,6 +146,10 @@ func TestList(t *testing.T) {
 							{Key: "method", Value: "POST"},
 						},
 						{
+							{Key: "path", Value: "/api/v1/file/upload"},
+							{Key: "method", Value: "POST"},
+						},
+						{
 							{Key: "path", Value: "/api/v1/api/deleteApi/:id"},
 							{Key: "method", Value: "DELETE"},
 						},
