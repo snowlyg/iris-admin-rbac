@@ -1,4 +1,4 @@
-package test
+package tests
 
 import (
 	"fmt"
@@ -177,7 +177,7 @@ func TestGetAll(t *testing.T) {
 		if err != nil {
 			t.Fatalf("获取路由权限错误")
 		}
-		if len(items) != 5 {
+		if len(items) != 6 {
 			t.Errorf("接口需要返回 %d 个路由，实际返回了 %d 个数据", len(routes), len(items))
 		}
 
