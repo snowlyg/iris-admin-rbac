@@ -31,3 +31,9 @@ func TestPublicCaptcha(t *testing.T) {
 	requestParams := map[string]interface{}{"page": 1, "pageSize": 10, "orderBy": "id"}
 	TestClient.GET(fmt.Sprintf("%s/captcha", url), httptest.NewResponses(http.StatusOK, response.ResponseOkMessage, pageKeys), httptest.NewWithQueryObjectParamFunc(requestParams))
 }
+
+func TestLoginError(t *testing.T) {
+	TestClient := httptest.Instance(t, TestServer.GetEngine(), str.Join("http://", web.CONFIG.System.Addr))
+	requestParams := map[string]interface{}{"username": "admin1", "password": "123456"}
+	TestClient.POST(fmt.Sprintf("%s/admin/login", url), httptest.NewResponses(http.StatusBadRequest, "用户名或密码错误", nil), httptest.NewWithJsonParamFunc(requestParams))
+}

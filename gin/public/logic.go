@@ -11,6 +11,7 @@ import (
 	"github.com/snowlyg/multi"
 	"go.uber.org/zap"
 	"golang.org/x/crypto/bcrypt"
+	"gorm.io/gorm"
 )
 
 var (
@@ -25,9 +26,14 @@ func GetAccessToken(req *LoginRequest) (*LoginResponse, error) {
 		return nil, ErrCaptcha
 	}
 	admin, err := admin.FindPasswordByUserName(database.Instance(), req.Username)
-	if err != nil {
+	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
 		return nil, err
 	}
+
+	if admin == nil || admin.Id == 0 {
+		return nil, ErrUserNameOrPassword
+	}
+
 	if err := bcrypt.CompareHashAndPassword([]byte(admin.Password), []byte(req.Password)); err != nil {
 		zap_server.ZAPLOG.Error("用户名或密码错误:",
 			zap.String("密码:", req.Password),
@@ -35,6 +41,7 @@ func GetAccessToken(req *LoginRequest) (*LoginResponse, error) {
 			zap.String("错误:", err.Error()))
 		return nil, ErrUserNameOrPassword
 	}
+
 	expiresAt := time.Now().Local().Add(time.Duration(web.CONFIG.SessionTimeout) * time.Minute).Unix()
 	claims := multi.New(&multi.Multi{
 		Id:            admin.Id,

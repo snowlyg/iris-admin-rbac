@@ -11,6 +11,7 @@ import (
 	"github.com/snowlyg/multi"
 	"go.uber.org/zap"
 	"golang.org/x/crypto/bcrypt"
+	"gorm.io/gorm"
 )
 
 var (
@@ -20,8 +21,12 @@ var (
 // GetAccessToken 登录
 func GetAccessToken(req *LoginRequest) (string, uint, error) {
 	admin, err := user.FindPasswordByUserName(database.Instance(), req.Username)
-	if err != nil {
+	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
 		return "", 0, err
+	}
+
+	if admin == nil || admin.Id == 0 {
+		return "", 0, ErrUserNameOrPassword
 	}
 
 	if err := bcrypt.CompareHashAndPassword([]byte(admin.Password), []byte(req.Password)); err != nil {
