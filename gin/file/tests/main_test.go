@@ -17,7 +17,8 @@ import (
 var TestServer *web_gin.WebServer
 
 func TestMain(m *testing.M) {
-	g.RootPath = filepath.ToSlash(filepath.Join("/home/go/src/github.com/snowlyg/iris-admin-rbac", strings.TrimSpace(g.RBAC_CONFIG.Path)))
+	gopath := os.Getenv("GOPATH")
+	g.RootPath = filepath.ToSlash(filepath.Join(gopath, "/src/github.com/snowlyg/iris-admin-rbac", strings.TrimSpace(g.RBAC_CONFIG.Path)))
 	var uuid string
 	uuid, TestServer = common.BeforeTestMainGin(rbac.PartyFunc, rbac.SeedFunc)
 	code := m.Run()
