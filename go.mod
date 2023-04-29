@@ -10,7 +10,7 @@ require (
 	github.com/kataras/iris/v12 v12.2.0-beta3
 	github.com/mojocn/base64Captcha v1.3.5
 	github.com/snowlyg/helper v0.1.41
-	github.com/snowlyg/httptest v0.1.13
+	github.com/snowlyg/httptest v0.1.14
 	github.com/snowlyg/iris-admin v1.2.13
 	github.com/snowlyg/multi v0.0.42
 	go.uber.org/zap v1.19.1
