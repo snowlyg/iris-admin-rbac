@@ -49,6 +49,7 @@ func (item *Admin) mc() map[string]interface{} {
 		"header_img": item.HeaderImg,
 	}
 	if item.Password != "" {
+
 		data["password"] = item.Password
 	}
 	return data

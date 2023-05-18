@@ -191,7 +191,6 @@ func TestCreate(t *testing.T) {
 }
 
 func TestUpdate(t *testing.T) {
-
 	TestClient := httptest.Instance(t, TestServer.GetEngine(), str.Join("http://", web.CONFIG.System.Addr))
 	TestClient.Login(rbac.LoginUrl, "", httptest.NewResponses(http.StatusOK, response.ResponseOkMessage, rbac.LoginResponse))
 	if TestClient == nil {
@@ -216,7 +215,7 @@ func TestUpdate(t *testing.T) {
 		"nickName":     "测试名称",
 		"email":        "get@admin.com",
 		"phone":        "13800138001",
-		"password":     "123456",
+		"password":     "13800138001",
 		"authorityIds": []string{"super_admin", "tenancy_admin"},
 		"status":       g.StatusUnknown,
 		"isShow":       g.StatusTrue,
@@ -248,6 +247,22 @@ func TestUpdate(t *testing.T) {
 		}},
 	}
 	TestClient.GET(fmt.Sprintf("%s/getAdmin/%d", url, id), httptest.NewResponses(http.StatusOK, response.ResponseOkMessage, pageKeys))
+
+	t.Run("tests password", func(t *testing.T) {
+		defer func() {
+			rbac.LoginResponse = httptest.Responses{
+				{Key: "accessToken", Value: "", Type: "notempty"},
+				{Key: "user", Value: httptest.Responses{
+					{Key: "id", Value: 0, Type: "ge"}}},
+			}
+		}()
+		TestClient = httptest.Instance(t, TestServer.GetEngine(), str.Join("http://", web.CONFIG.System.Addr))
+		loginFunc := httptest.NewWithJsonParamFunc(map[string]interface{}{"username": "create_test_username_for_update", "password": "13800138001"})
+		TestClient.Login(rbac.LoginUrl, "", httptest.NewResponses(http.StatusOK, response.ResponseOkMessage, rbac.LoginResponse), loginFunc)
+		if TestClient == nil {
+			return
+		}
+	})
 }
 
 func TestGetById(t *testing.T) {

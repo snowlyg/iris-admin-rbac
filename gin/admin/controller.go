@@ -9,6 +9,7 @@ import (
 	"github.com/snowlyg/iris-admin/server/database/scope"
 	"github.com/snowlyg/iris-admin/server/web/web_gin/response"
 	multi "github.com/snowlyg/multi/gin"
+	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
 )
 
@@ -77,9 +78,13 @@ func UpdateAdmin(ctx *gin.Context) {
 		response.FailWithMessage(err.Error(), ctx)
 		return
 	}
-
-	admin := &Admin{BaseAdmin: req.BaseAdmin, AuthorityIds: req.AuthorityUuids}
-	err := admin.Update(database.Instance(), scope.IdScope(reqId.Id))
+	hash, err := bcrypt.GenerateFromPassword([]byte(req.Password), bcrypt.DefaultCost)
+	if err != nil {
+		response.FailWithMessage(err.Error(), ctx)
+		return
+	}
+	admin := &Admin{BaseAdmin: req.BaseAdmin, AuthorityIds: req.AuthorityUuids, Password: string(hash)}
+	err = admin.Update(database.Instance(), scope.IdScope(reqId.Id))
 	if err != nil {
 		response.FailWithMessage(err.Error(), ctx)
 		return
