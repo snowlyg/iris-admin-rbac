@@ -78,13 +78,16 @@ func UpdateAdmin(ctx *gin.Context) {
 		response.FailWithMessage(err.Error(), ctx)
 		return
 	}
-	hash, err := bcrypt.GenerateFromPassword([]byte(req.Password), bcrypt.DefaultCost)
-	if err != nil {
-		response.FailWithMessage(err.Error(), ctx)
-		return
+	admin := &Admin{BaseAdmin: req.BaseAdmin, AuthorityIds: req.AuthorityUuids}
+	if req.Password != "" {
+		hash, err := bcrypt.GenerateFromPassword([]byte(req.Password), bcrypt.DefaultCost)
+		if err != nil {
+			response.FailWithMessage(err.Error(), ctx)
+			return
+		}
+		admin.Password = string(hash)
 	}
-	admin := &Admin{BaseAdmin: req.BaseAdmin, AuthorityIds: req.AuthorityUuids, Password: string(hash)}
-	err = admin.Update(database.Instance(), scope.IdScope(reqId.Id))
+	err := admin.Update(database.Instance(), scope.IdScope(reqId.Id))
 	if err != nil {
 		response.FailWithMessage(err.Error(), ctx)
 		return
