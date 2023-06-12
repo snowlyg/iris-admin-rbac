@@ -50,7 +50,7 @@ func GetApiList(ctx *gin.Context) {
 		return
 	}
 	items := &PageResponse{}
-	scopes := []func(db *gorm.DB) *gorm.DB{}
+	scopes := []func(db *gorm.DB) *gorm.DB{IsApiScope()}
 	if pageInfo.AuthorityType.AuthorityType > 0 {
 		scopes = append(scopes, AuthorityTypeScope(pageInfo.AuthorityType.AuthorityType))
 	}
@@ -120,7 +120,7 @@ func GetAllApis(ctx *gin.Context) {
 		return
 	}
 	res := &PageResponse{}
-	err := res.Find(database.Instance(), AuthorityTypeScope(req.AuthorityType))
+	err := res.Find(database.Instance(), AuthorityTypeScope(req.AuthorityType), IsApiScope())
 	if err != nil {
 		response.FailWithMessage(err.Error(), ctx)
 		return

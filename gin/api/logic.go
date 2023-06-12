@@ -60,7 +60,7 @@ func BatcheDelete(ids []uint) error {
 // GetApisForRole
 func GetApisForRole() (map[int][][]string, error) {
 	apis := ApiCollection{}
-	err := database.Instance().Model(&Api{}).Find(&apis).Error
+	err := database.Instance().Model(&Api{}).Where("is_menu<?", 2).Find(&apis).Error
 	if err != nil {
 		zap_server.ZAPLOG.Error(err.Error())
 		return nil, err

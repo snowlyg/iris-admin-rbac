@@ -6,9 +6,16 @@ import (
 )
 
 // IsMenuScope
-func IsMenuScope(isMenu int) func(db *gorm.DB) *gorm.DB {
+func IsMenuScope() func(db *gorm.DB) *gorm.DB {
 	return func(db *gorm.DB) *gorm.DB {
-		return db.Where("is_menu = ?", isMenu)
+		return db.Where("is_menu > ?", 0)
+	}
+}
+
+// IsApiScope
+func IsApiScope() func(db *gorm.DB) *gorm.DB {
+	return func(db *gorm.DB) *gorm.DB {
+		return db.Where("is_menu < ?", 2)
 	}
 }
 

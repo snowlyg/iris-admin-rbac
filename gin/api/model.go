@@ -22,7 +22,7 @@ type BaseApi struct {
 	ApiGroup      string `json:"apiGroup" gorm:"comment:api组" binding:"required"`
 	Method        string `json:"method" gorm:"default:POST;comment:方法" binding:"required"`
 	AuthorityType int    `json:"authorityType" gorm:"comment:角色类型"`
-	IsMenu        int64  `gorm:"column:is_menu;type:tinyint(1);not null;default:0" json:"isMenu"` // 是否显示 2:menu and api, 1为 menu，0为 api
+	IsMenu        int64  `gorm:"column:is_menu;type:tinyint(1);not null;default:0" json:"isMenu"` // 是否显示 2:menu, 1为 menu and api，0为 api
 }
 
 func (item *Api) mc() map[string]interface{} {
