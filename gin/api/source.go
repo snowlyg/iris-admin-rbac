@@ -1,6 +1,7 @@
 package api
 
 import (
+	"strconv"
 	"sync"
 
 	"github.com/gookit/color"
@@ -42,6 +43,7 @@ type source struct {
 	AuthorityTypes map[string]int
 }
 
+// New
 func New(routes []map[string]string, authorityTypes map[string]int) *source {
 	return &source{
 		routes:         routes,
@@ -56,12 +58,15 @@ func (s *source) GetSources() ApiCollection {
 		if g := GroupNames.Get(group); g != "" {
 			group = g
 		}
+		var isMenu int64 = 0
+		isMenu, _ = strconv.ParseInt(permRoute["is_menu"], 10, 64)
 		api := Api{BaseApi: BaseApi{
 			Path:          permRoute["path"],
 			Description:   permRoute["desc"],
 			ApiGroup:      group,
 			AuthorityType: s.AuthorityTypes[permRoute["path"]],
 			Method:        permRoute["method"],
+			IsMenu:        isMenu,
 		}}
 		apis = append(apis, api)
 	}

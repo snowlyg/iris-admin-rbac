@@ -70,7 +70,7 @@ func TestList(t *testing.T) {
 					{Key: "apiGroup", Value: "角色管理"},
 					{Key: "method", Value: "GET"},
 					{Key: "authorityType", Value: 1},
-					{Key: "isMenu", Value: 0},
+					{Key: "isMenu", Value: 1},
 					{Key: "updatedAt", Value: "", Type: "notempty"},
 					{Key: "createdAt", Value: "", Type: "notempty"}},
 			}},
@@ -124,7 +124,7 @@ func TestList(t *testing.T) {
 					{Key: "apiGroup", Value: "角色管理"},
 					{Key: "method", Value: "GET"},
 					{Key: "authorityType", Value: 1},
-					{Key: "isMenu", Value: 0},
+					{Key: "isMenu", Value: 1},
 					{Key: "updatedAt", Value: "", Type: "notempty"},
 					{Key: "createdAt", Value: "", Type: "notempty"},
 				},
@@ -152,7 +152,7 @@ func TestList(t *testing.T) {
 					{Key: "apiGroup", Value: "角色管理"},
 					{Key: "method", Value: "GET"},
 					{Key: "authorityType", Value: 1},
-					{Key: "isMenu", Value: 0},
+					{Key: "isMenu", Value: 1},
 					{Key: "updatedAt", Value: "", Type: "notempty"},
 					{Key: "createdAt", Value: "", Type: "notempty"}},
 			}, Length: 1},
@@ -368,6 +368,7 @@ func getPageApis(pageParam PageParam) ([]httptest.Responses, error) {
 	return routes, err
 }
 
+// getPageParams
 func getPageParams() []PageParam {
 	routes, _ := TestServer.GetSources()
 	pageSize := 10

@@ -10,7 +10,7 @@ import (
 	"gorm.io/gorm"
 )
 
-var ErrRoleNameInvalide = errors.New("角色标识已经被使用")
+var ErrRoleNameInvalide = errors.New("this role name is be used")
 
 // GetAdminRoleName 获管理员角色名称
 func GetAdminRoleName() string {
@@ -99,7 +99,7 @@ func IsAdminRole(id uint) error {
 		return err
 	}
 	if authority.AuthorityName == GetAdminRoleName() {
-		return errors.New("不能操作超级管理员")
+		return errors.New("can't oprate admin user")
 	}
 	return nil
 }
@@ -132,7 +132,6 @@ func AddPermForRole(uuid string, perms [][]string) error {
 	}
 
 	if len(perms) == 0 {
-		zap_server.ZAPLOG.Debug("权限数据为空")
 		return nil
 	}
 
@@ -140,15 +139,13 @@ func AddPermForRole(uuid string, perms [][]string) error {
 	for _, perm := range perms {
 		newPerms = append(newPerms, append([]string{uuid}, perm...))
 	}
-	zap_server.ZAPLOG.Info("添加权限到角色:", zap_server.Strings("新权限", newPerms))
 	b, err := casbin.Instance().AddPolicies(newPerms)
 	if err != nil {
 		zap_server.ZAPLOG.Error(err.Error())
 		return err
 	}
 	if !b {
-		zap_server.ZAPLOG.Error("权限添加失败")
-		return errors.New("权限添加失败")
+		return errors.New("perm add failed")
 	}
 
 	return nil

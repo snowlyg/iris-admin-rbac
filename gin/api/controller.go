@@ -2,7 +2,6 @@ package api
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/snowlyg/iris-admin/g"
 	"github.com/snowlyg/iris-admin/server/database"
 	"github.com/snowlyg/iris-admin/server/database/scope"
 	"github.com/snowlyg/iris-admin/server/web/web_gin/request"
@@ -51,7 +50,7 @@ func GetApiList(ctx *gin.Context) {
 		return
 	}
 	items := &PageResponse{}
-	scopes := []func(db *gorm.DB) *gorm.DB{IsMenuScope(g.StatusUnknown)}
+	scopes := []func(db *gorm.DB) *gorm.DB{}
 	if pageInfo.AuthorityType.AuthorityType > 0 {
 		scopes = append(scopes, AuthorityTypeScope(pageInfo.AuthorityType.AuthorityType))
 	}
@@ -121,7 +120,7 @@ func GetAllApis(ctx *gin.Context) {
 		return
 	}
 	res := &PageResponse{}
-	err := res.Find(database.Instance(), AuthorityTypeScope(req.AuthorityType), IsMenuScope(g.StatusUnknown))
+	err := res.Find(database.Instance(), AuthorityTypeScope(req.AuthorityType))
 	if err != nil {
 		response.FailWithMessage(err.Error(), ctx)
 		return
