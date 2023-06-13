@@ -17,5 +17,6 @@ func Group(group *gin.RouterGroup) {
 		authRouter.PUT("/updateAuthority/:id", UpdateAuthority)             // 更新角色
 		authRouter.POST("/copyAuthority/:id", CopyAuthority)                // 复制
 		authRouter.DELETE("/deleteAuthority/:id", DeleteAuthority)          // 删除角色
+		authRouter.GET("/authorityDetail/:id", AuthorityDetail)             // 角色权限
 	}
 }

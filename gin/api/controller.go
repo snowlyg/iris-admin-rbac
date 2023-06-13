@@ -119,17 +119,22 @@ func GetAllApis(ctx *gin.Context) {
 		response.FailWithMessage(err.Error(), ctx)
 		return
 	}
+
 	res := &PageResponse{}
-	err := res.Find(database.Instance(), AuthorityTypeScope(req.AuthorityType), IsApiScope())
+	scopes := []func(db *gorm.DB) *gorm.DB{AuthorityTypeScope(req.AuthorityType)}
+	if req.IsMenu > 0 {
+		scopes = append(scopes, IsMenuScope())
+	} else {
+		scopes = append(scopes, IsApiScope())
+	}
+	err := res.Find(database.Instance(), scopes...)
 	if err != nil {
 		response.FailWithMessage(err.Error(), ctx)
 		return
 	}
 
 	routers := FormatApis(res.Item)
-
 	response.OkWithData(routers, ctx)
-
 }
 
 // DeleteApisByIds 删除选中Api

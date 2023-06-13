@@ -173,8 +173,6 @@ func GetAuthorityList(ctx *gin.Context) {
 		return
 	}
 
-	
-
 	response.OkWithData(response.PageResult{
 		List:     items.Item,
 		Total:    total,
@@ -197,4 +195,20 @@ func DeleteAuthority(ctx *gin.Context) {
 		return
 	}
 	response.Ok(ctx)
+}
+
+// AuthorityDetail
+func AuthorityDetail(ctx *gin.Context) {
+	reqId := &orm.ReqId{}
+	if errs := ctx.ShouldBindUri(&reqId); errs != nil {
+		response.FailWithMessage(errs.Error(), ctx)
+		return
+	}
+	first := new(Response)
+	err := first.First(database.Instance(), scope.IdScope(reqId.Id))
+	if err != nil {
+		response.FailWithMessage(err.Error(), ctx)
+		return
+	}
+	response.OkWithData(first, ctx)
 }

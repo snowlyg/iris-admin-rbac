@@ -91,7 +91,7 @@ func TestList(t *testing.T) {
 			{Key: "page", Value: 1},
 			{Key: "list", Value: []httptest.Responses{
 				{
-					{Key: "id", Value: 14},
+					{Key: "id", Value: 15},
 					{Key: "path", Value: "/api/v1/oplog/getOplogList"},
 					{Key: "description", Value: "GetOplogList"},
 					{Key: "apiGroup", Value: "操作日志"},
@@ -101,7 +101,7 @@ func TestList(t *testing.T) {
 					{Key: "updatedAt", Value: "", Type: "notempty"},
 					{Key: "createdAt", Value: "", Type: "notempty"}},
 			}, Length: 1},
-			{Key: "total", Value: 14},
+			{Key: "total", Value: 15},
 		}
 		data := map[string]interface{}{"page": 1, "pageSize": 10, "method": "GET", "sort": "", "orderBy": "id"}
 		TestClient.GET(fmt.Sprintf("%s/getList", url), httptest.NewResponses(http.StatusOK, response.ResponseOkMessage, pageKeys), httptest.NewWithQueryObjectParamFunc(data))
@@ -129,7 +129,7 @@ func TestList(t *testing.T) {
 					{Key: "createdAt", Value: "", Type: "notempty"},
 				},
 			}, Length: 1},
-			{Key: "total", Value: 14},
+			{Key: "total", Value: 15},
 		}
 		data := map[string]interface{}{"page": 1, "pageSize": 10, "method": "GET"}
 		TestClient.GET(fmt.Sprintf("%s/getList", url), httptest.NewResponses(http.StatusOK, response.ResponseOkMessage, pageKeys), httptest.NewWithQueryObjectParamFunc(data))
@@ -156,7 +156,7 @@ func TestList(t *testing.T) {
 					{Key: "updatedAt", Value: "", Type: "notempty"},
 					{Key: "createdAt", Value: "", Type: "notempty"}},
 			}, Length: 1},
-			{Key: "total", Value: 8},
+			{Key: "total", Value: 9},
 		}
 		data := map[string]interface{}{"page": 1, "pageSize": 10, "apiGroup": "角色管理"}
 		TestClient.GET(fmt.Sprintf("%s/getList", url), httptest.NewResponses(http.StatusOK, response.ResponseOkMessage, pageKeys), httptest.NewWithQueryObjectParamFunc(data))
@@ -183,6 +183,22 @@ func TestGetAll(t *testing.T) {
 
 		data := map[string]interface{}{"authorityType": multi.AdminAuthority}
 		TestClient.GET(fmt.Sprintf("%s/getAll", url), httptest.NewResponsesWithLength(http.StatusOK, response.ResponseOkMessage, items, len(items)), httptest.NewWithQueryObjectParamFunc(data))
+	})
+	t.Run("路由权限测试 menu", func(t *testing.T) {
+		pageKeys := []httptest.Responses{
+			{
+				{Key: "id", Value: 1},
+				{Key: "path", Value: "/api/v1/authority/getAuthorityList"},
+				{Key: "description", Value: "GetAuthorityList"},
+				{Key: "apiGroup", Value: "角色管理"},
+				{Key: "method", Value: "GET"},
+				{Key: "authorityType", Value: 1},
+				{Key: "isMenu", Value: 1},
+				{Key: "updatedAt", Value: "", Type: "notempty"},
+				{Key: "createdAt", Value: "", Type: "notempty"}},
+		}
+		data := map[string]interface{}{"authorityType": multi.NoneAuthority, "isMenu": 1}
+		TestClient.GET(fmt.Sprintf("%s/getAll", url), httptest.NewResponsesWithLength(http.StatusOK, response.ResponseOkMessage, pageKeys, 1), httptest.NewWithQueryObjectParamFunc(data))
 	})
 }
 

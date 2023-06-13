@@ -1,6 +1,8 @@
 package api
 
 import (
+	"fmt"
+
 	"github.com/snowlyg/helper/arr"
 	"github.com/snowlyg/iris-admin/server/database/orm"
 	"github.com/snowlyg/iris-admin/server/zap_server"
@@ -71,26 +73,30 @@ func (res *PageResponse) Find(db *gorm.DB, scopes ...func(db *gorm.DB) *gorm.DB)
 // FormatApis
 func FormatApis(items []*Response) []*Response {
 	routers := []*Response{}
-	if len(items) > 0 {
-		// NOTICE: api,admin,authority,public,oplog
-		parentApiCheck := arr.NewCheckArrayType(5)
-		for i := 0; i < len(items); i++ {
-			if !parentApiCheck.Check(items[i].ApiGroup) {
-				router := &Response{}
-				router.Path = "/"
-				router.Description = items[i].ApiGroup
-				routers = append(routers, router)
-				parentApiCheck.Add(items[i].ApiGroup)
-			}
+	if len(items) == 0 {
+		return routers
+	}
+	// NOTICE: api,admin,authority,public,oplog
+	parentApiCheck := arr.NewCheckArrayType(5)
+	paranetId := 0
+	for i := 0; i < len(items); i++ {
+		if !parentApiCheck.Check(items[i].ApiGroup) {
+			router := &Response{}
+			router.Path = fmt.Sprintf("/%d", paranetId)
+			router.Description = items[i].ApiGroup
+			routers = append(routers, router)
+			parentApiCheck.Add(items[i].ApiGroup)
+			paranetId++
 		}
+	}
 
-		for i := 0; i < len(items); i++ {
-			for _, router := range routers {
-				if router.Description == items[i].ApiGroup {
-					router.Children = append(router.Children, items[i])
-				}
+	for i := 0; i < len(items); i++ {
+		for _, router := range routers {
+			if router.Description == items[i].ApiGroup {
+				router.Children = append(router.Children, items[i])
 			}
 		}
 	}
+
 	return routers
 }

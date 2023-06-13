@@ -64,120 +64,120 @@ func TestList(t *testing.T) {
 					{Key: "authorityName", Value: "超级管理员"},
 					{Key: "authorityType", Value: multi.AdminAuthority},
 					{Key: "parentId", Value: 0},
-					{Key: "perms", Value: []httptest.Responses{
-						{
-							{Key: "path", Value: "/api/v1/authority/getAuthorityList"},
-							{Key: "method", Value: "GET"},
-						},
-						{
-							{Key: "path", Value: "/api/v1/authority/getAdminAuthorityList"},
-							{Key: "method", Value: "GET"},
-						},
-						{
-							{Key: "path", Value: "/api/v1/authority/getTenancyAuthorityList"},
-							{Key: "method", Value: "GET"},
-						},
-						{
-							{Key: "path", Value: "/api/v1/authority/getGeneralAuthorityList"},
-							{Key: "method", Value: "GET"},
-						},
-						{
-							{Key: "path", Value: "/api/v1/api/getAll"},
-							{Key: "method", Value: "GET"},
-						},
-						{
-							{Key: "path", Value: "/api/v1/api/getApiById/:id"},
-							{Key: "method", Value: "GET"},
-						},
-						{
-							{Key: "path", Value: "/api/v1/api/getList"},
-							{Key: "method", Value: "GET"},
-						},
-						{
-							{Key: "path", Value: "/api/v1/admin/getAll"},
-							{Key: "method", Value: "GET"},
-						},
-						{
-							{Key: "path", Value: "/api/v1/admin/getAdmin/:id"},
-							{Key: "method", Value: "GET"},
-						},
-						{
-							{Key: "path", Value: "/api/v1/public/captcha"},
-							{Key: "method", Value: "GET"},
-						},
-						{
-							{Key: "path", Value: "/api/v1/public/clean"},
-							{Key: "method", Value: "GET"},
-						},
-						{
-							{Key: "path", Value: "/api/v1/public/logout"},
-							{Key: "method", Value: "GET"},
-						},
-						{
-							{Key: "path", Value: "/api/v1/profile"},
-							{Key: "method", Value: "GET"},
-						},
-						{
-							{Key: "path", Value: "/api/v1/oplog/getOplogList"},
-							{Key: "method", Value: "GET"},
-						},
-						{
-							{Key: "path", Value: "/api/v1/authority/createAuthority"},
-							{Key: "method", Value: "POST"},
-						},
-						{
-							{Key: "path", Value: "/api/v1/authority/copyAuthority/:id"},
-							{Key: "method", Value: "POST"},
-						},
-						{
-							{Key: "path", Value: "/api/v1/api/createApi"},
-							{Key: "method", Value: "POST"},
-						},
-						{
-							{Key: "path", Value: "/api/v1/admin/createAdmin"},
-							{Key: "method", Value: "POST"},
-						},
-						{
-							{Key: "path", Value: "/api/v1/profile/changeAvatar"},
-							{Key: "method", Value: "POST"},
-						},
-						{
-							{Key: "path", Value: "/api/v1/public/admin/login"},
-							{Key: "method", Value: "POST"},
-						},
-						{
-							{Key: "path", Value: "/api/v1/file/upload"},
-							{Key: "method", Value: "POST"},
-						},
-						{
-							{Key: "path", Value: "/api/v1/api/deleteApi/:id"},
-							{Key: "method", Value: "DELETE"},
-						},
-						{
-							{Key: "path", Value: "/api/v1/api/deleteApisByIds"},
-							{Key: "method", Value: "DELETE"},
-						},
-						{
-							{Key: "path", Value: "/api/v1/admin/deleteAdmin/:id"},
-							{Key: "method", Value: "DELETE"},
-						},
-						{
-							{Key: "path", Value: "/api/v1/authority/deleteAuthority/:id"},
-							{Key: "method", Value: "DELETE"},
-						},
-						{
-							{Key: "path", Value: "/api/v1/api/updateApi/:id"},
-							{Key: "method", Value: "PUT"},
-						},
-						{
-							{Key: "path", Value: "/api/v1/admin/updateAdmin/:id"},
-							{Key: "method", Value: "PUT"},
-						},
-						{
-							{Key: "path", Value: "/api/v1/authority/updateAuthority/:id"},
-							{Key: "method", Value: "PUT"},
-						},
-					}},
+					// {Key: "perms", Value: []httptest.Responses{
+					// 	{
+					// 		{Key: "path", Value: "/api/v1/authority/getAuthorityList"},
+					// 		{Key: "method", Value: "GET"},
+					// 	},
+					// 	{
+					// 		{Key: "path", Value: "/api/v1/authority/getAdminAuthorityList"},
+					// 		{Key: "method", Value: "GET"},
+					// 	},
+					// 	{
+					// 		{Key: "path", Value: "/api/v1/authority/getTenancyAuthorityList"},
+					// 		{Key: "method", Value: "GET"},
+					// 	},
+					// 	{
+					// 		{Key: "path", Value: "/api/v1/authority/getGeneralAuthorityList"},
+					// 		{Key: "method", Value: "GET"},
+					// 	},
+					// 	{
+					// 		{Key: "path", Value: "/api/v1/api/getAll"},
+					// 		{Key: "method", Value: "GET"},
+					// 	},
+					// 	{
+					// 		{Key: "path", Value: "/api/v1/api/getApiById/:id"},
+					// 		{Key: "method", Value: "GET"},
+					// 	},
+					// 	{
+					// 		{Key: "path", Value: "/api/v1/api/getList"},
+					// 		{Key: "method", Value: "GET"},
+					// 	},
+					// 	{
+					// 		{Key: "path", Value: "/api/v1/admin/getAll"},
+					// 		{Key: "method", Value: "GET"},
+					// 	},
+					// 	{
+					// 		{Key: "path", Value: "/api/v1/admin/getAdmin/:id"},
+					// 		{Key: "method", Value: "GET"},
+					// 	},
+					// 	{
+					// 		{Key: "path", Value: "/api/v1/public/captcha"},
+					// 		{Key: "method", Value: "GET"},
+					// 	},
+					// 	{
+					// 		{Key: "path", Value: "/api/v1/public/clean"},
+					// 		{Key: "method", Value: "GET"},
+					// 	},
+					// 	{
+					// 		{Key: "path", Value: "/api/v1/public/logout"},
+					// 		{Key: "method", Value: "GET"},
+					// 	},
+					// 	{
+					// 		{Key: "path", Value: "/api/v1/profile"},
+					// 		{Key: "method", Value: "GET"},
+					// 	},
+					// 	{
+					// 		{Key: "path", Value: "/api/v1/oplog/getOplogList"},
+					// 		{Key: "method", Value: "GET"},
+					// 	},
+					// 	{
+					// 		{Key: "path", Value: "/api/v1/authority/createAuthority"},
+					// 		{Key: "method", Value: "POST"},
+					// 	},
+					// 	{
+					// 		{Key: "path", Value: "/api/v1/authority/copyAuthority/:id"},
+					// 		{Key: "method", Value: "POST"},
+					// 	},
+					// 	{
+					// 		{Key: "path", Value: "/api/v1/api/createApi"},
+					// 		{Key: "method", Value: "POST"},
+					// 	},
+					// 	{
+					// 		{Key: "path", Value: "/api/v1/admin/createAdmin"},
+					// 		{Key: "method", Value: "POST"},
+					// 	},
+					// 	{
+					// 		{Key: "path", Value: "/api/v1/profile/changeAvatar"},
+					// 		{Key: "method", Value: "POST"},
+					// 	},
+					// 	{
+					// 		{Key: "path", Value: "/api/v1/public/admin/login"},
+					// 		{Key: "method", Value: "POST"},
+					// 	},
+					// 	{
+					// 		{Key: "path", Value: "/api/v1/file/upload"},
+					// 		{Key: "method", Value: "POST"},
+					// 	},
+					// 	{
+					// 		{Key: "path", Value: "/api/v1/api/deleteApi/:id"},
+					// 		{Key: "method", Value: "DELETE"},
+					// 	},
+					// 	{
+					// 		{Key: "path", Value: "/api/v1/api/deleteApisByIds"},
+					// 		{Key: "method", Value: "DELETE"},
+					// 	},
+					// 	{
+					// 		{Key: "path", Value: "/api/v1/admin/deleteAdmin/:id"},
+					// 		{Key: "method", Value: "DELETE"},
+					// 	},
+					// 	{
+					// 		{Key: "path", Value: "/api/v1/authority/deleteAuthority/:id"},
+					// 		{Key: "method", Value: "DELETE"},
+					// 	},
+					// 	{
+					// 		{Key: "path", Value: "/api/v1/api/updateApi/:id"},
+					// 		{Key: "method", Value: "PUT"},
+					// 	},
+					// 	{
+					// 		{Key: "path", Value: "/api/v1/admin/updateAdmin/:id"},
+					// 		{Key: "method", Value: "PUT"},
+					// 	},
+					// 	{
+					// 		{Key: "path", Value: "/api/v1/authority/updateAuthority/:id"},
+					// 		{Key: "method", Value: "PUT"},
+					// 	},
+					// }},
 					{Key: "defaultRouter", Value: "dashboard"},
 					{Key: "updatedAt", Value: "", Type: "notempty"},
 					{Key: "createdAt", Value: "", Type: "notempty"},
@@ -332,6 +332,24 @@ func TestCreate(t *testing.T) {
 	}
 	defer Delete(TestClient, id)
 
+	detail := httptest.Responses{
+		{Key: "id", Value: 0, Type: "ge"},
+		{Key: "uuid", Value: "test_authorityName_for_create"},
+		{Key: "authorityName", Value: "test_authorityName_for_create"},
+		{Key: "authorityType", Value: multi.AdminAuthority},
+		{Key: "parentId", Value: 0},
+		{Key: "defaultRouter", Value: "dashboard"},
+		{Key: "updatedAt", Value: "", Type: "notempty"},
+		{Key: "createdAt", Value: "", Type: "notempty"},
+		{Key: "perms", Value: []httptest.Responses{
+			{
+				{Key: "path", Value: "/api/v1/authority/updateAuthority/:id"},
+				{Key: "method", Value: "PUT"},
+			},
+		}},
+	}
+	Detail(TestClient, id, detail)
+
 	pageKeys := httptest.Responses{
 		{Key: "pageSize", Value: 10},
 		{Key: "page", Value: 1},
@@ -345,12 +363,12 @@ func TestCreate(t *testing.T) {
 				{Key: "defaultRouter", Value: "dashboard"},
 				{Key: "updatedAt", Value: "", Type: "notempty"},
 				{Key: "createdAt", Value: "", Type: "notempty"},
-				{Key: "perms", Value: []httptest.Responses{
-					{
-						{Key: "path", Value: "/api/v1/authority/updateAuthority/:id"},
-						{Key: "method", Value: "PUT"},
-					},
-				}},
+				// {Key: "perms", Value: []httptest.Responses{
+				// 	{
+				// 		{Key: "path", Value: "/api/v1/authority/updateAuthority/:id"},
+				// 		{Key: "method", Value: "PUT"},
+				// 	},
+				// }},
 			},
 		}},
 		{Key: "total", Value: 0, Type: "ge"},
@@ -406,12 +424,12 @@ func TestUpdate(t *testing.T) {
 				{Key: "defaultRouter", Value: "dashboard"},
 				{Key: "updatedAt", Value: "", Type: "notempty"},
 				{Key: "createdAt", Value: "", Type: "notempty"},
-				{Key: "perms", Value: []httptest.Responses{
-					{
-						{Key: "path", Value: "/api/v1/authority/updateAuthority1/:id"},
-						{Key: "method", Value: "GET"},
-					},
-				}},
+				// {Key: "perms", Value: []httptest.Responses{
+				// 	{
+				// 		{Key: "path", Value: "/api/v1/authority/updateAuthority1/:id"},
+				// 		{Key: "method", Value: "GET"},
+				// 	},
+				// }},
 			},
 		}},
 		{Key: "total", Value: 0, Type: "ge"},
@@ -456,4 +474,8 @@ func Create(TestClient *httptest.Client, data map[string]interface{}) uint {
 
 func Delete(TestClient *httptest.Client, id uint) {
 	TestClient.DELETE(fmt.Sprintf("%s/deleteAuthority/%d", url, id), httptest.SuccessResponse)
+}
+
+func Detail(TestClient *httptest.Client, id uint, respone httptest.Responses) {
+	TestClient.GET(fmt.Sprintf("%s/authorityDetail/%d", url, id), httptest.NewResponses(http.StatusOK, response.ResponseOkMessage, respone))
 }

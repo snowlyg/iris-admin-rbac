@@ -8,9 +8,9 @@ type DeleteApiReq struct {
 	Path   string `json:"path" form:"path" binding:"required"`
 	Method string `json:"method" form:"method" binding:"required"`
 }
-
 type AuthorityType struct {
-	AuthorityType int `json:"authorityType" form:"authorityType"`
+	AuthorityType int `json:"authorityType" form:"authorityType" uri:"authorityType" param:"authorityType"`
+	IsMenu        int `json:"isMenu" form:"isMenu" uri:"isMenu" param:"isMenu"`
 }
 
 type ReqPaginate struct {

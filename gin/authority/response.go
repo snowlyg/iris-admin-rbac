@@ -26,6 +26,9 @@ func (res *Response) First(db *gorm.DB, scopes ...func(db *gorm.DB) *gorm.DB) er
 		return err
 	}
 
+	res.Perms = getPermsForRoleMap(res.Uuid)
+	res.findChildrenAuthority()
+
 	return nil
 }
 
@@ -54,15 +57,6 @@ func (res *PageResponse) Paginate(db *gorm.DB, pageScope func(db *gorm.DB) *gorm
 		return count, err
 	}
 
-	if len(res.Item) > 0 {
-		for i := 0; i < len(res.Item); i++ {
-			uuid := res.Item[i].Uuid
-			res.Item[i].Perms = getPermsForRoleMap(uuid)
-
-			findChildrenAuthority(res.Item[i])
-		}
-	}
-
 	return count, nil
 }
 
@@ -77,21 +71,11 @@ func (res *PageResponse) Find(db *gorm.DB, scopes ...func(db *gorm.DB) *gorm.DB)
 		return err
 	}
 
-	if len(res.Item) > 0 {
-		for i := 0; i < len(res.Item); i++ {
-			uuid := res.Item[i].Uuid
-			res.Item[i].Perms = getPermsForRoleMap(uuid)
-
-			findChildrenAuthority(res.Item[i])
-		}
-
-	}
-
 	return nil
 }
 
 // findChildrenAuthority
-func findChildrenAuthority(item *Response) error {
+func (item *Response) findChildrenAuthority() error {
 	db := database.Instance()
 	if db == nil {
 		return gorm.ErrInvalidDB
@@ -99,7 +83,7 @@ func findChildrenAuthority(item *Response) error {
 	err := db.Where("parent_id = ?", item.Id).Find(&item.Children).Error
 	if len(item.Children) > 0 {
 		for k := range item.Children {
-			err = findChildrenAuthority(&item.Children[k])
+			err = item.Children[k].findChildrenAuthority()
 		}
 	}
 	return err
