@@ -13,7 +13,7 @@ var Source = new(source)
 type source struct{}
 
 func GetSources() ([]*Authority, error) {
-	apis, err := api.GetApisForRole()
+	apis, err := api.GetApiAndMenusForRole()
 	if err != nil {
 		return nil, err
 	}
