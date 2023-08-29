@@ -60,11 +60,16 @@ func Clear(ctx *gin.Context) {
 func Captcha(ctx *gin.Context) {
 	//字符,公式,验证码配置
 	// 生成默认数字的driver
-	if web.CONFIG.Captcha.KeyLong <= 0 {
+	if web.CONFIG.System.Level != "release" && web.CONFIG.Captcha.KeyLong <= 0 {
 		response.OkWithData(gin.H{"enable": false}, ctx)
 		return
 	}
-	driver := base64Captcha.NewDriverDigit(web.CONFIG.Captcha.ImgHeight, web.CONFIG.Captcha.ImgWidth, web.CONFIG.Captcha.KeyLong, 0.7, 80)
+	keyLong := web.CONFIG.Captcha.KeyLong
+	if web.CONFIG.System.Level == "release" {
+		keyLong = 4
+	}
+
+	driver := base64Captcha.NewDriverDigit(web.CONFIG.Captcha.ImgHeight, web.CONFIG.Captcha.ImgWidth, keyLong, 0.7, 80)
 	cp := base64Captcha.NewCaptcha(driver, store)
 	if id, b64s, err := cp.Generate(); err != nil {
 		response.FailWithMessage(err.Error(), ctx)
